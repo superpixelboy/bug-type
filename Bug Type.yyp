@@ -65,6 +65,8 @@
     {"id":{"name":"s_bug_fast","path":"sprites/s_bug_fast/s_bug_fast.yy",},},
     {"id":{"name":"s_bug_jumpy","path":"sprites/s_bug_jumpy/s_bug_jumpy.yy",},},
     {"id":{"name":"s_bug_test","path":"sprites/s_bug_test/s_bug_test.yy",},},
+    {"id":{"name":"s_bugayuga_house","path":"sprites/s_bugayuga_house/s_bugayuga_house.yy",},},
+    {"id":{"name":"s_house","path":"sprites/s_house/s_house.yy",},},
     {"id":{"name":"s_player","path":"sprites/s_player/s_player.yy",},},
     {"id":{"name":"s_rock_large_cracked","path":"sprites/s_rock_large_cracked/s_rock_large_cracked.yy",},},
     {"id":{"name":"s_rock_large_mossy","path":"sprites/s_rock_large_mossy/s_rock_large_mossy.yy",},},
