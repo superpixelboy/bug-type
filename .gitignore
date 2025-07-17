@@ -61,9 +61,7 @@ Temporary Items
 # GameMaker Studio 2 files to ignore
 *.yyp.backup*
 /datafiles_yy/
-/objects/
 /rooms/
-/scripts/
 /sprites/
 /sounds/
 /fonts/

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_spawn_bug_by_rock_type",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_spawn_bug_by_rock_type",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
