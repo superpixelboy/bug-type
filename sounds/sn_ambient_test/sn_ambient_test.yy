@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"sn_ambient_test",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":114.28678,
+  "name":"sn_ambient_test",
+  "parent":{
+    "name":"Sounds",
+    "path":"folders/Sounds.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"sn_ambient_test.mp3",
+  "type":0,
+  "volume":1.0,
+}

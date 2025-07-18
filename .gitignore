@@ -53,22 +53,12 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
- 
-# GameMaker temporary files
+
+
+ # GameMaker temporary files ONLY
 *.resource_order
 *.old
-
-# GameMaker Studio 2 files to ignore
 *.yyp.backup*
-/datafiles_yy/
-/rooms/
-/sprites/
-/sounds/
-/fonts/
-/timelines/
-/extensions/
-/animcurves/
-/notes/
 *.yy.backup*
 /options/
 /views/
