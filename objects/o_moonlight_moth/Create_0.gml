@@ -2,9 +2,10 @@
 event_inherited();
 
 // Override the stats for Shadow Beetle
-bug_hp = 75;
-bug_max_hp = 75;
+bug_hp = 40;
+bug_max_hp = 40;
 stun_duration = 15;
+essence_value =25;
 can_regenerate = false;
 is_fleeting = false;
 

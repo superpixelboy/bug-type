@@ -17,6 +17,7 @@ if (is_flashing) {
 
 // Draw caught text
 // Draw caught text with click instruction
+// Draw caught text with better formatting
 if (state == "caught") {
     draw_set_font(-1);
     draw_set_halign(fa_center);
@@ -24,8 +25,26 @@ if (state == "caught") {
     
     var text_x = room_width/2;
     var text_y = room_height/2 - 60;
+    
+    // Convert object name to readable format
     var bug_name = object_get_name(object_index);
+    bug_name = string_replace_all(bug_name, "o_", "");           // Remove "o_" prefix
+    bug_name = string_replace_all(bug_name, "_", " ");           // Replace underscores with spaces
+    
+    // Capitalize first letter of each word
+    var words = string_split(bug_name, " ");
+    bug_name = "";
+    for (var i = 0; i < array_length(words); i++) {
+        var word = words[i];
+        if (string_length(word) > 0) {
+            word = string_upper(string_char_at(word, 1)) + string_copy(word, 2, string_length(word) - 1);
+            bug_name += word;
+            if (i < array_length(words) - 1) bug_name += " ";
+        }
+    }
+    
     var caught_text = bug_name + " Caught!";
+    var essence_text = "+" + string(essence_value) + " Essence";
     var continue_text = "Click to continue";
     
     // Black outline for main text
@@ -34,15 +53,23 @@ if (state == "caught") {
         for (var dy = -1; dy <= 1; dy++) {
             if (dx != 0 || dy != 0) {
                 draw_text(text_x + dx, text_y + dy, caught_text);
-                draw_text(text_x + dx, text_y + 20 + dy, continue_text);
+                draw_text(text_x + dx, text_y + 20 + dy, essence_text);
+                draw_text(text_x + dx, text_y + 40 + dy, continue_text);
             }
         }
     }
     
     // White text
-    draw_set_color(c_white);
+    draw_set_color(c_olive);
     draw_text(text_x, text_y, caught_text);
-    draw_text(text_x, text_y + 20, continue_text);
+    
+    // Green essence text
+    draw_set_color(c_white);
+    draw_text(text_x, text_y + 20, essence_text);
+    
+    // Gray continue text
+    draw_set_color(c_gray);
+    draw_text(text_x, text_y + 40, continue_text);
     
     // Reset draw settings
     draw_set_halign(fa_left);
@@ -71,4 +98,23 @@ if (keyboard_check(vk_f1)) {  // Hold F1 to see debug info
     draw_set_color(c_white);
 }
 
-
+// Draw progress bar
+if (state == "idle" || state == "recovering") {
+    var bar_x = room_width/2 - catch_bar_width/2;
+    var bar_y = 50;
+    var bar_height = 20;
+    
+    // Background
+    draw_set_color(c_black);
+    draw_rectangle(bar_x, bar_y, bar_x + catch_bar_width, bar_y + bar_height, false);
+    
+    // Progress fill
+    draw_set_color(c_green);
+    draw_rectangle(bar_x + 2, bar_y + 2, bar_x + (catch_bar_width - 4) * catch_progress, bar_y + bar_height - 2, false);
+    
+    // Label
+    draw_set_color(c_white);
+    draw_set_halign(fa_center);
+    draw_text(room_width/2, bar_y - 15, "Catching...");
+    draw_set_halign(fa_left);
+}

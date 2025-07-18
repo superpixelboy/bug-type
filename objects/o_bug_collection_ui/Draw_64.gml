@@ -47,46 +47,46 @@ for (var i = 0; i < bugs_per_page; i++) {
     draw_set_color(c_black);
     draw_text(cell_x + 5, cell_y + 5, string(bug_index + 1));
     
-    if (is_discovered) {
-        // Draw actual bug sprite (scaled down from battle size)
-        var bug_sprite = bug_sprites[bug_index];
-        
-        // Draw sprite at smaller scale (since they're 64x64+ for battles)
-        draw_sprite_ext(bug_sprite, 0, cell_x + 85, cell_y + 30, 0.6, 0.6, 0, c_white, 1);
-        
-        // Bug name
-        draw_set_halign(fa_center);
-        draw_set_color(make_color_rgb(101, 67, 33));
-        draw_text(cell_x + 85, cell_y + 55, bug_names[bug_index]);
-        
-        // Magical property hint (small text)
-        draw_set_color(make_color_rgb(139, 69, 19));
-        var properties = [
-            "Protection Spells",    // Shadow Beetle
-            "Growth Magic",         // Moss Grub
-            "Camouflage Potions",   // Bark Crawler
-            "Silence Charms",       // Whisper Weevil
-            "Agility Brews",        // Glade Hopper
-            "Darkness Potions",     // Gloom Mite
-            "Night Vision",         // Moonlight Moth
-            "Fire Resistance",      // Ember Wasp
-            "Flexibility Magic",    // Centipede
-            "Ultimate Protection"   // Ancient Shell-Back
-        ];
-        draw_text(cell_x + 85, cell_y + 65, properties[bug_index]);
-        
-    } else {
-        // Draw silhouette using the same sprite
-        var bug_sprite = bug_sprites[bug_index];
-        
-        // Draw as dark silhouette
-        draw_sprite_ext(bug_sprite, 0, cell_x + 85, cell_y + 30, 0.6, 0.6, 0, c_black, 0.3);
-        
-        draw_set_halign(fa_center);
-        draw_set_color(c_black);
-        draw_text(cell_x + 85, cell_y + 55, "???");
-        draw_text(cell_x + 85, cell_y + 65, "Unknown Reagent");
-    }
+if (is_discovered) {
+    // Draw actual bug sprite (scaled down from battle size)
+    var bug_sprite = bug_sprites[bug_index];
+    
+    // Draw sprite at smaller scale (since they're 64x64+ for battles)
+    draw_sprite_ext(bug_sprite, 0, cell_x + 85, cell_y + 25, 0.6, 0.6, 0, c_white, 1);
+    
+    // Bug name - centered
+    draw_set_halign(fa_center);
+    draw_set_color(make_color_rgb(101, 67, 33));
+    draw_text(cell_x + 85, cell_y + 50, bug_names[bug_index]);
+    
+    // Essence values in upper right corner, aligned with bug number
+    draw_set_halign(fa_right);
+    draw_set_color(c_gray);
+    var essence_values = [
+        30,   // Shadow Beetle
+        1,    // Moss Grub
+        10,   // Bark Crawler
+        3,    // Whisper Weevil
+        20,   // Glade Hopper
+        12,   // Gloom Mite
+        70,   // Moonlight Moth
+        100,  // Ember Wasp
+        120,  // Centipede
+        200   // Ancient Shell-Back
+    ];
+    draw_text(cell_x + 165, cell_y + 5, "e. " + string(essence_values[bug_index]));
+    
+} else {
+    // Draw silhouette using the same sprite
+    var bug_sprite = bug_sprites[bug_index];
+    
+    // Draw as dark silhouette
+    draw_sprite_ext(bug_sprite, 0, cell_x + 85, cell_y + 25, 0.6, 0.6, 0, c_black, 0.3);
+    
+    draw_set_halign(fa_center);
+    draw_set_color(c_black);
+    draw_text(cell_x + 85, cell_y + 50, "???");
+}
 }
 
 // Page navigation

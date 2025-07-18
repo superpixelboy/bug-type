@@ -1,14 +1,17 @@
 function scr_bug_do_damage(damage) {
-    current_hp -= 1; // Always 1 damage
+
     
+	//Magc wand
+	var damage_multiplier = global.has_oak_wand ? 2 : 1;
+	current_hp -= (1 * damage_multiplier);
+	
+
     // Satisfying visual feedback
     flash_timer = 8;
     scale_bounce_x = -0.4;
     scale_bounce_y = -0.4;
-    
-	
-	   // DEBUG: Check if bounce is being set
-    show_debug_message("Setting bounce: " + string(scale_bounce_x));
+
+
 	
     // Get mouse position for particle origin
     var mouse_x_pos = mouse_x;

@@ -10,3 +10,7 @@ if (state == "caught") {
     // Normal bug clicking behavior
     scr_bug_handle_click();
 }
+
+if (state == "ready_to_catch") {
+    scr_bug_handle_catch();
+}

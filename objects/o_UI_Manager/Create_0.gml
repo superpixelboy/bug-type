@@ -145,3 +145,7 @@ function scr_spawn_catch_particles(x_pos, y_pos) {
 flash_alpha = 0;
 flash_duration = 0;
 flash_timer = 0;
+
+// Items
+global.has_oak_wand = false;
+global.has_lucky_clover = false;

@@ -48,3 +48,10 @@ capture_timer = 0;
 bounce_offset_x = 0;
 bounce_offset_y = 0;
 bounce_decay = 0.8;
+
+// Auto-catch system
+auto_catch_enabled = true;
+auto_catch_timer = 0;
+auto_catch_interval = 10;  // Damage every 10 frames
+catch_progress = 0;
+catch_bar_width = 200;

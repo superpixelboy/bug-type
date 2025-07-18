@@ -1,6 +1,6 @@
 // Check for player interaction
 if (distance_to_object(o_player) < 32 && dialogue_cooldown <= 0) {
-    if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W"))) {
+    if (keyboard_check_pressed(vk_space) || mouse_check_button_pressed(mb_left)) {
         if (!dialogue_active) {
             // Start dialogue
             dialogue_active = true;

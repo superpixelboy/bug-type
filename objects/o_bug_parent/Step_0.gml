@@ -1,13 +1,14 @@
 // Simplified state machine
 switch(state) {
-    case "idle":
-        // Cycle between frames 0 and 1 (breathing animation)
-        anim_timer++;
-        if (anim_timer >= 45) {
-            image_index = (image_index == 0) ? 1 : 0;
-            anim_timer = 0;
-        }
-        break;
+ 
+		case "idle":
+    // Cycle between frames 0 and 1 (breathing animation)
+	    anim_timer++;
+	    if (anim_timer >= 30) {  // Adjust speed as needed
+	        image_index = (image_index == 0) ? 1 : 0;
+	        anim_timer = 0;
+	    }
+	    break;
         
     case "recovering":
         // Show frame 2 (hit/stunned frame) 
@@ -106,4 +107,30 @@ if (abs(bounce_offset_x) > 0.1 || abs(bounce_offset_y) > 0.1) {
 } else {
     bounce_offset_x = 0;
     bounce_offset_y = 0;
+}
+
+// Auto-catch system (only when in idle state)
+if (state == "idle" && auto_catch_enabled) {
+    auto_catch_timer++;
+    
+    if (auto_catch_timer >= auto_catch_interval) {
+        // Auto-damage every 10 frames
+        current_hp -= (global.has_oak_wand ? 2 : 1);
+        auto_catch_timer = 0;
+        
+        // Gentle visual feedback instead of click feedback
+        flash_timer = 4;  // Shorter flash
+        // NO scale bounce or click particles
+        
+        // Update progress bar
+        catch_progress = 1 - (current_hp / bug_max_hp);
+        
+        // Check if ready to catch
+        if (current_hp <= 0) {
+            state = "ready_to_catch";
+            current_hp = 0;
+            scr_screen_flash();
+            audio_play_sound(sn_bug_ready, 1, false);
+        }
+    }
 }

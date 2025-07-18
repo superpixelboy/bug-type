@@ -1,11 +1,11 @@
 {
   "$GMObject":"",
-  "%Name":"o_shadow_moss_grub",
+  "%Name":"o_gem_bug",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"o_shadow_moss_grub",
+  "name":"o_gem_bug",
   "overriddenProperties":[],
   "parent":{
     "name":"Bugs",
@@ -33,8 +33,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"s_bug_moss_grub",
-    "path":"sprites/s_bug_moss_grub/s_bug_moss_grub.yy",
+    "name":"s_bug_gem_bug",
+    "path":"sprites/s_bug_gem_bug/s_bug_gem_bug.yy",
   },
   "spriteMaskId":null,
   "visible":true,

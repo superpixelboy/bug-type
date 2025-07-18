@@ -1,5 +1,29 @@
 function scr_spawn_bug_by_rock_type(spawn_x, spawn_y, rock_type) {
     
+    // Check for empty rocks first
+    var empty_chance = 0;
+    switch(rock_type) {
+        case "normal":
+            empty_chance = global.has_lucky_clover ? 0.4 : 0.5;  // 50% -> 40% with clover
+            break;
+        case "mossy":
+            empty_chance = global.has_lucky_clover ? 0.2 : 0.3;  // 30% -> 20% with clover
+            break;
+        case "cracked":
+            empty_chance = global.has_lucky_clover ? 0.05 : 0.1; // 10% -> 5% with clover
+            break;
+    }
+    
+    // Roll for empty rock
+    if (random(1) < empty_chance) {
+        return instance_create_layer(spawn_x, spawn_y, "Bugs", o_empty_rock);
+    }
+    
+    // LUCKY CLOVER CHECK - Small chance for gem bug if owned (only if not empty)
+    if (global.has_lucky_clover && random(1) < 0.08) {  // 8% chance
+        return instance_create_layer(spawn_x, spawn_y, "Bugs", o_gem_bug);
+    }
+    
     switch(rock_type) {
         case "normal":
             // Mostly common bugs

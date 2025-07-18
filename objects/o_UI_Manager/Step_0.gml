@@ -32,3 +32,17 @@ if (flash_timer < flash_duration) {
 } else {
     flash_alpha = 0;
 }
+
+//DEBUG RESET ROCKS
+  if (keyboard_check_pressed(ord("R"))) {
+        // Save position globally before starting fade
+        global.sleep_x = o_player.x;
+        global.sleep_y = o_player.y;
+        
+        // Create fade controller
+        if (!instance_exists(o_fade_controller)) {
+            var fade = instance_create_layer(0, 0, "Instances", o_fade_controller);
+            fade.action_to_perform = "sleep";
+            fade.fade_state = "fade_out";
+        }
+    }
