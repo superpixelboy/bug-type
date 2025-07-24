@@ -174,9 +174,10 @@ if (keyboard_check_pressed(vk_space) && can_interact) {
     // Store current position before leaving
     global.return_x = x;
     global.return_y = y;
+	global.return_room = room;  // Add this line to remember which room we came from
     
     global.current_rock_id = closest_rock.rock_unique_id;
     global.current_rock_type = rock_type;
     audio_play_sound(sn_rock_click, 1, false);
-    room_goto_next();
+    room_goto(rm_rock_catching);
 }

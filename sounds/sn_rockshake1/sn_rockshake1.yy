@@ -9,7 +9,7 @@
   "bitRate":128,
   "compression":0,
   "conversionMode":0,
-  "duration":1.9591837,
+  "duration":10.666825,
   "name":"sn_rockshake1",
   "parent":{
     "name":"Sounds",
