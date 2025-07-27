@@ -10,7 +10,7 @@ function scr_bug_handle_catch() {
         
         // Register bug discovery
         var bug_type_name = object_get_name(object_index);
-        ds_map_set(global.discovered_bugs, bug_type_name, true);
+		 ds_map_set(global.discovered_bugs, bug_type, true);
         
         // Comment out the catch particles
         // scr_spawn_catch_particles(mouse_x, mouse_y);

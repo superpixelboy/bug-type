@@ -1,4 +1,9 @@
 // ===========================================
+// NEW: Bug data system
+bug_type = "unknown";
+bug_name = "Unknown Bug";
+flavor_text = "";
+
 
 // Core bug stats (override in child objects)
 bug_hp = 3;              // Much lower HP for 1-damage system

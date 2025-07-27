@@ -44,3 +44,5 @@ bug_sprites = [
 if (!variable_global_exists("discovered_bugs")) {
     global.discovered_bugs = ds_map_create();
 }
+
+depth = -10000;  // Very negative = draws on top

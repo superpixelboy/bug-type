@@ -8,8 +8,8 @@
   "name":"o_ancient_shell_back",
   "overriddenProperties":[],
   "parent":{
-    "name":"Bugs",
-    "path":"folders/Objects/Bugs.yy",
+    "name":"old",
+    "path":"folders/Objects/Bugs/old.yy",
   },
   "parentObjectId":{
     "name":"o_bug_parent",

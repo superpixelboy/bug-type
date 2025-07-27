@@ -1,7 +1,7 @@
 {
   "$GMRoom":"v1",
   "%Name":"rm_spooky_forest",
-  "creationCodeFile":"",
+  "creationCodeFile":"rooms/rm_spooky_forest/RoomCreationCode.gml",
   "inheritCode":false,
   "inheritCreationOrder":false,
   "inheritLayers":false,
@@ -93,12 +93,14 @@
     {"name":"inst_33FC1F9F","path":"rooms/rm_spooky_forest/rm_spooky_forest.yy",},
     {"name":"inst_49F4E8DE","path":"rooms/rm_spooky_forest/rm_spooky_forest.yy",},
     {"name":"inst_7AB84D78","path":"rooms/rm_spooky_forest/rm_spooky_forest.yy",},
+    {"name":"inst_43B1611B","path":"rooms/rm_spooky_forest/rm_spooky_forest.yy",},
   ],
   "isDnd":false,
   "layers":[
     {"$GMRInstanceLayer":"","%Name":"Controllers","depth":0,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[
         {"$GMRInstance":"v2","%Name":"inst_56E0423B","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":true,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_56E0423B","objectId":{"name":"o_UI_Manager","path":"objects/o_UI_Manager/o_UI_Manager.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":96.0,"y":192.0,},
         {"$GMRInstance":"v2","%Name":"inst_65623D9C","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_65623D9C","objectId":{"name":"o_bug_collection_ui","path":"objects/o_bug_collection_ui/o_bug_collection_ui.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":768.0,"y":544.0,},
+        {"$GMRInstance":"v2","%Name":"inst_43B1611B","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_43B1611B","objectId":{"name":"o_collection_button","path":"objects/o_collection_button/o_collection_button.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":-1.0,"x":256.0,"y":384.0,},
       ],"layers":[],"name":"Controllers","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRInstanceLayer":"","%Name":"Walls","depth":100,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[
         {"$GMRInstance":"v2","%Name":"inst_6D5DA3A9","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_6D5DA3A9","objectId":{"name":"o_barrier","path":"objects/o_barrier/o_barrier.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":46.333332,"scaleY":3.4583333,"x":544.0,"y":13.5,},

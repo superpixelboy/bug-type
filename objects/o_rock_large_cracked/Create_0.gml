@@ -11,3 +11,4 @@ image_yscale = 4;
 
 // Sound management
 shake_sound_id = -1;  // Add this line
+rock_type = "normal";  

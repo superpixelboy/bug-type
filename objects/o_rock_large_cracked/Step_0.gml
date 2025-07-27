@@ -31,6 +31,6 @@ if (state == "shaking") {
     // Spawn bug code...
     var bug_type = random(1);
 	// REPLACE YOUR EXISTING BUG SPAWN CODE WITH:
-    scr_spawn_bug_by_rock_type(x , y , global.current_rock_type);
+  scr_spawn_bug_by_rock_type(x, y, rock_type);
     }
 }

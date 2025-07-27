@@ -24,52 +24,58 @@ if (state == "caught") {
     draw_set_valign(fa_middle);
     
     var text_x = room_width/2;
-    var text_y = room_height/2 - 60;
-    
-    // Convert object name to readable format
-    var bug_name = object_get_name(object_index);
-    bug_name = string_replace_all(bug_name, "o_", "");           // Remove "o_" prefix
-    bug_name = string_replace_all(bug_name, "_", " ");           // Replace underscores with spaces
-    
-    // Capitalize first letter of each word
-    var words = string_split(bug_name, " ");
-    bug_name = "";
-    for (var i = 0; i < array_length(words); i++) {
-        var word = words[i];
-        if (string_length(word) > 0) {
-            word = string_upper(string_char_at(word, 1)) + string_copy(word, 2, string_length(word) - 1);
-            bug_name += word;
-            if (i < array_length(words) - 1) bug_name += " ";
-        }
-    }
+    var text_y = room_height/2 - 80;
     
     var caught_text = bug_name + " Caught!";
     var essence_text = "+" + string(essence_value) + " Essence";
     var continue_text = "Click to continue";
     
-    // Black outline for main text
+    // Wrap the flavor text if it's too long
+    var max_width = room_width - 40;  // Leave some margin
+    var wrapped_flavor = "";
+    var words = string_split(flavor_text, " ");
+    var current_line = "";
+    
+    for (var i = 0; i < array_length(words); i++) {
+        var test_line = current_line + (current_line == "" ? "" : " ") + words[i];
+        if (string_width(test_line) > max_width && current_line != "") {
+            wrapped_flavor += current_line + "\n";
+            current_line = words[i];
+        } else {
+            current_line = test_line;
+        }
+    }
+    wrapped_flavor += current_line;  // Add the last line
+    
+    // Count lines in wrapped text for positioning
+    var line_count = string_count("\n", wrapped_flavor) + 1;
+    var flavor_height = line_count * 12;  // Approximate line height
+    
+    // Black outline for all text
     draw_set_color(c_black);
     for (var dx = -1; dx <= 1; dx++) {
         for (var dy = -1; dy <= 1; dy++) {
             if (dx != 0 || dy != 0) {
                 draw_text(text_x + dx, text_y + dy, caught_text);
                 draw_text(text_x + dx, text_y + 20 + dy, essence_text);
-                draw_text(text_x + dx, text_y + 40 + dy, continue_text);
+                draw_text(text_x + dx, text_y + 40 + dy, wrapped_flavor);
+                draw_text(text_x + dx, text_y + 40 + flavor_height + 10 + dy, continue_text);
             }
         }
     }
     
-    // White text
+    // Main text
     draw_set_color(c_olive);
     draw_text(text_x, text_y, caught_text);
     
-    // Green essence text
     draw_set_color(c_white);
     draw_text(text_x, text_y + 20, essence_text);
     
-    // Gray continue text
+    draw_set_color(c_yellow);
+    draw_text(text_x, text_y + 40, wrapped_flavor);
+    
     draw_set_color(c_gray);
-    draw_text(text_x, text_y + 40, continue_text);
+    draw_text(text_x, text_y + 40 + flavor_height + 10, continue_text);
     
     // Reset draw settings
     draw_set_halign(fa_left);

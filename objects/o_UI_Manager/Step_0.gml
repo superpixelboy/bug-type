@@ -46,3 +46,5 @@ if (flash_timer < flash_duration) {
             fade.fade_state = "fade_out";
         }
     }
+	
+	

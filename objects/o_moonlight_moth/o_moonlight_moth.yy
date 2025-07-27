@@ -8,8 +8,8 @@
   "name":"o_moonlight_moth",
   "overriddenProperties":[],
   "parent":{
-    "name":"Bugs",
-    "path":"folders/Objects/Bugs.yy",
+    "name":"old",
+    "path":"folders/Objects/Bugs/old.yy",
   },
   "parentObjectId":{
     "name":"o_bug_parent",

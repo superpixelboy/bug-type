@@ -27,8 +27,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"Bugs",
-    "path":"folders/Sprites/Bugs.yy",
+    "name":"old",
+    "path":"folders/Sprites/Bugs/old.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

@@ -3,6 +3,7 @@ global.bugs_caught = 0;
 global.flipped_rocks = ds_list_create();
 global.essence =0;
 
+
 // Add this new map for tracking spawned rocks
 if (!variable_global_exists("spawned_rocks")) {
     global.spawned_rocks = ds_map_create();
@@ -149,3 +150,8 @@ flash_timer = 0;
 // Items
 global.has_oak_wand = false;
 global.has_lucky_clover = false;
+global.has_rabbit_foot=false;
+global.has_horseshoe=false;
+
+
+scr_initialize_bug_data()

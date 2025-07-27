@@ -29,6 +29,6 @@ if (state == "shaking") {
     global.last_rock_used = true;  // We'll use this flag
     
   // REPLACE YOUR EXISTING BUG SPAWN CODE WITH:
-    scr_spawn_bug_by_rock_type(x, y, global.current_rock_type);
+scr_spawn_bug_by_rock_type(x, y, rock_type);
 	}
 }

@@ -24,7 +24,7 @@ switch(state) {
         
     case "ready_to_catch":
         // Show frame 3 (dazed/vulnerable frame)
-        image_index = 3;
+        image_index = 2;
         
         // Gentle ready glow effect
         if ((current_time * 0.01) % 40 < 20) {
@@ -36,7 +36,7 @@ switch(state) {
         
     case "capturing":
         // Keep showing dazed frame during capture
-        image_index = 3;
+        image_index = 2;
         
         capture_timer++;
         
@@ -66,7 +66,7 @@ switch(state) {
         
     case "caught":
         // Keep showing dazed frame
-        image_index = 3;
+        image_index = 2;
         break;
 }
 

@@ -11,3 +11,6 @@ image_yscale = 4;
 
 // Sound management
 shake_sound_id = -1;  // Add this line
+
+// In each rock's Create event
+rock_type = "normal";  // or whatever type this rock is
