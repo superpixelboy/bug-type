@@ -181,3 +181,7 @@ if (keyboard_check_pressed(vk_space) && can_interact) {
     audio_play_sound(sn_rock_click, 1, false);
     room_goto(rm_rock_catching);
 }
+
+
+// Update player depth for tree sorting
+depth = -y;  // Player sorts based on feet position

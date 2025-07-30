@@ -64,10 +64,10 @@ switch(state) {
         }
         break;
         
-    case "caught":
-        // Keep showing dazed frame
-        image_index = 2;
-        break;
+	case "caught":
+	    image_index = 2;
+	 //   capture_timer++; // Make sure this line exists!
+	    break;
 }
 
 // Keep all the bounce and visual effects below!

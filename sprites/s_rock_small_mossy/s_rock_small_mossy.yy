@@ -12,15 +12,14 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"abdc12bf-2661-451b-aa3d-e6c112f720ad","name":"abdc12bf-2661-451b-aa3d-e6c112f720ad","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"","%Name":"6cca502d-3b6e-43ae-8396-9289f3fca0ea","name":"6cca502d-3b6e-43ae-8396-9289f3fca0ea","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":16,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"5c0206c6-0b9e-4da2-900c-83c9a0c4ca8f","blendMode":0,"displayName":"Layer 1","isLocked":false,"name":"5c0206c6-0b9e-4da2-900c-83c9a0c4ca8f","opacity":37.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
-    {"$GMImageLayer":"","%Name":"52f8563b-a3ab-4cef-b8be-b9b7a0373e44","blendMode":0,"displayName":"default","isLocked":false,"name":"52f8563b-a3ab-4cef-b8be-b9b7a0373e44","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"436c71ef-cc3b-4965-8626-9c2151bcbfbb","blendMode":0,"displayName":"default","isLocked":false,"name":"436c71ef-cc3b-4965-8626-9c2151bcbfbb","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"s_rock_small_mossy",
   "nineSlice":null,
@@ -72,8 +71,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"abdc12bf-2661-451b-aa3d-e6c112f720ad","path":"sprites/s_rock_small_mossy/s_rock_small_mossy.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"ac588be0-5c0d-427d-bbb4-45dd0ee54b30","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"6cca502d-3b6e-43ae-8396-9289f3fca0ea","path":"sprites/s_rock_small_mossy/s_rock_small_mossy.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"c814d454-4740-4037-a6e7-246211e6ab85","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

@@ -6,8 +6,8 @@ has_flipped = false;
 image_index = 0;
 image_speed = 0;
 
-image_xscale = 4;
-image_yscale = 4;
+image_xscale = 3;
+image_yscale = 3;
 
 // Sound management
 shake_sound_id = -1;  // Add this line

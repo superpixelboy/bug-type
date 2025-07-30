@@ -155,3 +155,8 @@ global.has_horseshoe=false;
 
 
 scr_initialize_bug_data()
+
+//For the Bug Selector object
+global.next_forced_bug = -1;
+
+audio_play_sound(sn_main_theme, 1, true);  // true = loop

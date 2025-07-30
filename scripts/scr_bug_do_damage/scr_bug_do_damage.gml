@@ -1,18 +1,17 @@
 function scr_bug_do_damage(damage) {
-
     
-	//Magc wand
+	//Magic wand
 	var damage_multiplier = global.has_oak_wand ? 2 : 1;
 	current_hp -= (1 * damage_multiplier);
 	
-
+    // UPDATE PROGRESS BAR HERE - This was missing!
+    catch_progress = 1 - (current_hp / bug_max_hp);
+    
     // Satisfying visual feedback
     flash_timer = 8;
     scale_bounce_x = -0.4;
     scale_bounce_y = -0.4;
 
-
-	
     // Get mouse position for particle origin
     var mouse_x_pos = mouse_x;
     var mouse_y_pos = mouse_y;
@@ -36,6 +35,7 @@ function scr_bug_do_damage(damage) {
     if (current_hp <= 0) {
         state = "ready_to_catch";
         current_hp = 0;
+        catch_progress = 1;  // Ensure bar is completely full when ready
         // DON'T reset combo here - keep it for the catch!
         
         // Ready to catch feedback

@@ -7,8 +7,8 @@ function scr_initialize_bug_data() {
         name: "Pumpkin Snail",
         flavor_text: "It's just orange. That's it.",
         sprite: s_bug_pumpkin_snail,
-       // locations: { Apple_Grove: 4, Dead_Woods: 5, Haunted_Town: 3, Pumpkin_Patch: 1 },
-	   locations: { Apple_Grove: 1, Dead_Woods: 5, Haunted_Town: 3, Pumpkin_Patch: 1 },
+        locations: { Apple_Grove: 4, Dead_Woods: 5, Haunted_Town: 3, Pumpkin_Patch: 1 },
+	   
         hp: 15,
         essence: 8
     };
@@ -18,8 +18,8 @@ function scr_initialize_bug_data() {
         name: "Fancy Pumpkin Snail",
         flavor_text: "It might not have legs, but it's still a fancy pants",
         sprite: s_bug_fancy_pumpkin_snail,
-    //    locations: { Apple_Grove: 5, Dead_Woods: 5, Haunted_Town: 4, Pumpkin_Patch: 1 },
-	 locations: { Apple_Grove: 1, Dead_Woods: 5, Haunted_Town: 4, Pumpkin_Patch: 1 },
+       locations: { Apple_Grove: 5, Dead_Woods: 5, Haunted_Town: 4, Pumpkin_Patch: 1 },
+	
         hp: 18,
         essence: 12
     };
@@ -29,8 +29,7 @@ function scr_initialize_bug_data() {
         name: "Jack-o-Lantern Snail",
         flavor_text: "Glows when scared... so always.",
         sprite: s_bug_jack_o_lantern_snail,
-     //   locations: { Graveyard: 8, Haunted_Town: 6, Pumpkin_Patch: 5, Cauldron_Springs: 8 },
-	  locations: { Apple_Grove: 1, Dead_Woods: 5, Haunted_Town: 4, Pumpkin_Patch: 1 },
+      locations: { Graveyard: 8, Haunted_Town: 6, Pumpkin_Patch: 5, Cauldron_Springs: 8 },
         hp: 25,
         essence: 35
     };
