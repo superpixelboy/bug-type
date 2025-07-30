@@ -14,7 +14,7 @@
   "frames":[
     {"$GMSpriteFrame":"","%Name":"860afc55-c0f7-4968-a14d-cee3673d6028","name":"860afc55-c0f7-4968-a14d-cee3673d6028","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
     {"$GMSpriteFrame":"","%Name":"3f4218ca-eef5-46fa-9218-32f6a21d5ab9","name":"3f4218ca-eef5-46fa-9218-32f6a21d5ab9","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"500d6d13-e3db-41ac-a23a-0deaa72c547c","name":"500d6d13-e3db-41ac-a23a-0deaa72c547c","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"","%Name":"0bd29d28-c642-4679-9d6f-8542e2da8fb0","name":"0bd29d28-c642-4679-9d6f-8542e2da8fb0","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
     {"$GMSpriteFrame":"","%Name":"d5e9e310-4753-47ff-b9a1-2d74823e17bb","name":"d5e9e310-4753-47ff-b9a1-2d74823e17bb","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
@@ -80,8 +80,8 @@
                 "0":{"$SpriteFrameKeyframe":"","Id":{"name":"3f4218ca-eef5-46fa-9218-32f6a21d5ab9","path":"sprites/s_yaga_hut_stand/s_yaga_hut_stand.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"4b296386-1e94-44eb-8f4f-4ca952ad6432","IsCreationKey":false,"Key":1.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"500d6d13-e3db-41ac-a23a-0deaa72c547c","path":"sprites/s_yaga_hut_stand/s_yaga_hut_stand.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"62586513-4db3-4e6a-b5fa-629f3b8ed104","IsCreationKey":false,"Key":2.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"0bd29d28-c642-4679-9d6f-8542e2da8fb0","path":"sprites/s_yaga_hut_stand/s_yaga_hut_stand.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"387eafad-2f52-40c2-b750-0dcc7e4b7fab","IsCreationKey":false,"Key":2.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
                 "0":{"$SpriteFrameKeyframe":"","Id":{"name":"d5e9e310-4753-47ff-b9a1-2d74823e17bb","path":"sprites/s_yaga_hut_stand/s_yaga_hut_stand.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"bbbd162f-cf15-44e7-9e21-c14f343f29ec","IsCreationKey":false,"Key":3.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},

@@ -1,15 +1,17 @@
 {
   "$GMObject":"",
-  "%Name":"o_tree_parent",
+  "%Name":"o_babayaga_hut",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"o_tree_parent",
+  "name":"o_babayaga_hut",
   "overriddenProperties":[],
   "parent":{
-    "name":"Trees",
-    "path":"folders/Objects/Trees.yy",
+    "name":"Objects",
+    "path":"folders/Objects.yy",
   },
   "parentObjectId":{
     "name":"o_shadow_parent",
@@ -33,8 +35,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"s_tree_purple",
-    "path":"sprites/s_tree_purple/s_tree_purple.yy",
+    "name":"s_yaga_hut_idle",
+    "path":"sprites/s_yaga_hut_idle/s_yaga_hut_idle.yy",
   },
   "spriteMaskId":null,
   "visible":true,
