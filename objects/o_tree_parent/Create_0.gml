@@ -19,3 +19,11 @@ collision_obj = instance_create_layer(x, trunk_y, "Walls", o_tree_collision);
 collision_obj.image_xscale = trunk_width / sprite_get_width(s_tree_collision_mask);
 collision_obj.image_yscale = collision_height / sprite_get_height(s_tree_collision_mask);
 collision_obj.parent_tree = id;  // Reference back to tree
+
+event_inherited(); 
+// Configure shadows for trees
+shadow_offset_x = 4;      // Slight offset to the right
+shadow_offset_y = 15;      // Below the tree base
+shadow_scale_x = 0.8;     // Narrower than tree
+shadow_scale_y = 0.4;     // Very flat
+shadow_alpha = 0.3;       // More transparent for natural look

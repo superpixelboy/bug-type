@@ -1,3 +1,4 @@
+// o_player - Draw Event (Fixed)
 // Find closest rock (same logic as Step Event)
 var nearest_rock = instance_nearest(x, y, o_rock_small);
 var nearest_mossy = instance_nearest(x, y, o_rock_small_mossy);
@@ -64,5 +65,7 @@ if (can_interact) {
     draw_set_alpha(1);
 }
 
-// Draw player AFTER outline
-draw_self();
+// Call parent draw (this draws shadow + player sprite)
+event_inherited();
+
+// NOTE: Removed draw_self(); because event_inherited() already draws the player!

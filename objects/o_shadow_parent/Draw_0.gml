@@ -1,21 +1,18 @@
-if (!variable_instance_exists(id, "shadow_enabled")) {
-    shadow_enabled = true;
-    shadow_offset_x = 2;
-    shadow_offset_y = 4;
-    shadow_alpha = 0.5;
-    shadow_scale_x = 1.0;
-    shadow_scale_y = 0.6;
+// o_shadow_parent - Draw Event (Alternative Version)
+// Draw shadow first using the object's own sprite
+if (shadow_enabled && sprite_exists(sprite_index)) {
+    draw_sprite_ext(
+        sprite_index,          // Use the object's own sprite
+        image_index,           // Same frame as object
+        x + shadow_offset_x,   // X position
+        y + shadow_offset_y,   // Y position
+        shadow_scale_x * image_xscale,  // X scale (matches object scale)
+        shadow_scale_y * image_yscale,  // Y scale (flattened)
+        image_angle,           // Rotation (matches object)
+        c_black,               // Color (black for shadow)
+        shadow_alpha           // Alpha (transparency)
+    );
 }
 
-
-if (shadow_enabled) {
-    // Draw shadow (simple alpha approach)
-    draw_sprite_ext(sprite_index, image_index, 
-        x + shadow_offset_x, y + shadow_offset_y,
-        shadow_scale_x, shadow_scale_y, 
-        image_angle, c_black, shadow_alpha);
-}
-
-
-// Draw the sprite
+// Then draw the main sprite on top
 draw_self();

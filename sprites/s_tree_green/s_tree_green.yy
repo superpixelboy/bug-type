@@ -2,7 +2,7 @@
   "$GMSprite":"",
   "%Name":"s_tree_green",
   "bboxMode":0,
-  "bbox_bottom":62,
+  "bbox_bottom":60,
   "bbox_left":3,
   "bbox_right":63,
   "bbox_top":1,
@@ -20,7 +20,7 @@
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"65e52254-461b-4980-bb3c-ee01bf025aaf","blendMode":0,"displayName":"default","isLocked":false,"name":"65e52254-461b-4980-bb3c-ee01bf025aaf","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
-    {"$GMImageLayer":"","%Name":"958d5d61-7c63-478b-80a1-57d31dabf7b4","blendMode":3,"displayName":"Layer 1","isLocked":false,"name":"958d5d61-7c63-478b-80a1-57d31dabf7b4","opacity":43.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"958d5d61-7c63-478b-80a1-57d31dabf7b4","blendMode":3,"displayName":"Layer 1","isLocked":false,"name":"958d5d61-7c63-478b-80a1-57d31dabf7b4","opacity":43.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":false,},
   ],
   "name":"s_tree_green",
   "nineSlice":null,
