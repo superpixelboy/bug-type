@@ -34,42 +34,34 @@ switch(state) {
         }
         break;
         
-    case "capturing":
-        // Keep showing dazed frame during capture
-        image_index = 2;
-        
-        capture_timer++;
-        
-        // Bug shrinks and flies toward essence counter
-        var progress = capture_timer / 60;
-        
-        // Use capture_scale for shrinking
-        capture_scale = lerp(1, 0, progress);
-        
-        // Move toward upper left corner
-        x = lerp(xstart, 60, progress);
-        y = lerp(ystart, 30, progress);
-        
-        // Set alpha for fading
-        image_alpha = lerp(1, 0, progress);
-        
-        if (capture_timer >= 60) {
-            state = "caught";
-            
-            // Make invisible but huge for easy clicking
-            image_alpha = 0;           // Invisible
-            capture_scale = 10;        // Huge click area
-            x = room_width / 2;        // Center of screen
-            y = room_height / 2;
-        }
-        break;
-        
-	case "caught":
-	    image_index = 2;
-	 //   capture_timer++; // Make sure this line exists!
-	    break;
-}
+ 
+// In o_bug_parent Step Event, modify the "capturing" case:
 
+case "capturing":
+    // Keep showing dazed frame during capture
+    image_index = 2;
+    
+    capture_timer++;
+    
+    // Bug shrinks and flies toward essence counter (faster now)
+    var progress = capture_timer / 30;  // Reduced from 60 to 30
+    
+    // Use capture_scale for shrinking
+    capture_scale = lerp(1, 0, progress);
+    
+    // Move toward upper left corner
+    x = lerp(xstart, 60, progress);
+    y = lerp(ystart, 30, progress);
+    
+    // Set alpha for fading
+    image_alpha = lerp(1, 0, progress);
+    
+    if (capture_timer >= 30) {  // Reduced from 60
+        // Don't go to "caught" state - let the card handle everything
+        instance_destroy();
+    }
+    break;
+}
 // Keep all the bounce and visual effects below!
 // Handle flash effect
 if (flash_timer > 0) {

@@ -108,7 +108,7 @@ function scr_initialize_bug_data() {
     global.bug_data[$ "candy_apple_beetle"] = {
         name: "Candy Apple Beetle",
         flavor_text: "It's sickly sweet... seriously, don't eat it.",
-        sprite: s_bug_candy_apple_beetle,
+        sprite: s_bug_candy_apple_bat,
         locations: { Apple_Grove: 6, Sugar_Lake: 9 },
         hp: 40,
         essence: 55
@@ -118,7 +118,7 @@ function scr_initialize_bug_data() {
     global.bug_data[$ "caramel_apple_spider"] = {
         name: "Caramel Apple Spider",
         flavor_text: "It's the most venomous spider in the world... but luckily it's too slow to catch anything.",
-        sprite: s_bug_caramel_apple_spider,
+        sprite: s_bug_caramel_apple_gecko,
         locations: { Apple_Grove: 5, Dead_Woods: 8, Graveyard: 9, Haunted_Town: 9, Sugar_Lake: 9 },
         hp: 65,
         essence: 70
