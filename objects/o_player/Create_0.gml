@@ -38,3 +38,12 @@ shadow_offset_y = 10;      // Just below the player's feet
 shadow_scale_x = .9;     // Slightly smaller than player
 shadow_scale_y = 0.3;     // Very flat shadow
 shadow_alpha = 0.5;       // Semi-transparent
+
+
+
+// Exclamation mark system
+show_exclamation = false;
+exclamation_alpha = 0;
+exclamation_bounce_y = 0;
+exclamation_animation_timer = 0;
+exclamation_appeared = false;  // Prevents re-triggering bounce

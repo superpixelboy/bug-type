@@ -119,6 +119,8 @@ var closest_rock = noone;
 var closest_distance = 999;
 var rock_type = "normal";
 
+
+
 // Find the closest rock
 if (nearest_rock != noone) {
     var dist = distance_to_object(nearest_rock);
@@ -167,6 +169,61 @@ if (closest_distance <= 28 && closest_rock != noone) {
             can_interact = (dx > 4 && abs(dy) < 20);
             break;
     }
+}
+
+// Handle exclamation mark display
+if (can_interact) {
+    if (!show_exclamation) {
+        // Just became able to interact - trigger bounce animation
+        show_exclamation = true;
+        exclamation_appeared = false;
+        exclamation_animation_timer = 0;
+        exclamation_alpha = 0;
+        exclamation_bounce_y = 0;
+    }
+} else {
+    if (show_exclamation) {
+        // No longer can interact - fade out quickly
+        show_exclamation = false;
+        exclamation_appeared = false;
+    }
+}
+
+// Animate exclamation mark
+if (show_exclamation) {
+    exclamation_animation_timer++;
+    
+            if (!exclamation_appeared) {
+        // Bounce-in animation (first 20 frames) - POP UP from below!
+        if (exclamation_animation_timer <= 10) {
+            var bounce_progress = exclamation_animation_timer / 10;
+            
+            // Easing: bounce UP from below with overshoot
+            var ease_progress = 1 - power(1 - bounce_progress, 3);
+            exclamation_bounce_y = lerp(12, 0, ease_progress);  // Start below, move up!
+            
+            // Add a little bounce back (negative bounce for upward motion)
+            if (bounce_progress > 0.7) {
+                var bounce_back = sin((bounce_progress - 0.7) * 3.14 * 3) * -2;  // Negative for upward
+                exclamation_bounce_y += bounce_back;
+            }
+            
+            exclamation_alpha = lerp(0, 1, bounce_progress);
+        } else {
+            // Finished appearing
+            exclamation_appeared = true;
+            exclamation_bounce_y = 0;
+            exclamation_alpha = 1;
+        }
+    } else {
+        // Gentle idle float animation
+        var float_offset = sin(exclamation_animation_timer * 0.1) * 1;
+        exclamation_bounce_y = float_offset;
+        exclamation_alpha = 1;
+    }
+} else {
+    // Fade out when not interacting
+    exclamation_alpha = max(exclamation_alpha - 0.1, 0);
 }
 
 // Spacebar interaction
