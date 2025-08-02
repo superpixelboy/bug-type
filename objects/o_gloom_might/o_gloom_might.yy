@@ -32,10 +32,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"s_bug_gloom_might",
-    "path":"sprites/s_bug_gloom_might/s_bug_gloom_might.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }

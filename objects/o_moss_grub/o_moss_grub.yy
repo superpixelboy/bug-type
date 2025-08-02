@@ -32,10 +32,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"s_bug_moss_grub",
-    "path":"sprites/s_bug_moss_grub/s_bug_moss_grub.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }

@@ -32,10 +32,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"s_bug_ancient_shell_back",
-    "path":"sprites/s_bug_ancient_shell_back/s_bug_ancient_shell_back.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }

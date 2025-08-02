@@ -32,10 +32,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"s_bug_whisper_weevil",
-    "path":"sprites/s_bug_whisper_weevil/s_bug_whisper_weevil.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }

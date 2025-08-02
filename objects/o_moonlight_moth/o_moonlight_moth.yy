@@ -32,10 +32,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"s_bug_moonlight_moth",
-    "path":"sprites/s_bug_moonlight_moth/s_bug_moonlight_moth.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }

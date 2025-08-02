@@ -32,10 +32,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"s_bug_centimpede",
-    "path":"sprites/s_bug_centimpede/s_bug_centimpede.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }
