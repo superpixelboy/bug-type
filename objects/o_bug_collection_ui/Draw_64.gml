@@ -1,17 +1,11 @@
+// o_bug_collection_ui - Updated Draw GUI Event
 // Collection button - bottom left corner
-var btn_x = 20;   // Left side with some padding
-var btn_y = room_height - 50;  // Bottom with some padding
+var btn_x = 20;
+var btn_y = room_height - 50;
 var btn_width = 100;
 var btn_height = 30;
 
-// Draw button background - back to normal colors
-// In your Draw GUI, add this BRIGHT overlay to see what's happening:
-draw_set_color(c_lime);  // Bright green
-draw_set_alpha(0.5);     // Semi-transparent
-draw_rectangle(btn_x, btn_y, btn_x + btn_width, btn_y + btn_height, false);
-draw_set_alpha(1);       // Reset
-
-// Then your normal button on top
+// Draw button background
 draw_set_color(c_red);
 draw_rectangle(btn_x, btn_y, btn_x + btn_width, btn_y + btn_height, false);
 
@@ -27,6 +21,7 @@ draw_set_valign(fa_top);
 
 // Only draw collection panel when open
 if (!is_open) exit;
+
 // Draw sketchbook background
 draw_set_color(make_color_rgb(240, 230, 210));  // Aged paper color
 draw_rectangle(ui_x, ui_y, ui_x + ui_width, ui_y + ui_height, false);
@@ -41,7 +36,16 @@ draw_set_halign(fa_center);
 draw_set_color(make_color_rgb(101, 67, 33));  // Dark brown ink
 draw_text(ui_x + ui_width/2, ui_y + 10, "Bug Collection");
 
-// Get all bugs from the data system (at the top of the drawing loop)
+// Check if bug data exists
+if (!variable_global_exists("bug_data")) {
+    draw_set_halign(fa_center);
+    draw_set_color(c_red);
+    draw_text(ui_x + ui_width/2, ui_y + 100, "Bug data not loaded!");
+    draw_set_halign(fa_left);
+    exit;
+}
+
+// Get all bugs from the data system
 var all_bug_keys = variable_struct_get_names(global.bug_data);
 var total_bugs = array_length(all_bug_keys);
 var total_pages = ceil(total_bugs / bugs_per_page);
@@ -64,7 +68,7 @@ for (var i = 0; i < bugs_per_page; i++) {
     var cell_x = ui_x + 20 + (grid_x * cell_width);
     var cell_y = ui_y + 50 + (grid_y * cell_height);
     
-    // Get bug data
+    // Get bug data using the bug key
     var bug_key = all_bug_keys[bug_index];
     var bug_data = global.bug_data[$ bug_key];
     
@@ -112,9 +116,6 @@ for (var i = 0; i < bugs_per_page; i++) {
     }
 }
 
-// Update page calculation
-//var total_pages = ceil(total_bugs / bugs_per_page);
-
 // Page navigation
 if (total_pages > 1) {
     draw_set_halign(fa_center);
@@ -128,11 +129,10 @@ draw_set_halign(fa_center);
 draw_set_color(make_color_rgb(101, 67, 33));
 draw_text(ui_x + ui_width/2, ui_y + ui_height - 5, "Press TAB to close");
 
-
 // Draw navigation buttons (only if there are multiple pages)
 if (total_pages > 1) {
     // Left arrow button
-    var left_arrow_x = ui_x -0;
+    var left_arrow_x = ui_x;
     var left_arrow_y = ui_y + ui_height/2 - 15;
     var left_arrow_width = 20;
     var left_arrow_height = 30;
@@ -185,9 +185,6 @@ draw_set_valign(fa_middle);
 draw_set_color(c_black);
 draw_text(close_x + close_size/2, close_y + close_size/2, "X");
 
-
 // Reset draw settings
 draw_set_halign(fa_left);
 draw_set_color(c_white);
-
-
