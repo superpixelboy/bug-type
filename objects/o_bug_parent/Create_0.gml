@@ -24,13 +24,11 @@ recovery_timer = 0;
 image_speed = 0;
 image_index = 0;
 anim_timer = 0;
-image_xscale = 3;
-image_yscale = 3;
+image_xscale = 2.5;
+image_yscale = 2.5;
 xstart = x;
 ystart = y;
 image_alpha = 1;
-base_scale_x = 3;
-base_scale_y = 3;
 capture_scale = 1;
 // Visual effects
 flash_timer = 0;
@@ -39,8 +37,8 @@ is_flashing = false;
 // Scale bounce for satisfying feedback
 scale_bounce_x = 0;
 scale_bounce_y = 0;
-base_scale_x = 3;
-base_scale_y = 3;
+base_scale_x = 2.5;
+base_scale_y = 2.5;
 wobble_angle = 0;
 reaction_timer = 0;
 
