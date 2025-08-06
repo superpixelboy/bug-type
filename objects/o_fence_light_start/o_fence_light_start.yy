@@ -1,17 +1,19 @@
 {
   "$GMObject":"",
-  "%Name":"o_tree_collision",
-  "eventList":[],
+  "%Name":"o_fence_light_start",
+  "eventList":[
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+  ],
   "managed":true,
-  "name":"o_tree_collision",
+  "name":"o_fence_light_start",
   "overriddenProperties":[],
   "parent":{
-    "name":"Trees",
-    "path":"folders/Objects/Trees.yy",
+    "name":"Decorations",
+    "path":"folders/Objects/Decorations.yy",
   },
   "parentObjectId":{
-    "name":"o_barrier",
-    "path":"objects/o_barrier/o_barrier.yy",
+    "name":"o_tree_parent",
+    "path":"objects/o_tree_parent/o_tree_parent.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,
@@ -31,8 +33,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"s_tree_collision_mask",
-    "path":"sprites/s_tree_collision_mask/s_tree_collision_mask.yy",
+    "name":"s_fence_lights_start",
+    "path":"sprites/s_fence_lights_start/s_fence_lights_start.yy",
   },
   "spriteMaskId":null,
   "visible":true,

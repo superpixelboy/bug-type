@@ -1,8 +1,8 @@
 {
   "$GMTileSet":"v1",
-  "%Name":"s_grass_and_stone",
+  "%Name":"ts_orange_grass",
   "autoTileSets":[
-    {"$GMAutoTileSet":"","%Name":"autotile_1","closed_edge":false,"name":"autotile_1","resourceType":"GMAutoTileSet","resourceVersion":"2.0","tiles":[152,147,148,137,146,139,149,141,145,150,140,142,138,144,143,151,],},
+    {"$GMAutoTileSet":"","%Name":"autotile_1","closed_edge":false,"name":"autotile_1","resourceType":"GMAutoTileSet","resourceVersion":"2.0","tiles":[151,143,144,138,142,140,150,145,141,149,139,146,137,148,147,152,],},
     {"$GMAutoTileSet":"","%Name":"autotile_2","closed_edge":false,"name":"autotile_2","resourceType":"GMAutoTileSet","resourceVersion":"2.0","tiles":[169,160,161,155,159,157,167,162,158,166,156,163,154,165,164,168,],},
     {"$GMAutoTileSet":"","%Name":"autotile_3","closed_edge":false,"name":"autotile_3","resourceType":"GMAutoTileSet","resourceVersion":"2.0","tiles":[186,177,178,172,176,174,184,179,175,183,173,180,171,182,181,185,],},
     {"$GMAutoTileSet":"","%Name":"autotile_4","closed_edge":false,"name":"autotile_4","resourceType":"GMAutoTileSet","resourceVersion":"2.0","tiles":[203,194,195,189,193,191,201,196,192,200,190,197,188,199,198,202,],},
@@ -13,7 +13,7 @@
     "SerialiseWidth":0,
     "TileSerialiseData":[],
   },
-  "name":"s_grass_and_stone",
+  "name":"ts_orange_grass",
   "out_columns":17,
   "out_tilehborder":2,
   "out_tilevborder":2,
@@ -24,8 +24,8 @@
   "resourceType":"GMTileSet",
   "resourceVersion":"2.0",
   "spriteId":{
-    "name":"s_ts_grass_and_stone",
-    "path":"sprites/s_ts_grass_and_stone/s_ts_grass_and_stone.yy",
+    "name":"s_ts_orange_grass",
+    "path":"sprites/s_ts_orange_grass/s_ts_orange_grass.yy",
   },
   "spriteNoExport":false,
   "textureGroupId":{

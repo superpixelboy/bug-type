@@ -31,8 +31,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"s_tree_green",
-    "path":"sprites/s_tree_green/s_tree_green.yy",
+    "name":"s_tree_purple",
+    "path":"sprites/s_tree_purple/s_tree_purple.yy",
   },
   "spriteMaskId":null,
   "visible":true,

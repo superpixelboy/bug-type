@@ -4,14 +4,19 @@ event_inherited();  // Call parent create
 collision_height = 5;  // Shorter collision
 trunk_width = 5;       // Wider trunk
 
-depth = -trunk_y+5;
+depth = -trunk_y;
 // Update collision object with new settings
 if (instance_exists(collision_obj)) {
     collision_obj.image_xscale = trunk_width / sprite_get_width(s_tree_collision_mask);
     collision_obj.image_yscale = collision_height / sprite_get_height(s_tree_collision_mask);
 }
 
-shadow_offset_y = 7;      // Below the tree base
+// Configure shadows for leaves
+shadow_offset_x = 2;      // Slight offset to the right
+shadow_offset_y = +7;      // Below the tree base
+shadow_scale_x = 1.2;     // Narrower than tree
+shadow_scale_y = 0.6;     // Very flat
+shadow_alpha = 0.3;       // More transparent for natural 
 // obj_bush - Create Event
 shake_timer = 0;
 shake_intensity = 0;
@@ -33,7 +38,7 @@ part_type_direction(particle_type, 0, 360, 0, 0); // All directions
 part_type_gravity(particle_type, 0.1, 270); // Slight downward gravity
 part_type_alpha2(particle_type, 1, .5); // Fade out over time
 part_type_scale(particle_type, 0.5, 0.8); // Small particles
-part_type_color1(particle_type, make_color_rgb(100, 139, 85)); // Natural forest green
+part_type_color1(particle_type,c_orange); // Natural forest green
 
 // Cooldown to prevent constant shaking
 shake_cooldown = 0;
