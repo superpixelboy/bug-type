@@ -1,5 +1,9 @@
 // o_bug_card - Updated Create Event (Template-based)
-
+// At the very top of o_bug_card Create Event
+if (instance_number(o_bug_card) > 1) {
+    instance_destroy();
+    exit;
+}
 // Card state and animation
 card_state = "waiting";
 animation_timer = 0;
@@ -21,6 +25,7 @@ bug_name = "Unknown Bug";
 bug_sprite = s_bug_test;
 flavor_text = "Mystery bug";
 essence_value = 1;
+bug_type = "unknown";  // ADD THIS LINE
 
 // ALWAYS use the template card sprite now
 card_sprite = s_card_template;
@@ -51,7 +56,8 @@ high_res_h = original_app_surf_h * high_res_scale;
 high_res_viewport = 1;
 use_high_res = true;
 
-// Gem rarity system
-
+// Gem rarity system - Initialize with default values
+bug_rarity_tier = 5;  // Default to very common
+gem_sprite = s_gem_very_common;  // Default gem
 gem_float_timer = 0;
 gem_glow_timer = 0;

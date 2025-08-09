@@ -24,8 +24,18 @@ function scr_bug_handle_catch() {
         });
     }
 }
+
 function scr_create_bug_card() {
     show_debug_message("Creating template-based bug card..."); // DEBUG
+		// When creating the card:
+	if (!global.showing_card) {
+	    global.showing_card = true;
+	    var card = instance_create_layer(room_width/2, room_height + 100, "GUI", o_bug_card);
+	    // ... set card properties
+	}
+
+	// In o_bug_card's destroy event:
+	global.showing_card = false;
     
     var card = instance_create_layer(room_width/2, room_height + 100, "Instances", o_bug_card);
     
@@ -39,13 +49,14 @@ function scr_create_bug_card() {
     // ALWAYS use template now
     card.card_sprite = s_card_template;
     
-    // NOW calculate gem rarity (after bug_type is set)
-    card.bug_rarity_tier = calculate_bug_rarity(card.bug_type);
+    // NOW calculate gem rarity (after bug_type is set) - FIXED FUNCTION NAME
+    card.bug_rarity_tier = scr_gem_rarity(card.bug_type);
     card.gem_sprite = get_gem_sprite(card.bug_rarity_tier);
     card.gem_float_timer = 0;
     card.gem_glow_timer = 0;
     
     show_debug_message("Card created with bug: " + bug_name + " using template card"); // DEBUG
+    show_debug_message("Bug rarity tier: " + string(card.bug_rarity_tier)); // DEBUG
     
     // Start the flip animation
     card.card_state = "flipping_in";

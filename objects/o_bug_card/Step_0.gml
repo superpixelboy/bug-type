@@ -1,4 +1,3 @@
-
 switch(card_state) {
     case "waiting":
         // Count down delay timer
@@ -84,13 +83,21 @@ switch(card_state) {
             animation_timer = 0;
         }
 		
-		// In o_bug_card Step Event, add this in the "showing" case:
-		if (bug_rarity_tier == 1 && random(100) < 5) { // 5% chance per frame for ultra rare
-		    // Spawn a sparkle near the gem
-		    var sparkle_x = gui_x + (frame_w_gui * 0.85) + random_range(-10, 10);
-		    var sparkle_y = gui_y + (frame_h_gui * 0.15) + random_range(-10, 10);
-		    scr_spawn_magic_particles(sparkle_x, sparkle_y, 1);
-		}
+        // Sparkle effect for ultra rare gems - FIXED VARIABLE REFERENCE
+        if (bug_rarity_tier == 1 && random(100) < 5) { // 5% chance per frame for ultra rare
+            // Spawn a sparkle near the gem
+            var cam = view_camera[0];
+            var vx = camera_get_view_x(cam);
+            var vy = camera_get_view_y(cam);
+            var gui_x = (x - vx) * 2;
+            var gui_y = (y - vy) * 2;
+            var frame_w_gui = sprite_get_width(s_card_template) * card_scale_x * 2;
+            var frame_h_gui = sprite_get_height(s_card_template) * card_scale_y * 2;
+            
+            var sparkle_x = gui_x + (frame_w_gui * 0.85) + random_range(-10, 10);
+            var sparkle_y = gui_y + (frame_h_gui * 0.15) + random_range(-10, 10);
+            scr_spawn_magic_particles(sparkle_x, sparkle_y, 1);
+        }
         break;
         
     case "flipping_out":
