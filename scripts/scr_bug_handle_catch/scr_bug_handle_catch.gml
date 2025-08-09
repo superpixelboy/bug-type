@@ -25,9 +25,9 @@ function scr_bug_handle_catch() {
     }
 }
 
-// Updated scr_create_bug_card function
+// Updated scr_create_bug_card function (now always uses template)
 function scr_create_bug_card() {
-    show_debug_message("Creating bug card..."); // DEBUG
+    show_debug_message("Creating template-based bug card..."); // DEBUG
     
     var card = instance_create_layer(room_width/2, room_height + 100, "Instances", o_bug_card);
     
@@ -37,10 +37,10 @@ function scr_create_bug_card() {
     card.flavor_text = flavor_text;  // This comes from the bug instance
     card.essence_value = essence_value; // This comes from the bug instance
     
-    // IMPORTANT: Set the card sprite based on the bug sprite
-    card.card_sprite = scr_get_bug_card_sprite(sprite_index);
+    // ALWAYS use template now (no more mapping needed!)
+    card.card_sprite = s_card_template;
     
-    show_debug_message("Card created with bug: " + bug_name + " using card sprite: " + sprite_get_name(card.card_sprite)); // DEBUG
+    show_debug_message("Card created with bug: " + bug_name + " using template card"); // DEBUG
     
     // Start the flip animation
     card.card_state = "flipping_in";

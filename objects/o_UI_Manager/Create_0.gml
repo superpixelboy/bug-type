@@ -158,5 +158,8 @@ scr_initialize_bug_data()
 
 //For the Bug Selector object
 global.next_forced_bug = -1;
+display_set_gui_size(960, 540);     // 2× the 480×270 world
+gpu_set_texfilter(false);           // nearest-neighbor for crisp downscales/rotations
+
 
 audio_play_sound(sn_main_theme, 1, true);  // true = loop
