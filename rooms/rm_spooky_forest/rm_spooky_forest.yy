@@ -334,14 +334,17 @@
         {"$GMRSpriteGraphic":"v1","%Name":"graphic_65EC09A0","animationSpeed":1.0,"colour":4294967295,"frozen":false,"headPosition":0.0,"ignore":true,"inheritedItemId":null,"inheritItemSettings":false,"name":"graphic_65EC09A0","resourceType":"GMRSpriteGraphic","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"spriteId":{"name":"s_yaga_hut_idle","path":"sprites/s_yaga_hut_idle/s_yaga_hut_idle.yy",},"x":362.0,"y":142.0,},
         {"$GMRSpriteGraphic":"v1","%Name":"graphic_1CC52F70","animationSpeed":1.0,"colour":4294967295,"frozen":false,"headPosition":0.0,"ignore":false,"inheritedItemId":null,"inheritItemSettings":false,"name":"graphic_1CC52F70","resourceType":"GMRSpriteGraphic","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"spriteId":{"name":"s_house","path":"sprites/s_house/s_house.yy",},"x":609.0,"y":467.0,},
       ],"depth":600,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Decorations","properties":[],"resourceType":"GMRAssetLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
-    {"$GMRTileLayer":"","%Name":"Leaves_1","depth":700,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Leaves_1","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":64,"SerialiseWidth":64,"TileCompressedData":[
-          -1820,-2147483648,3,25,21,29,-56,-2147483648,8,25,21,29,25,21,19,18,28,-56,-2147483648,4,23,18,20,19,
-          -3,18,1,28,-56,-2147483648,2,31,22,-3,18,1,42,-3,38,1,46,-55,-2147483648,1,23,-3,18,1,40,-3,35,1,45,
-          -55,-2147483648,1,31,-3,30,5,48,39,35,43,49,-57,-2147483648,-2,16,5,23,48,47,49,32,-59,-2147483648,4,
-          31,30,30,32,-189,-2147483648,3,8,4,12,-59,-2147483648,5,8,4,2,1,11,-59,-2147483648,7,6,1,1,9,7,4,12,
-          -57,-2147483648,7,14,13,13,15,6,1,11,-61,-2147483648,3,14,13,15,-1374,-2147483648,
-        ],"TileDataFormat":1,},"tilesetId":{"name":"ts_leaves","path":"tilesets/ts_leaves/ts_leaves.yy",},"userdefinedDepth":false,"visible":false,"x":0,"y":0,},
-    {"$GMRTileLayer":"","%Name":"Leaves","depth":800,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Leaves","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":64,"SerialiseWidth":64,"TileCompressedData":[
+    {"$GMRTileLayer":"","%Name":"Leaves","depth":700,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Leaves","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":64,"SerialiseWidth":64,"TileCompressedData":[
+          -1627,-2147483648,-9,0,-50,-2147483648,-14,0,-49,-2147483648,-15,0,-49,-2147483648,-16,0,-48,-2147483648,
+          -12,0,4,6,7,0,0,-48,-2147483648,-11,0,1,17,-4,0,-48,-2147483648,-2,0,3,1,16,15,-3,0,1,8,-7,0,-48,-2147483648,
+          -3,0,6,11,2,4,1,7,2,-7,0,-48,-2147483648,-4,0,-2,1,3,6,10,2,-7,0,-48,-2147483648,-6,0,1,11,-6,0,3,1,
+          0,0,-48,-2147483648,-14,0,2,8,9,-48,-2147483648,-13,0,3,2,1,0,-3,-2147483648,1,11,-44,-2147483648,-16,
+          0,-3,-2147483648,4,7,1,-2147483648,3,-44,-2147483648,-11,0,5,1,16,-2147483648,-2147483648,5,-3,2,-46,
+          -2147483648,8,7,9,9,10,17,1,11,0,-3,-2147483648,4,9,14,2,11,-49,-2147483648,-2,11,3,5,2,2,-5,0,-50,-2147483648,
+          -2,0,1,-2147483648,-3,0,1,2,-6,0,-54,-2147483648,-9,0,1,15,-56,-2147483648,1,0,-6,-2147483648,-2,0,-1309,
+          -2147483648,
+        ],"TileDataFormat":1,},"tilesetId":{"name":"ts_leaves","path":"tilesets/ts_leaves/ts_leaves.yy",},"userdefinedDepth":false,"visible":true,"x":0,"y":0,},
+    {"$GMRTileLayer":"","%Name":"OrangeGrass","depth":800,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"OrangeGrass","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":64,"SerialiseWidth":64,"TileCompressedData":[
           -1254,-2147483648,3,145,138,146,-60,-2147483648,6,145,143,151,144,138,146,-58,-2147483648,8,140,151,
           141,142,151,144,138,146,-56,-2147483648,4,148,142,144,143,-3,151,2,144,146,-53,-2147483648,4,145,138,
           146,140,-6,151,1,139,-53,-2147483648,4,140,151,144,143,-5,151,4,141,150,138,146,-48,-2147483648,4,145,

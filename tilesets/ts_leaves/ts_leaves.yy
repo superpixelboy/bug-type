@@ -11,7 +11,7 @@
     "TileSerialiseData":[],
   },
   "name":"ts_leaves",
-  "out_columns":17,
+  "out_columns":4,
   "out_tilehborder":2,
   "out_tilevborder":2,
   "parent":{
@@ -37,5 +37,5 @@
   "tileWidth":16,
   "tilexoff":0,
   "tileyoff":0,
-  "tile_count":289,
+  "tile_count":18,
 }

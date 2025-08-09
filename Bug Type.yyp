@@ -293,6 +293,7 @@
     {"id":{"name":"s_card_spiced_hot_cocoa_scorpion","path":"sprites/s_card_spiced_hot_cocoa_scorpion/s_card_spiced_hot_cocoa_scorpion.yy",},},
     {"id":{"name":"s_card_sugar_cookie_spider","path":"sprites/s_card_sugar_cookie_spider/s_card_sugar_cookie_spider.yy",},},
     {"id":{"name":"s_card_sugar_stick_bugs","path":"sprites/s_card_sugar_stick_bugs/s_card_sugar_stick_bugs.yy",},},
+    {"id":{"name":"s_card_template","path":"sprites/s_card_template/s_card_template.yy",},},
     {"id":{"name":"s_card_vampire_mosquito","path":"sprites/s_card_vampire_mosquito/s_card_vampire_mosquito.yy",},},
     {"id":{"name":"s_card_wandering_gravestone_toad","path":"sprites/s_card_wandering_gravestone_toad/s_card_wandering_gravestone_toad.yy",},},
     {"id":{"name":"s_card_werewolf_spider","path":"sprites/s_card_werewolf_spider/s_card_werewolf_spider.yy",},},

@@ -11,8 +11,8 @@ target_x = room_width/2;
 target_y = room_height/2;
 start_y = room_height + 100;
 card_rotation = 0;
-card_scale_x = 0.8;
-card_scale_y = 0.8;
+card_scale_x = 1;
+card_scale_y = 1;
 
 // Card data (set by the bug that creates this card)
 bug_name = "Unknown Bug";

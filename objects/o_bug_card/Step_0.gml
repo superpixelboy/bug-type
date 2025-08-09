@@ -48,8 +48,8 @@ switch(card_state) {
             
             // Final values
             y = target_y;
-            card_scale_x = 0.8;  // Final scale 0.8
-            card_scale_y = 0.8;  // Final scale 0.8
+            card_scale_x = 1;  // Final scale 0.8
+            card_scale_y = 1;  // Final scale 0.8
             card_rotation = 0;
             
             // Start bug bounce animation

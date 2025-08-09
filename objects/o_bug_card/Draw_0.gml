@@ -62,7 +62,8 @@ if (card_state == "showing" || (card_state == "flipping_in" && flip_progress > 0
     var sprite_scale = 1.5 * bug_bounce_scale;  // Apply bounce scale to the base scale
     draw_sprite_ext(
         bug_sprite, 0,
-        draw_x - 90, draw_y + 25,  // Positioned as you like it
+     //   draw_x - 90, draw_y + 25,  // Positioned as you like it
+	  draw_x, draw_y,  // Positioned as you like it
         sprite_scale, sprite_scale,
         0, c_white, image_alpha
     );
@@ -72,7 +73,7 @@ if (card_state == "showing" || (card_state == "flipping_in" && flip_progress > 0
     draw_set_valign(fa_bottom);
     draw_set_color(c_gray);
     draw_set_font(fnt_DOS);
-    draw_text(draw_x + (frame_width/2) - 165, draw_y + (frame_height/2) - 80, "Essence: +" + string(essence_value));
+    draw_text(draw_x + (frame_width/2) , draw_y + (frame_height/2) - 80, "Essence: +" + string(essence_value));
     
     // DYNAMIC CONTINUE PROMPT
     if (card_state == "showing") {
@@ -82,7 +83,7 @@ if (card_state == "showing" || (card_state == "flipping_in" && flip_progress > 0
         draw_set_valign(fa_bottom);
         
         // Position it well below the card for visibility
-        draw_text(draw_x + (frame_width/2) - 230, draw_y + (frame_height/2) - 48, "Click to Continue...");
+        draw_text(draw_x + (frame_width/2), draw_y + (frame_height/2) - 48, "Click to Continue...");
         draw_set_alpha(1);
     }
 }
