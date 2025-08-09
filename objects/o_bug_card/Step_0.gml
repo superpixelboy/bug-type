@@ -83,6 +83,14 @@ switch(card_state) {
             card_state = "flipping_out";
             animation_timer = 0;
         }
+		
+		// In o_bug_card Step Event, add this in the "showing" case:
+		if (bug_rarity_tier == 1 && random(100) < 5) { // 5% chance per frame for ultra rare
+		    // Spawn a sparkle near the gem
+		    var sparkle_x = gui_x + (frame_w_gui * 0.85) + random_range(-10, 10);
+		    var sparkle_y = gui_y + (frame_h_gui * 0.15) + random_range(-10, 10);
+		    scr_spawn_magic_particles(sparkle_x, sparkle_y, 1);
+		}
         break;
         
     case "flipping_out":

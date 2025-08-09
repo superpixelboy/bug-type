@@ -50,3 +50,8 @@ high_res_h = original_app_surf_h * high_res_scale;
 // High-res viewport setup
 high_res_viewport = 1;
 use_high_res = true;
+
+// Gem rarity system
+
+gem_float_timer = 0;
+gem_glow_timer = 0;

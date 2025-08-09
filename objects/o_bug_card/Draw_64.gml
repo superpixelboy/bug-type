@@ -19,6 +19,29 @@ var surf_w = max(1, sprite_get_width(s_card_template)  * 2);
 var surf_h = max(1, sprite_get_height(s_card_template) * 2);
 var text_surf = surface_create(surf_w, surf_h);
 
+// In o_bug_card Draw_64 Event, add this AFTER the main card surface is drawn:
+// Draw rarity gem in upper right corner
+if (card_state == "showing" || (card_state == "flipping_in" && flip_progress > 0.5)) {
+    var gem_x = gui_x + (frame_w_gui * 0.85);
+    var gem_y = gui_y + (frame_h_gui * 0.15);
+    
+    gem_float_timer += 0.1;
+    var float_offset = sin(gem_float_timer) * 2;
+    
+    // Glow effect for rare gems
+    if (bug_rarity_tier <= 2) {
+        gem_glow_timer += 0.15;
+        var glow_alpha = 0.3 + (sin(gem_glow_timer) * 0.2);
+        var glow_color = (bug_rarity_tier == 1) ? make_color_rgb(255, 100, 255) : make_color_rgb(255, 100, 100);
+        
+        draw_set_alpha(glow_alpha);
+        draw_sprite_ext(gem_sprite, 0, gem_x, gem_y + float_offset, 1.2, 1.2, 0, glow_color, 1);
+        draw_set_alpha(1);
+    }
+    
+    // Draw main gem
+    draw_sprite_ext(gem_sprite, 0, gem_x, gem_y + float_offset, 1.0, 1.0, 0, c_white, image_alpha);
+}
 if (surface_exists(text_surf)) {
     surface_set_target(text_surf);
     draw_clear_alpha(c_black, 0);

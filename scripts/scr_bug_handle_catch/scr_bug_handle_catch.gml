@@ -24,21 +24,26 @@ function scr_bug_handle_catch() {
         });
     }
 }
-
-// Updated scr_create_bug_card function (now always uses template)
 function scr_create_bug_card() {
     show_debug_message("Creating template-based bug card..."); // DEBUG
     
     var card = instance_create_layer(room_width/2, room_height + 100, "Instances", o_bug_card);
     
-    // Pass bug data to card - USE INSTANCE VARIABLES
-    card.bug_name = bug_name;        // This comes from the bug instance
-    card.bug_sprite = sprite_index;  // This comes from the bug instance - IMPORTANT!
-    card.flavor_text = flavor_text;  // This comes from the bug instance
-    card.essence_value = essence_value; // This comes from the bug instance
+    // Pass bug data to card
+    card.bug_type = bug_type;        
+    card.bug_name = bug_name;        
+    card.bug_sprite = sprite_index;  
+    card.flavor_text = flavor_text;  
+    card.essence_value = essence_value; 
     
-    // ALWAYS use template now (no more mapping needed!)
+    // ALWAYS use template now
     card.card_sprite = s_card_template;
+    
+    // NOW calculate gem rarity (after bug_type is set)
+    card.bug_rarity_tier = calculate_bug_rarity(card.bug_type);
+    card.gem_sprite = get_gem_sprite(card.bug_rarity_tier);
+    card.gem_float_timer = 0;
+    card.gem_glow_timer = 0;
     
     show_debug_message("Card created with bug: " + bug_name + " using template card"); // DEBUG
     
