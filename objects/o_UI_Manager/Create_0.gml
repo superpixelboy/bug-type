@@ -1,8 +1,12 @@
-// Existing code...
+
 global.bugs_caught = 0;
 global.flipped_rocks = ds_list_create();
-global.essence =0;
+global.essence = 0;
 
+// ADD THIS LINE:
+global.showing_card = false;  // Prevents multiple cards from spawning
+
+// Rest of existing code...
 
 // Add this new map for tracking spawned rocks
 if (!variable_global_exists("spawned_rocks")) {

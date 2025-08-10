@@ -56,68 +56,88 @@ switch(card_state) {
         }
         break;
         
-    case "showing":
-        animation_timer++;
+    // Replace the animation section in your Step Event "showing" case:
+
+case "showing":
+    animation_timer++;
+    
+    // Gentle floating animation while showing
+    var float_offset = sin(animation_timer * 0.1) * 2;
+    y = target_y + float_offset;
+    
+    // Start content pop-in animations when card is fully visible
+    if (!content_ready && animation_timer > 5) {  // Shorter delay - was 10
+        content_ready = true;
+        bug_pop_timer = 0;
+        gem_pop_timer = 8;  // Gem pops in after bug - was 5
+    }
+    
+    // SNAPPIER Bug pop-in animation
+    if (content_ready && bug_pop_timer < 20) {  // Faster duration - was 30
+        bug_pop_timer++;
+        var pop_progress = bug_pop_timer / 20;  // Faster - was 30
         
-        // Gentle floating animation while showing
-        var float_offset = sin(animation_timer * 0.1) * 2;
-        y = target_y + float_offset;
-        
-        // Bug bounce animation (first 30 frames)
-        if (bug_bounce_timer < 30) {
-            bug_bounce_timer++;
-            // Create a nice bounce curve
-            var bounce_progress = bug_bounce_timer / 30;
-            var bounce_curve = sin(bounce_progress * pi * 2) * (1 - bounce_progress);
-            bug_bounce_scale = 1.0 + (bounce_curve * 0.3); // Bounce up to 1.3x scale
+        // MORE DRAMATIC bouncy scale: 0 → 1.6 → 1.0 (bigger overshoot)
+        if (pop_progress < 0.5) {  // First half - was 0.6
+            bug_pop_scale = lerp(0, 1.3, pop_progress / 0.5);  // Bigger overshoot - was 1.3
         } else {
-            bug_bounce_scale = 1.0; // Return to normal scale
+            // Snap back faster
+            var snap_progress = (pop_progress - 0.5) / 0.5;
+            bug_pop_scale = lerp(1.3, 1.0, snap_progress * snap_progress);  // Quadratic easing for snap
         }
+    } else if (content_ready) {
+        bug_pop_scale = 1.0;
+    }
+    
+    // SNAPPIER Gem pop-in animation (slightly delayed)
+    if (content_ready && gem_pop_timer < 15) {  // Even faster for gem - was 30
+        gem_pop_timer++;
+        var gem_progress = gem_pop_timer / 15;  // Faster - was 30
         
-        // Subtle pulsing glow effect
-        var pulse = 0.9 + sin(animation_timer * 0.15) * 0.1;
-        
-        // ONLY advance on click - remove auto-advance
-        if (mouse_check_button_pressed(mb_left) || keyboard_check_pressed(vk_space)) {
-            card_state = "flipping_out";
-            animation_timer = 0;
+        // Same dramatic bouncy scale for gem
+        if (gem_progress < 0.5) {
+            gem_pop_scale = lerp(0, 1.3, gem_progress / 0.5);  // Bigger overshoot
+        } else {
+            var snap_progress = (gem_progress - 0.5) / 0.5;
+            gem_pop_scale = lerp(1.3, 1.0, snap_progress * snap_progress);  // Quadratic snap
         }
-		
-        // Sparkle effect for ultra rare gems - FIXED VARIABLE REFERENCE
-        if (bug_rarity_tier == 1 && random(100) < 5) { // 5% chance per frame for ultra rare
-            // Spawn a sparkle near the gem
-            var cam = view_camera[0];
-            var vx = camera_get_view_x(cam);
-            var vy = camera_get_view_y(cam);
-            var gui_x = (x - vx) * 2;
-            var gui_y = (y - vy) * 2;
-            var frame_w_gui = sprite_get_width(s_card_template) * card_scale_x * 2;
-            var frame_h_gui = sprite_get_height(s_card_template) * card_scale_y * 2;
-            
-            var sparkle_x = gui_x + (frame_w_gui * 0.85) + random_range(-10, 10);
-            var sparkle_y = gui_y + (frame_h_gui * 0.15) + random_range(-10, 10);
-            scr_spawn_magic_particles(sparkle_x, sparkle_y, 1);
-        }
-        break;
+    } else if (content_ready) {
+        gem_pop_scale = 1.0;
+    }
+    
+    // Click to continue
+    if (mouse_check_button_pressed(mb_left) || keyboard_check_pressed(vk_space)) {
+        card_state = "flipping_out";
+        animation_timer = 0;
+    }
+    break;
         
-    case "flipping_out":
-        animation_timer++;
-        flip_progress = animation_timer / (total_flip_time * 0.7);  // Faster exit
-        
-        var ease_progress = power(flip_progress, 2);  // Ease in
-        
-        // Move up and fade
-        y = lerp(target_y, target_y - 100, ease_progress);
-        card_scale_x = lerp(0.8, 0.6, ease_progress);  // Scale from 0.8
-        card_scale_y = lerp(0.8, 0.6, ease_progress);  // Scale from 0.8
-        
-        // Fade out
-        image_alpha = lerp(1, 0, ease_progress);
-        
-        if (flip_progress >= 1) {
-            // Return to overworld
-            room_goto(global.return_room);
-            instance_destroy();
-        }
-        break;
+   
+case "flipping_out":
+    animation_timer++;
+    flip_progress = animation_timer / (total_flip_time * 0.7);  // Faster exit
+    
+    var ease_progress = power(flip_progress, 2);  // Ease in
+    
+    // QUICK FADE for content (much faster than card movement)
+    if (animation_timer < 6) {  // Fade content in first 10 frames
+        content_fade_alpha = lerp(1.0, 0.0, animation_timer / 6);
+    } else {
+        content_fade_alpha = 0.0;  // Fully faded after 10 frames
+    }
+    
+    // Move up and fade (card background only)
+    y = lerp(target_y, target_y - 100, ease_progress);
+    card_scale_x = lerp(0.8, 0.6, ease_progress);
+    card_scale_y = lerp(0.8, 0.6, ease_progress);
+    
+    // Fade out card background
+    image_alpha = lerp(1, 0, ease_progress);
+    
+    if (flip_progress >= 1) {
+        // Return to overworld
+        room_goto(global.return_room);
+        instance_destroy();
+    }
+    break;
 }

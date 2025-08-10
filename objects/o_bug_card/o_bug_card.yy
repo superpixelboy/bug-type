@@ -32,10 +32,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"s_card_template",
-    "path":"sprites/s_card_template/s_card_template.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }

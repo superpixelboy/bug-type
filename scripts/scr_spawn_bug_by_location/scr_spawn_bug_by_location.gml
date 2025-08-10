@@ -1,8 +1,9 @@
+// Debug version of scr_spawn_bug_by_location
 function scr_spawn_bug_by_location(spawn_x, spawn_y, location, rock_type) {
     
-    // DEBUG: Check if our data exists
-    show_debug_message("Current location: " + string(location));
-    show_debug_message("Bug data exists: " + string(variable_global_exists("bug_data")));
+    show_debug_message("=== SPAWNING BUG ===");
+    show_debug_message("Location: " + string(location));
+    show_debug_message("Rock type: " + string(rock_type));
     
     if (!variable_global_exists("bug_data")) {
         show_debug_message("ERROR: global.bug_data not initialized!");
@@ -15,11 +16,11 @@ function scr_spawn_bug_by_location(spawn_x, spawn_y, location, rock_type) {
     
     for (var i = 0; i < array_length(bug_names); i++) {
         var bug_key = bug_names[i];
-        var bug_data = variable_struct_get(global.bug_data, bug_key);  // FIXED LINE
+        var bug_data = variable_struct_get(global.bug_data, bug_key);
         
         // Check if this bug can spawn in current location
         if (variable_struct_exists(bug_data.locations, location)) {
-            var rarity = variable_struct_get(bug_data.locations, location);  // ALSO FIXED
+            var rarity = variable_struct_get(bug_data.locations, location);
             
             // Skip bugs marked with "x" (not found here)
             if (rarity != "x") {
@@ -36,28 +37,38 @@ function scr_spawn_bug_by_location(spawn_x, spawn_y, location, rock_type) {
     
     // If no bugs available, return empty rock
     if (array_length(available_bugs) == 0) {
+        show_debug_message("No bugs available for location: " + string(location));
         return instance_create_layer(spawn_x, spawn_y, "Bugs", o_empty_rock);
     }
     
     // Randomly select from weighted array
     var selected_bug = available_bugs[irandom(array_length(available_bugs) - 1)];
+    show_debug_message("Selected bug: " + string(selected_bug));
     
     // Create the bug instance
-	var bug_instance = instance_create_layer(spawn_x, spawn_y, "Bugs", o_bug_parent);
-bug_instance.bug_type = selected_bug;
-
-// Load the bug data directly
-with (bug_instance) {
-    if (variable_struct_exists(global.bug_data, bug_type)) {
-        var data = global.bug_data[$ bug_type];
-        bug_name = data.name;
-        flavor_text = data.flavor_text;
-        sprite_index = data.sprite;
-        bug_hp = data.hp;
-        bug_max_hp = data.hp;
-        current_hp = bug_hp;
-        essence_value = data.essence;
+    var bug_instance = instance_create_layer(spawn_x, spawn_y, "Bugs", o_bug_parent);
+    
+    // CRITICAL: Set bug_type FIRST
+    bug_instance.bug_type = selected_bug;
+    show_debug_message("Set bug_type to: " + string(bug_instance.bug_type));
+    
+    // Load the bug data
+    with (bug_instance) {
+        if (variable_struct_exists(global.bug_data, bug_type)) {
+            var data = global.bug_data[$ bug_type];
+            bug_name = data.name;
+            flavor_text = data.flavor_text;
+            sprite_index = data.sprite;
+            bug_hp = data.hp;
+            bug_max_hp = data.hp;
+            current_hp = bug_hp;
+            essence_value = data.essence;
+            
+            show_debug_message("Loaded bug data for: " + bug_name);
+        } else {
+            show_debug_message("ERROR: Could not find bug data for: " + string(bug_type));
+        }
     }
-}
+    
     return bug_instance;
 }

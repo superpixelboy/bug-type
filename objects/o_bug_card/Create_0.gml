@@ -1,9 +1,23 @@
 // o_bug_card - Updated Create Event (Template-based)
-// At the very top of o_bug_card Create Event
+
+// STRONGER protection against multiple cards
 if (instance_number(o_bug_card) > 1) {
+    show_debug_message("Destroying duplicate card! Total cards: " + string(instance_number(o_bug_card)));
     instance_destroy();
     exit;
 }
+
+// Also check global flag
+if (global.showing_card) {
+    show_debug_message("Card already showing, destroying duplicate!");
+    instance_destroy();
+    exit;
+}
+
+// Set the flag immediately
+global.showing_card = true;
+
+// Rest of your existing Create Event code...
 // Card state and animation
 card_state = "waiting";
 animation_timer = 0;
@@ -25,7 +39,7 @@ bug_name = "Unknown Bug";
 bug_sprite = s_bug_test;
 flavor_text = "Mystery bug";
 essence_value = 1;
-bug_type = "unknown";  // ADD THIS LINE
+bug_type = "unknown";
 
 // ALWAYS use the template card sprite now
 card_sprite = s_card_template;
@@ -35,10 +49,18 @@ drop_shadow_offset = 4;
 card_depth = -1000;
 
 // Bug bounce animation
-bug_bounce_timer = 0;
-bug_bounce_scale = 1.0;
-
+// Add these variables to o_bug_card Create Event:
+bug_pop_timer = 0;
+bug_pop_scale = 0;
+gem_pop_timer = 0;
+gem_pop_scale = 0;
+content_ready = false;  // Flag to know when to start pop animations
 depth = card_depth;
+
+
+
+content_fade_alpha = 1.0;  // Controls fade of bug/gem/text during exit
+
 
 // Card dimensions (using template)
 card_width = sprite_get_width(s_card_template);

@@ -48,6 +48,19 @@ var scale_y_template = (card_scale_y * 2);
 var scale_x_surface = (card_scale_x) * flip_scale;
 var scale_y_surface = (card_scale_y);
 
+// ----------------- DROP SHADOW -----------------
+var shadow_offset_x = 8;  // Pixels to the right
+var shadow_offset_y = 8;  // Pixels down
+var shadow_alpha = 0.4;   // Semi-transparent
+
+draw_sprite_ext(
+    s_card_template, card_frame,
+    cx_gui + shadow_offset_x, cy_gui + shadow_offset_y,  // Offset position
+    scale_x_template, scale_y_template,
+    card_rotation,
+    c_black, shadow_alpha * image_alpha  // Black color, reduced alpha
+);
+
 // ----------------- CARD BACKGROUND -----------------
 draw_sprite_ext(
     s_card_template, card_frame,
@@ -57,106 +70,150 @@ draw_sprite_ext(
     c_white, image_alpha
 );
 
-// ----------------- FRONT CONTENT (only when front is showing) -----------------
-if (show_front_content) {
-    // ---- RARITY GEM ----
-    var gem_x = cx_gui + (frame_w_gui * 0.32) - (frame_w_gui * 0.5); // offset from center basis
-    var gem_y = cy_gui - (frame_h_gui * 0.38) - (frame_h_gui * 0.0); // stays centered vertically
+// ----------------- FRONT CONTENT (only when front is showing AND content is ready) -----------------
+if (show_front_content && content_ready) {
+    
 
-    // Put gem in card space (center-based):
-    gem_x = cx_gui + (frame_w_gui * 0.32) - (frame_w_gui * 0.5);
-    gem_y = cy_gui - (frame_h_gui * 0.38) - 0;
+// ---- RARITY GEM WITH POP ANIMATION AND FADE ----
+if (gem_pop_scale > 0) {  // Only draw if gem has started animating
+    var gem_x = cx_gui + (frame_w_gui * 0.32);  
+    var gem_y = cy_gui - (frame_h_gui * 0.38);  
 
+    // Draw glow effect for rare gems
     if (bug_rarity_tier <= 2) {
         gem_glow_timer += 0.15;
         var glow_alpha = 0.3 + (sin(gem_glow_timer) * 0.2);
         var glow_color = (bug_rarity_tier == 1) ? make_color_rgb(255, 100, 255) : make_color_rgb(255, 100, 100);
 
-        draw_set_alpha(glow_alpha);
-        draw_sprite_ext(gem_sprite, 0, gem_x, gem_y, 2.4, 2.4, 0, glow_color, 1);
+        draw_set_alpha(glow_alpha * content_fade_alpha);  // Apply fade
+        draw_sprite_ext(gem_sprite, 0, gem_x, gem_y, 2.4 * gem_pop_scale, 2.4 * gem_pop_scale, 0, glow_color, 1);
         draw_set_alpha(1);
     }
-    draw_sprite_ext(gem_sprite, 0, gem_x, gem_y, 2.0, 2.0, 0, c_white, image_alpha);
 
-    // ---- Build 2× text surface ----
-    var surf_w = max(1, sprite_get_width(s_card_template)  * 2);
-    var surf_h = max(1, sprite_get_height(s_card_template) * 2);
-    var text_surf = surface_create(surf_w, surf_h);
+    // Draw the actual gem with pop scale AND fade
+    draw_sprite_ext(gem_sprite, 0, gem_x, gem_y, 2.0 * gem_pop_scale, 2.0 * gem_pop_scale, 0, c_white, image_alpha * content_fade_alpha);
+}
 
-    if (surface_exists(text_surf)) {
-        surface_set_target(text_surf);
-        draw_clear_alpha(c_black, 0);
+    // ---- Build 2× text surface (only if bug has popped in) ----
+    if (bug_pop_scale > 0) {
+        var surf_w = max(1, sprite_get_width(s_card_template) * 2);
+        var surf_h = max(1, sprite_get_height(s_card_template) * 2);
+        var text_surf = surface_create(surf_w, surf_h);
 
-        var cx = surf_w * 0.5;
-        var cy = surf_h * 0.5;
+        if (surface_exists(text_surf)) {
+            surface_set_target(text_surf);
+            draw_clear_alpha(c_black, 0);
 
-        draw_set_halign(fa_center);
-        draw_set_valign(fa_middle);
+            var cx = surf_w * 0.5;
+            var cy = surf_h * 0.5;
+            
+            // Shadow offset for all content
+            var content_shadow_x = 3;
+            var content_shadow_y = 3;
 
-        // ---- BUG SPRITE ----
-        var tgt_bug_h_px = (sprite_get_height(s_card_template) * 0.35) * 2;
-        var spr_w = sprite_get_width(bug_sprite);
-        var spr_h = sprite_get_height(bug_sprite);
-        var bug_scale = min(tgt_bug_h_px / spr_w, tgt_bug_h_px / spr_h) * bug_bounce_scale;
-        var bug_y_off = -sprite_get_height(s_card_template) * 0.20 * 2;
-        draw_sprite_ext(bug_sprite, 0, cx, cy + bug_y_off, bug_scale, bug_scale, 0, c_white, image_alpha);
+            draw_set_halign(fa_center);
+            draw_set_valign(fa_middle);
 
-        // ---- NAME ----
-        draw_set_font(fnt_card_title_2x);
-        var cream   = make_color_rgb(245,235,215);
-        var outline = make_color_rgb(45,25,60);
-        var name_y  = sprite_get_height(s_card_template) * 0.08 * 2;
-        var name_w  = (sprite_get_width(s_card_template) - 45) * 2;
-        var name_sep = 14 * 2;
+            // ---- BUG SPRITE WITH POP ANIMATION AND SHADOW ----
+            var tgt_bug_h_px = (sprite_get_height(s_card_template) * 0.35) * 2;
+            var spr_w = sprite_get_width(bug_sprite);
+            var spr_h = sprite_get_height(bug_sprite);
+            var bug_scale = min(tgt_bug_h_px / spr_w, tgt_bug_h_px / spr_h) * bug_pop_scale;  // Use bug_pop_scale instead of bug_bounce_scale
+            var bug_y_off = -sprite_get_height(s_card_template) * 0.20 * 2;
+            
 
-        draw_set_color(outline);
-        draw_text_ext(cx + 2, cy + name_y + 2, bug_name, name_sep, name_w);
-        draw_text_ext(cx - 2, cy + name_y - 2, bug_name, name_sep, name_w);
-        draw_text_ext(cx + 2, cy + name_y - 2, bug_name, name_sep, name_w);
-        draw_text_ext(cx - 2, cy + name_y + 2, bug_name, name_sep, name_w);
+		// Draw bug shadow
+		draw_sprite_ext(bug_sprite, 0, cx + content_shadow_x, cy + bug_y_off + content_shadow_y, 
+		               bug_scale, bug_scale, 0, c_black, 0.6 * image_alpha * content_fade_alpha);
+		// Draw bug
+		draw_sprite_ext(bug_sprite, 0, cx, cy + bug_y_off, 
+		               bug_scale, bug_scale, 0, c_white, image_alpha * content_fade_alpha);
 
-        draw_set_color(cream);
-        draw_text_ext(cx, cy + name_y, bug_name, name_sep, name_w);
 
-        // ---- FLAVOR ----
-        draw_set_font(fnt_flavor_text_2x);
-        var light_gold = make_color_rgb(255,223,128);
-        var flavor_y = sprite_get_height(s_card_template) * 0.28 * 2;
-        var txt_w    = (sprite_get_width(s_card_template) - 60) * 2;
-        var flavor_sep = 12 * 2;
+            // ---- BUG NAME WITH OUTLINE AND SEMI-TRANSPARENT SHADOW ----
+            draw_set_font(fnt_card_title_2x);
+            var cream = make_color_rgb(245,235,215);
+            var dark_purple = make_color_rgb(45, 25, 60);  // Dark purple outline
+            var name_y = sprite_get_height(s_card_template) * 0.08 * 2;
+            var name_w = (sprite_get_width(s_card_template) - 45) * 2;
+            var name_sep = 14 * 2;
+            
+            var shadow_offset = 4;
 
-        draw_set_color(c_black);
-        draw_text_ext(cx + 2, cy + flavor_y + 2, flavor_text, flavor_sep, txt_w);
-        draw_text_ext(cx - 2, cy + flavor_y - 2, flavor_text, flavor_sep, txt_w);
+            // Draw SEMI-TRANSPARENT name shadow first (behind everything)
+            draw_set_alpha(0.5 * content_fade_alpha);  // Make shadow 50% transparent
+            draw_set_color(c_black);
+            draw_text_ext(cx + shadow_offset, cy + name_y + shadow_offset, bug_name, name_sep, name_w);
+            draw_set_alpha(1);  // Reset alpha to full opacity
+            
+            // Draw dark purple outline (8-direction)
+            draw_set_color(dark_purple);
+            draw_text_ext(cx + 2, cy + name_y + 2, bug_name, name_sep, name_w);
+            draw_text_ext(cx - 2, cy + name_y - 2, bug_name, name_sep, name_w);
+            draw_text_ext(cx + 2, cy + name_y - 2, bug_name, name_sep, name_w);
+            draw_text_ext(cx - 2, cy + name_y + 2, bug_name, name_sep, name_w);
+            draw_text_ext(cx + 2, cy + name_y, bug_name, name_sep, name_w);
+            draw_text_ext(cx - 2, cy + name_y, bug_name, name_sep, name_w);
+            draw_text_ext(cx, cy + name_y + 2, bug_name, name_sep, name_w);
+            draw_text_ext(cx, cy + name_y - 2, bug_name, name_sep, name_w);
+            
+            // Draw cream text on top
+            draw_set_color(cream);
+            draw_text_ext(cx, cy + name_y, bug_name, name_sep, name_w);
 
-        draw_set_color(light_gold);
-        draw_text_ext(cx, cy + flavor_y, flavor_text, flavor_sep, txt_w);
+            // ---- FLAVOR TEXT WITH OUTLINE ONLY ----
+            draw_set_font(fnt_flavor_text_2x);
+            var light_gold = make_color_rgb(255,223,128);
+            var flavor_y = sprite_get_height(s_card_template) * 0.28 * 2;
+            var txt_w = (sprite_get_width(s_card_template) - 60) * 2;
+            var flavor_sep = 12 * 2;
 
-        // ---- ESSENCE ----
-        draw_set_font(fnt_flavor_text);
-        var essence_y = sprite_get_height(s_card_template) * 0.40 * 2;
-        var essence_text = "Essence: +" + string(essence_value);
+            // Draw black outline (8-direction)
+            draw_set_color(c_black);
+            draw_text_ext(cx + 2, cy + flavor_y + 2, flavor_text, flavor_sep, txt_w);
+            draw_text_ext(cx - 2, cy + flavor_y - 2, flavor_text, flavor_sep, txt_w);
+            draw_text_ext(cx + 2, cy + flavor_y - 2, flavor_text, flavor_sep, txt_w);
+            draw_text_ext(cx - 2, cy + flavor_y + 2, flavor_text, flavor_sep, txt_w);
+            draw_text_ext(cx + 2, cy + flavor_y, flavor_text, flavor_sep, txt_w);
+            draw_text_ext(cx - 2, cy + flavor_y, flavor_text, flavor_sep, txt_w);
+            draw_text_ext(cx, cy + flavor_y + 2, flavor_text, flavor_sep, txt_w);
+            draw_text_ext(cx, cy + flavor_y - 2, flavor_text, flavor_sep, txt_w);
+            
+            // Draw gold text on top
+            draw_set_color(light_gold);
+            draw_text_ext(cx, cy + flavor_y, flavor_text, flavor_sep, txt_w);
 
-        draw_set_color(c_black);
-        draw_text(cx + 2, cy + essence_y + 2, essence_text);
-        draw_text(cx - 2, cy + essence_y - 2, essence_text);
-        draw_text(cx + 2, cy + essence_y - 2, essence_text);
-        draw_text(cx - 2, cy + essence_y + 2, essence_text);
+            // ---- ESSENCE TEXT WITH OUTLINE ONLY ----
+            draw_set_font(fnt_flavor_text);
+            var essence_y = sprite_get_height(s_card_template) * 0.40 * 2;
+            var essence_text = "Essence: +" + string(essence_value);
 
-        draw_set_color(make_color_rgb(255,215,0));
-        draw_text(cx, cy + essence_y, essence_text);
+            // Draw black outline (8-direction)
+            draw_set_color(c_black);
+            draw_text(cx + 1, cy + essence_y + 1, essence_text);
+            draw_text(cx - 1, cy + essence_y - 1, essence_text);
+            draw_text(cx + 1, cy + essence_y - 1, essence_text);
+            draw_text(cx - 1, cy + essence_y + 1, essence_text);
+            draw_text(cx + 1, cy + essence_y, essence_text);
+            draw_text(cx - 1, cy + essence_y, essence_text);
+            draw_text(cx, cy + essence_y + 1, essence_text);
+            draw_text(cx, cy + essence_y - 1, essence_text);
+            
+            // Draw gold text on top
+            draw_set_color(make_color_rgb(255,215,0));
+            draw_text(cx, cy + essence_y, essence_text);
 
-        surface_reset_target();
+            surface_reset_target();
 
-        // ---- Draw surface ONCE (after creation) ----
-        draw_surface_ext(
-            text_surf,
-            tl_x, tl_y,
-            scale_x_surface, scale_y_surface,
-            card_rotation,
-            c_white, image_alpha
-        );
-
-        surface_free(text_surf);
+            // Draw the surface
+           draw_surface_ext(
+    text_surf,
+    tl_x, tl_y,
+    scale_x_surface, scale_y_surface,
+    card_rotation,
+    c_white, image_alpha * content_fade_alpha  // Apply fade to entire text surface
+);
+            surface_free(text_surf);
+        }
     }
 }
