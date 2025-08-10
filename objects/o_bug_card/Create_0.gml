@@ -59,6 +59,14 @@ depth = card_depth;
 
 
 
+// Catch Counters
+catch_count = 1;           // How many times this bug has been caught
+bonus_essence = 0;         // Bonus essence from milestones
+milestone_text = "";       // Text to show if milestone reached
+show_coin = false;         // Whether to show the coin
+coin_pop_scale = 0;        // Animation scale for coin
+coin_pop_timer = 0;        // Animation timer for coin
+
 content_fade_alpha = 1.0;  // Controls fade of bug/gem/text during exit
 
 

@@ -26,7 +26,7 @@
   "origin":4,
   "parent":{
     "name":"Gems",
-    "path":"folders/Sprites/Gems.yy",
+    "path":"folders/Sprites/Cards/Gems.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

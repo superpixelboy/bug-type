@@ -72,7 +72,87 @@ draw_sprite_ext(
 
 // ----------------- FRONT CONTENT (only when front is showing AND content is ready) -----------------
 if (show_front_content && content_ready) {
+    // ---- CATCH COUNT COIN (in upper left corner) ----
+if (show_coin && coin_pop_scale > 0) {
+    var coin_x = cx_gui - (frame_w_gui * 0.32);  // Upper left corner
+    var coin_y = cy_gui - (frame_h_gui * 0.38);
     
+    // Draw the coin sprite (you'll create s_coin_bronze, s_coin_silver, s_coin_gold)
+    var coin_sprite = s_coin_bronze; // Default
+    
+    // Choose coin color based on milestones
+    if (catch_count >= 20) coin_sprite = s_coin_gold;
+    else if (catch_count >= 10) coin_sprite = s_coin_silver;
+    else if (catch_count >= 5) coin_sprite = s_coin_bronze;
+    
+    // Draw coin with pop animation
+    draw_sprite_ext(coin_sprite, 0, coin_x, coin_y, 
+                   2.0 * coin_pop_scale, 2.0 * coin_pop_scale, 0, c_white, image_alpha * content_fade_alpha);
+    
+    // Draw count number on top of coin
+    draw_set_font(fnt_card_title_2x);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    
+    // Black outline for number
+    draw_set_color(c_black);
+    for (var dx = -2; dx <= 2; dx += 2) {
+        for (var dy = -2; dy <= 2; dy += 2) {
+            if (dx != 0 || dy != 0) {
+                draw_text(coin_x + dx, coin_y + dy, string(catch_count));
+            }
+        }
+    }
+    
+    // White number
+    draw_set_color(c_white);
+    draw_text(coin_x, coin_y, string(catch_count));
+}
+
+// ---- MILESTONE BONUS TEXT (if applicable) ----
+if (milestone_text != "" && content_ready) {
+    var milestone_y = cy_gui + (frame_h_gui * 0.45); // Below essence text
+    
+    draw_set_font(fnt_flavor_text_2x);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    
+    // Glowing effect for milestone text
+    var glow_alpha = 0.8 + sin(animation_timer * 0.2) * 0.2;
+    
+    // Gold glow
+    draw_set_color(make_color_rgb(255, 215, 0));
+    draw_set_alpha(glow_alpha * content_fade_alpha);
+    draw_text(cx, milestone_y - 2, milestone_text);
+    draw_text(cx, milestone_y + 2, milestone_text);
+    draw_text(cx - 2, milestone_y, milestone_text);
+    draw_text(cx + 2, milestone_y, milestone_text);
+    
+    // Main text
+    draw_set_color(c_yellow);
+    draw_set_alpha(content_fade_alpha);
+    draw_text(cx, milestone_y, milestone_text);
+    
+    draw_set_alpha(1);
+}
+
+// ---- BONUS ESSENCE TEXT (if applicable) ----
+if (bonus_essence > 0 && content_ready) {
+    var bonus_y = cy_gui + (frame_h_gui * 0.52); // Below milestone text
+    var bonus_text = "Bonus: +" + string(bonus_essence) + " Essence!";
+    
+    draw_set_font(fnt_flavor_text);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    
+    // Green for bonus essence
+    draw_set_color(c_black);
+    draw_text(cx + 1, bonus_y + 1, bonus_text);
+    draw_text(cx - 1, bonus_y - 1, bonus_text);
+    
+    draw_set_color(c_lime);
+    draw_text(cx, bonus_y, bonus_text);
+}
 
 // ---- RARITY GEM WITH POP ANIMATION AND FADE ----
 if (gem_pop_scale > 0) {  // Only draw if gem has started animating

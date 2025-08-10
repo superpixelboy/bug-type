@@ -61,48 +61,63 @@ switch(card_state) {
 case "showing":
     animation_timer++;
     
-    // Gentle floating animation while showing
+    // Gentle floating animation
     var float_offset = sin(animation_timer * 0.1) * 2;
     y = target_y + float_offset;
     
-    // Start content pop-in animations when card is fully visible
-    if (!content_ready && animation_timer > 5) {  // Shorter delay - was 10
+    // Start content pop-in animations
+    if (!content_ready && animation_timer > 5) {
         content_ready = true;
         bug_pop_timer = 0;
-        gem_pop_timer = 8;  // Gem pops in after bug - was 5
+        gem_pop_timer = 8;
+        
+        // NEW: Start coin animation if count > 1
+        if (catch_count > 1) {
+            show_coin = true;
+            coin_pop_timer = 15; // Delay coin after gem
+        }
     }
     
-    // SNAPPIER Bug pop-in animation
-    if (content_ready && bug_pop_timer < 20) {  // Faster duration - was 30
+    // Bug pop-in animation (existing code...)
+    if (content_ready && bug_pop_timer < 20) {
         bug_pop_timer++;
-        var pop_progress = bug_pop_timer / 20;  // Faster - was 30
-        
-        // MORE DRAMATIC bouncy scale: 0 → 1.6 → 1.0 (bigger overshoot)
-        if (pop_progress < 0.5) {  // First half - was 0.6
-            bug_pop_scale = lerp(0, 1.3, pop_progress / 0.5);  // Bigger overshoot - was 1.3
+        var pop_progress = bug_pop_timer / 20;
+        if (pop_progress < 0.5) {
+            bug_pop_scale = lerp(0, 1.3, pop_progress / 0.5);
         } else {
-            // Snap back faster
             var snap_progress = (pop_progress - 0.5) / 0.5;
-            bug_pop_scale = lerp(1.3, 1.0, snap_progress * snap_progress);  // Quadratic easing for snap
+            bug_pop_scale = lerp(1.3, 1.0, snap_progress * snap_progress);
         }
     } else if (content_ready) {
         bug_pop_scale = 1.0;
     }
     
-    // SNAPPIER Gem pop-in animation (slightly delayed)
-    if (content_ready && gem_pop_timer < 15) {  // Even faster for gem - was 30
+    // Gem pop-in animation (existing code...)
+    if (content_ready && gem_pop_timer < 15) {
         gem_pop_timer++;
-        var gem_progress = gem_pop_timer / 15;  // Faster - was 30
-        
-        // Same dramatic bouncy scale for gem
+        var gem_progress = gem_pop_timer / 15;
         if (gem_progress < 0.5) {
-            gem_pop_scale = lerp(0, 1.3, gem_progress / 0.5);  // Bigger overshoot
+            gem_pop_scale = lerp(0, 1.3, gem_progress / 0.5);
         } else {
             var snap_progress = (gem_progress - 0.5) / 0.5;
-            gem_pop_scale = lerp(1.3, 1.0, snap_progress * snap_progress);  // Quadratic snap
+            gem_pop_scale = lerp(1.3, 1.0, snap_progress * snap_progress);
         }
     } else if (content_ready) {
         gem_pop_scale = 1.0;
+    }
+    
+    // NEW: Coin pop-in animation
+    if (show_coin && coin_pop_timer < 15) {
+        coin_pop_timer++;
+        var coin_progress = coin_pop_timer / 15;
+        if (coin_progress < 0.5) {
+            coin_pop_scale = lerp(0, 1.4, coin_progress / 0.5); // Even bouncier!
+        } else {
+            var snap_progress = (coin_progress - 0.5) / 0.5;
+            coin_pop_scale = lerp(1.4, 1.0, snap_progress * snap_progress);
+        }
+    } else if (show_coin) {
+        coin_pop_scale = 1.0;
     }
     
     // Click to continue
