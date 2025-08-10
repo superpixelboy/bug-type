@@ -1,16 +1,15 @@
 // ===========================================
 // o_bug_parent - Left Mouse Button Pressed Event
 // ===========================================
-
+show_debug_message("=== MOUSE CLICK DEBUG ===");
+show_debug_message("Current state: " + string(state));
+show_debug_message("global.showing_card: " + string(global.showing_card));
+show_debug_message("Existing card count: " + string(instance_number(o_bug_card)));
 
 if (state == "caught") {
-    // Any click anywhere returns to overworld
     room_goto(global.return_room);
 } else {
-    // Normal bug clicking behavior
-    scr_bug_handle_click();
+    scr_bug_handle_click();  // Only call click handler
+    // Remove the second scr_bug_handle_catch() call completely
 }
 
-if (state == "ready_to_catch") {
-    scr_bug_handle_catch();
-}

@@ -1,6 +1,6 @@
 // ===========================================
 // NEW: Bug data system
-bug_species = "unknown";
+bug_type_name = "unknown";  // Use a different variable name
 bug_name = "Unknown Bug";
 flavor_text = "";
 

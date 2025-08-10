@@ -1,4 +1,4 @@
-/// o_bug_card Draw Event
+/// o_bug_card Draw GUI Event - FIXED VERSION
 
 // 1) Early exits
 if (card_state == "hidden" || card_state == "waiting") exit;
@@ -72,157 +72,120 @@ draw_sprite_ext(
 
 // ----------------- FRONT CONTENT (only when front is showing AND content is ready) -----------------
 if (show_front_content && content_ready) {
+
     // ---- CATCH COUNT COIN (in upper left corner) ----
-if (show_coin && coin_pop_scale > 0) {
-    var coin_x = cx_gui - (frame_w_gui * 0.32);  // Upper left corner
-    var coin_y = cy_gui - (frame_h_gui * 0.38);
-    
-    // Draw the coin sprite (you'll create s_coin_bronze, s_coin_silver, s_coin_gold)
-    var coin_sprite = s_coin_bronze; // Default
-    
-    // Choose coin color based on milestones
-    if (catch_count >= 20) coin_sprite = s_coin_gold;
-    else if (catch_count >= 10) coin_sprite = s_coin_silver;
-    else if (catch_count >= 5) coin_sprite = s_coin_bronze;
-    
-    // Draw coin with pop animation
-    draw_sprite_ext(coin_sprite, 0, coin_x, coin_y, 
-                   2.0 * coin_pop_scale, 2.0 * coin_pop_scale, 0, c_white, image_alpha * content_fade_alpha);
-    
-    // Draw count number on top of coin
-    draw_set_font(fnt_card_title_2x);
-    draw_set_halign(fa_center);
-    draw_set_valign(fa_middle);
-    
-    // Black outline for number
-    draw_set_color(c_black);
-    for (var dx = -2; dx <= 2; dx += 2) {
-        for (var dy = -2; dy <= 2; dy += 2) {
-            if (dx != 0 || dy != 0) {
-                draw_text(coin_x + dx, coin_y + dy, string(catch_count));
+    if (show_coin && content_ready) {
+        var coin_x = cx_gui - (frame_w_gui * 0.32);  // Upper left corner
+        var coin_y = cy_gui - (frame_h_gui * 0.38);
+        
+        // Handle coin animation
+        if (coin_pop_timer < 15) {
+            coin_pop_timer++;
+            var coin_progress = coin_pop_timer / 15;
+            if (coin_progress < 0.5) {
+                coin_pop_scale = lerp(0, 1.4, coin_progress / 0.5);
+            } else {
+                var snap_progress = (coin_progress - 0.5) / 0.5;
+                coin_pop_scale = lerp(1.4, 1.0, snap_progress * snap_progress);
             }
-        }
-    }
-    
-    // White number
-    draw_set_color(c_white);
-    draw_text(coin_x, coin_y, string(catch_count));
-}
-
-// ---- MILESTONE BONUS TEXT (if applicable) ----
-if (milestone_text != "" && content_ready) {
-    var milestone_y = cy_gui + (frame_h_gui * 0.45); // Below essence text
-    
-    draw_set_font(fnt_flavor_text_2x);
-    draw_set_halign(fa_center);
-    draw_set_valign(fa_middle);
-    
-    // Glowing effect for milestone text
-    var glow_alpha = 0.8 + sin(animation_timer * 0.2) * 0.2;
-    
-    // Gold glow
-    draw_set_color(make_color_rgb(255, 215, 0));
-    draw_set_alpha(glow_alpha * content_fade_alpha);
-    draw_text(cx, milestone_y - 2, milestone_text);
-    draw_text(cx, milestone_y + 2, milestone_text);
-    draw_text(cx - 2, milestone_y, milestone_text);
-    draw_text(cx + 2, milestone_y, milestone_text);
-    
-    // Main text
-    draw_set_color(c_yellow);
-    draw_set_alpha(content_fade_alpha);
-    draw_text(cx, milestone_y, milestone_text);
-    
-    draw_set_alpha(1);
-}
-
-// ---- CATCH COUNT COIN (in upper left corner) ----
-if (show_coin && content_ready) {  // Changed: removed coin_pop_scale > 0 check
-    var coin_x = cx_gui - (frame_w_gui * 0.32);  // Upper left corner
-    var coin_y = cy_gui - (frame_h_gui * 0.38);
-    
-    // FIXED: Start coin animation immediately when content is ready
-    if (coin_pop_timer < 15) {
-        coin_pop_timer++;
-        var coin_progress = coin_pop_timer / 15;
-        if (coin_progress < 0.5) {
-            coin_pop_scale = lerp(0, 1.4, coin_progress / 0.5);
         } else {
-            var snap_progress = (coin_progress - 0.5) / 0.5;
-            coin_pop_scale = lerp(1.4, 1.0, snap_progress * snap_progress);
+            coin_pop_scale = 1.0;
         }
-    } else {
-        coin_pop_scale = 1.0;
-    }
-    
-    // Choose coin color based on catch count
-    var coin_sprite = s_coin_bronze; // Default
-    if (catch_count >= 20) coin_sprite = s_coin_gold;
-    else if (catch_count >= 10) coin_sprite = s_coin_silver;
-    else coin_sprite = s_coin_bronze;
-    
-    // Draw coin with pop animation
-    draw_sprite_ext(coin_sprite, 0, coin_x, coin_y, 
-                   2.0 * coin_pop_scale, 2.0 * coin_pop_scale, 0, c_white, image_alpha * content_fade_alpha);
-    
-    // Draw count number on top of coin
-    draw_set_font(fnt_card_title_2x);
-    draw_set_halign(fa_center);
-    draw_set_valign(fa_middle);
-    
-    // Black outline for number
-    draw_set_color(c_black);
-    for (var dx = -2; dx <= 2; dx += 2) {
-        for (var dy = -2; dy <= 2; dy += 2) {
-            if (dx != 0 || dy != 0) {
-                draw_text(coin_x + dx, coin_y + dy, string(catch_count));
+        
+        // Choose coin color based on catch count
+        var coin_sprite = s_coin_bronze; // Default
+        if (catch_count >= 20) coin_sprite = s_coin_gold;
+        else if (catch_count >= 10) coin_sprite = s_coin_silver;
+        else coin_sprite = s_coin_bronze;
+        
+        // Draw coin with pop animation
+        draw_sprite_ext(coin_sprite, 0, coin_x, coin_y, 
+                       2.0 * coin_pop_scale, 2.0 * coin_pop_scale, 0, c_white, image_alpha * content_fade_alpha);
+        
+        // Draw count number on top of coin
+        draw_set_font(fnt_card_title_2x);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        
+        // Black outline for number
+        draw_set_color(c_black);
+        for (var dx = -2; dx <= 2; dx += 2) {
+            for (var dy = -2; dy <= 2; dy += 2) {
+                if (dx != 0 || dy != 0) {
+                    draw_text(coin_x + dx, coin_y + dy, string(catch_count));
+                }
             }
         }
+        
+        // White number
+        draw_set_color(c_white);
+        draw_text(coin_x, coin_y, string(catch_count));
     }
-    
-    // White number
-    draw_set_color(c_white);
-    draw_text(coin_x, coin_y, string(catch_count));
-    
-    show_debug_message("Drawing coin at " + string(coin_x) + "," + string(coin_y) + " with count: " + string(catch_count));
-}
-// ---- BONUS ESSENCE TEXT (if applicable) ----
-if (bonus_essence > 0 && content_ready) {
-    var bonus_y = cy_gui + (frame_h_gui * 0.52); // Below milestone text
-    var bonus_text = "Bonus: +" + string(bonus_essence) + " Essence!";
-    
-    draw_set_font(fnt_flavor_text);
-    draw_set_halign(fa_center);
-    draw_set_valign(fa_middle);
-    
-    // Green for bonus essence
-    draw_set_color(c_black);
-    draw_text(cx + 1, bonus_y + 1, bonus_text);
-    draw_text(cx - 1, bonus_y - 1, bonus_text);
-    
-    draw_set_color(c_lime);
-    draw_text(cx, bonus_y, bonus_text);
-}
 
-// ---- RARITY GEM WITH POP ANIMATION AND FADE ----
-if (gem_pop_scale > 0) {  // Only draw if gem has started animating
-    var gem_x = cx_gui + (frame_w_gui * 0.32);  
-    var gem_y = cy_gui - (frame_h_gui * 0.38);  
-
-    // Draw glow effect for rare gems
-    if (bug_rarity_tier <= 2) {
-        gem_glow_timer += 0.15;
-        var glow_alpha = 0.3 + (sin(gem_glow_timer) * 0.2);
-        var glow_color = (bug_rarity_tier == 1) ? make_color_rgb(255, 100, 255) : make_color_rgb(255, 100, 100);
-
-        draw_set_alpha(glow_alpha * content_fade_alpha);  // Apply fade
-        draw_sprite_ext(gem_sprite, 0, gem_x, gem_y, 2.4 * gem_pop_scale, 2.4 * gem_pop_scale, 0, glow_color, 1);
+    // ---- MILESTONE BONUS TEXT (if applicable) ----
+    if (milestone_text != "" && content_ready) {
+        var milestone_y = cy_gui + (frame_h_gui * 0.45); // Below essence text
+        
+        draw_set_font(fnt_flavor_text_2x);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        
+        // Glowing effect for milestone text
+        var glow_alpha = 0.8 + sin(animation_timer * 0.2) * 0.2;
+        
+        // Gold glow
+        draw_set_color(make_color_rgb(255, 215, 0));
+        draw_set_alpha(glow_alpha * content_fade_alpha);
+        draw_text(cx_gui, milestone_y - 2, milestone_text);
+        draw_text(cx_gui, milestone_y + 2, milestone_text);
+        draw_text(cx_gui - 2, milestone_y, milestone_text);
+        draw_text(cx_gui + 2, milestone_y, milestone_text);
+        
+        // Main text
+        draw_set_color(c_yellow);
+        draw_set_alpha(content_fade_alpha);
+        draw_text(cx_gui, milestone_y, milestone_text);
+        
         draw_set_alpha(1);
     }
 
-    // Draw the actual gem with pop scale AND fade
-    draw_sprite_ext(gem_sprite, 0, gem_x, gem_y, 2.0 * gem_pop_scale, 2.0 * gem_pop_scale, 0, c_white, image_alpha * content_fade_alpha);
-}
+    // ---- BONUS ESSENCE TEXT (if applicable) ----
+    if (bonus_essence > 0 && content_ready) {
+        var bonus_y = cy_gui + (frame_h_gui * 0.52); // Below milestone text
+        var bonus_text = "Bonus: +" + string(bonus_essence) + " Essence!";
+        
+        draw_set_font(fnt_flavor_text);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        
+        // Green for bonus essence
+        draw_set_color(c_black);
+        draw_text(cx_gui + 1, bonus_y + 1, bonus_text);
+        draw_text(cx_gui - 1, bonus_y - 1, bonus_text);
+        
+        draw_set_color(c_lime);
+        draw_text(cx_gui, bonus_y, bonus_text);
+    }
+
+    // ---- RARITY GEM WITH POP ANIMATION AND FADE ----
+    if (gem_pop_scale > 0) {  // Only draw if gem has started animating
+        var gem_x = cx_gui + (frame_w_gui * 0.32);  
+        var gem_y = cy_gui - (frame_h_gui * 0.38);  
+
+        // Draw glow effect for rare gems
+        if (bug_rarity_tier <= 2) {
+            gem_glow_timer += 0.15;
+            var glow_alpha = 0.3 + (sin(gem_glow_timer) * 0.2);
+            var glow_color = (bug_rarity_tier == 1) ? make_color_rgb(255, 100, 255) : make_color_rgb(255, 100, 100);
+
+            draw_set_alpha(glow_alpha * content_fade_alpha);  // Apply fade
+            draw_sprite_ext(gem_sprite, 0, gem_x, gem_y, 2.4 * gem_pop_scale, 2.4 * gem_pop_scale, 0, glow_color, 1);
+            draw_set_alpha(1);
+        }
+
+        // Draw the actual gem with pop scale AND fade
+        draw_sprite_ext(gem_sprite, 0, gem_x, gem_y, 2.0 * gem_pop_scale, 2.0 * gem_pop_scale, 0, c_white, image_alpha * content_fade_alpha);
+    }
 
     // ---- Build 2× text surface (only if bug has popped in) ----
     if (bug_pop_scale > 0) {
@@ -248,17 +211,15 @@ if (gem_pop_scale > 0) {  // Only draw if gem has started animating
             var tgt_bug_h_px = (sprite_get_height(s_card_template) * 0.35) * 2;
             var spr_w = sprite_get_width(bug_sprite);
             var spr_h = sprite_get_height(bug_sprite);
-            var bug_scale = min(tgt_bug_h_px / spr_w, tgt_bug_h_px / spr_h) * bug_pop_scale;  // Use bug_pop_scale instead of bug_bounce_scale
+            var bug_scale = min(tgt_bug_h_px / spr_w, tgt_bug_h_px / spr_h) * bug_pop_scale;
             var bug_y_off = -sprite_get_height(s_card_template) * 0.20 * 2;
             
-
-		// Draw bug shadow
-		draw_sprite_ext(bug_sprite, 0, cx + content_shadow_x, cy + bug_y_off + content_shadow_y, 
-		               bug_scale, bug_scale, 0, c_black, 0.6 * image_alpha * content_fade_alpha);
-		// Draw bug
-		draw_sprite_ext(bug_sprite, 0, cx, cy + bug_y_off, 
-		               bug_scale, bug_scale, 0, c_white, image_alpha * content_fade_alpha);
-
+            // Draw bug shadow
+            draw_sprite_ext(bug_sprite, 0, cx + content_shadow_x, cy + bug_y_off + content_shadow_y, 
+                           bug_scale, bug_scale, 0, c_black, 0.6 * image_alpha * content_fade_alpha);
+            // Draw bug
+            draw_sprite_ext(bug_sprite, 0, cx, cy + bug_y_off, 
+                           bug_scale, bug_scale, 0, c_white, image_alpha * content_fade_alpha);
 
             // ---- BUG NAME WITH OUTLINE AND SEMI-TRANSPARENT SHADOW ----
             draw_set_font(fnt_card_title_2x);
@@ -336,13 +297,13 @@ if (gem_pop_scale > 0) {  // Only draw if gem has started animating
             surface_reset_target();
 
             // Draw the surface
-           draw_surface_ext(
-    text_surf,
-    tl_x, tl_y,
-    scale_x_surface, scale_y_surface,
-    card_rotation,
-    c_white, image_alpha * content_fade_alpha  // Apply fade to entire text surface
-);
+            draw_surface_ext(
+                text_surf,
+                tl_x, tl_y,
+                scale_x_surface, scale_y_surface,
+                card_rotation,
+                c_white, image_alpha * content_fade_alpha  // Apply fade to entire text surface
+            );
             surface_free(text_surf);
         }
     }

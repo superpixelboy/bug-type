@@ -1,5 +1,7 @@
 // o_bug_card - Updated Create Event (Template-based)
-
+show_debug_message("=== CARD CREATE ATTEMPT ===");
+show_debug_message("Total cards before this: " + string(instance_number(o_bug_card) - 1));
+show_debug_message("global.showing_card was: " + string(global.showing_card));
 // STRONGER protection against multiple cards
 if (instance_number(o_bug_card) > 1) {
     show_debug_message("Destroying duplicate card! Total cards: " + string(instance_number(o_bug_card)));
@@ -39,7 +41,7 @@ bug_name = "Unknown Bug";
 bug_sprite = s_bug_test;
 flavor_text = "Mystery bug";
 essence_value = 1;
-bug_species = "unknown";
+bug_type_id = "unknown";
 
 // ALWAYS use the template card sprite now
 card_sprite = s_card_template;

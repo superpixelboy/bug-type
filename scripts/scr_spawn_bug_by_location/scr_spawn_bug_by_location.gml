@@ -50,6 +50,7 @@ function scr_spawn_bug_by_location(spawn_x, spawn_y, location, rock_type) {
     
     // CRITICAL: Set bug_species FIRST
     bug_instance.bug_species = selected_bug;
+	bug_instance.bug_type_name = selected_bug;  // Add this line
     show_debug_message("Set bug_species to: " + string(bug_instance.bug_species));
     
     // Load the bug data

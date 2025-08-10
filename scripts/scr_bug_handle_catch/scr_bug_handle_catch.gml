@@ -19,8 +19,11 @@ function scr_bug_handle_catch() {
     if (state == "ready_to_catch") {
         state = "capturing";
         
-        show_debug_message("=== BUG CATCH DEBUG ===");
-        show_debug_message("bug_species: " + string(bug_species));
+        show_debug_message("=== DEBUG BUG VARIABLES ===");
+show_debug_message("bug_type_name exists: " + string(variable_instance_exists(id, "bug_type_name")));
+show_debug_message("bug_type_name value: " + string(bug_type_name));
+show_debug_message("bug_name exists: " + string(variable_instance_exists(id, "bug_name")));
+show_debug_message("bug_name value: " + string(bug_name));
         
         // Get current catch count for this bug type
         var current_count = 0;
@@ -76,7 +79,7 @@ function scr_bug_handle_catch() {
         var card = instance_create_layer(room_width/2, room_height + 100, "Instances", o_bug_card);
         
         // Set all the card data
-        card.bug_species = bug_species;
+        card.bug_type_id = bug_type_name;  // Use a different variable name for the card
         card.bug_name = bug_name;
         card.bug_sprite = sprite_index;
         card.essence_value = essence_value;
