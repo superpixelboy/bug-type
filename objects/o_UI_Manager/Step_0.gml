@@ -44,8 +44,3 @@ if (keyboard_check_pressed(vk_f1)) {
         }
     }
 }
-
-// Safety check: Reset flag if no cards exist
-if (global.showing_card && instance_number(o_bug_card) == 0) {
-    global.showing_card = false;
-}

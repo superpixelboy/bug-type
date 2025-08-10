@@ -15,9 +15,12 @@ function scr_bug_handle_click() {
     scr_play_combo_sound(combo_count);
     break;
             
-     case "ready_to_catch":
-    // LEFT CLICK when ready = catch the bug!
-    scr_bug_handle_catch();
-    break;
+        case "ready_to_catch":
+            // LEFT CLICK when ready = "wrong button" feedback
+            combo_count = 0;  // Reset combo
+            bounce_offset_x = random_range(-8, 8);
+            bounce_offset_y = random_range(-4, 4);
+            audio_play_sound(sn_bugtap1, 1, false);
+            break;
     }
 }

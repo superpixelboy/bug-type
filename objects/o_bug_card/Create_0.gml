@@ -1,5 +1,4 @@
-// o_bug_card - Create Event (Fixed)
-show_debug_message("=== CARD CREATE ===");
+// o_bug_card - Updated Create Event (Template-based)
 
 // STRONGER protection against multiple cards
 if (instance_number(o_bug_card) > 1) {
@@ -18,10 +17,11 @@ if (global.showing_card) {
 // Set the flag immediately
 global.showing_card = true;
 
-// CRITICAL: Set initial state FIRST before anything else!
-card_state = "flipping_in";  // Start with flip animation immediately
+// Rest of your existing Create Event code...
+// Card state and animation
+card_state = "waiting";
 animation_timer = 0;
-delay_timer = 0;  // No delay
+delay_timer = 0;
 total_flip_time = 30;
 display_time = 120;
 flip_progress = 0;
@@ -29,44 +29,38 @@ flip_progress = 0;
 // Card positioning and transform
 target_x = room_width/2;
 target_y = room_height/2;
-start_y = room_height + 100;  // Start below screen
-x = target_x;  // Set initial X position
-y = start_y;   // Set initial Y position (off screen)
+start_y = room_height + 100;
 card_rotation = 0;
 card_scale_x = 1;
 card_scale_y = 1;
 
-// Card data (will be set by the bug that creates this card)
-bug_species = "unknown";  // Initialize this!
+// Card data (set by the bug that creates this card)
 bug_name = "Unknown Bug";
 bug_sprite = s_bug_test;
 flavor_text = "Mystery bug";
 essence_value = 1;
+bug_type = "unknown";
 
-// ALWAYS use the template card sprite
+// ALWAYS use the template card sprite now
 card_sprite = s_card_template;
 
 // Visual effects
 drop_shadow_offset = 4;
 card_depth = -1000;
-depth = card_depth;
 
 // Bug bounce animation
+// Add these variables to o_bug_card Create Event:
 bug_pop_timer = 0;
 bug_pop_scale = 0;
 gem_pop_timer = 0;
 gem_pop_scale = 0;
 content_ready = false;  // Flag to know when to start pop animations
+depth = card_depth;
 
-// Catch Counters
-catch_count = 1;           // How many times this bug has been caught
-bonus_essence = 0;         // Bonus essence from milestones
-milestone_text = "";       // Text to show if milestone reached
-show_coin = false;         // Whether to show the coin
-coin_pop_scale = 0;        // Animation scale for coin
-coin_pop_timer = 0;        // Animation timer for coin
+
 
 content_fade_alpha = 1.0;  // Controls fade of bug/gem/text during exit
+
 
 // Card dimensions (using template)
 card_width = sprite_get_width(s_card_template);
@@ -82,6 +76,7 @@ high_res_h = original_app_surf_h * high_res_scale;
 
 // High-res viewport setup
 high_res_viewport = 1;
+use_high_res = true;
 
 // Gem rarity system - Initialize with default values
 bug_rarity_tier = 5;  // Default to very common
@@ -89,5 +84,12 @@ gem_sprite = s_gem_very_common;  // Default gem
 gem_float_timer = 0;
 gem_glow_timer = 0;
 
-show_debug_message("Card created with state: " + card_state);
-show_debug_message("Card position: " + string(x) + ", " + string(y));
+// ----- Coin value & sprite (1..15) -----
+coin_value = irandom_range(1, 15);
+if (coin_value <= 4) {
+    coin_sprite = s_coin_copper;
+} else if (coin_value <= 9) {
+    coin_sprite = s_coin_sliver; // (asset name spelled "sliver")
+} else {
+    coin_sprite = s_coin_gold;
+}
