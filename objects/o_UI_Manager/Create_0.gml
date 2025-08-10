@@ -20,6 +20,10 @@ global.return_y = 525;
 //Door Stuff
 global.door_cooldown = 0;
 
+// Add to o_UI_Manager Create Event (after existing globals)
+if (!variable_global_exists("bug_catch_counts")) {
+    global.bug_catch_counts = ds_map_create();
+}
 
 
 // Create particle systems for different hit types

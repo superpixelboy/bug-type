@@ -1,14 +1,18 @@
 // ===========================================
-// NEW: Bug data system
-bug_type = "unknown";
+// o_bug_parent - Create Event
+// ===========================================
+
+// INITIALIZE bug_species FIRST - before anything else!
+bug_species = "unknown";  // This MUST be first!
+
+// NOW initialize other bug data
 bug_name = "Unknown Bug";
 flavor_text = "";
-
 
 // Core bug stats (override in child objects)
 bug_hp = 3;              // Much lower HP for 1-damage system
 bug_max_hp = 3;          
-recovery_window =15;    // 30 frames recovery for combo feel
+recovery_window = 15;    // 30 frames recovery for combo feel
 essence_value = 2;       // Essence gained when caught (override in children)
 
 combo_count = 0;  // Track combo for feedback only
@@ -30,6 +34,7 @@ xstart = x;
 ystart = y;
 image_alpha = 1;
 capture_scale = 1;
+
 // Visual effects
 flash_timer = 0;
 is_flashing = false;
@@ -47,7 +52,6 @@ capture_scale = 1;
 capture_y_offset = 0;
 capture_timer = 0;
 
-
 // Bounce feedback
 bounce_offset_x = 0;
 bounce_offset_y = 0;
@@ -60,5 +64,5 @@ auto_catch_interval = 10;  // Damage every 10 frames
 catch_progress = 0;
 catch_bar_width = 200;
 
-//Final Info
+// Final Info
 caught_timer = 0;

@@ -1,7 +1,7 @@
-function scr_gem_rarity(bug_type) {
-    if (!variable_struct_exists(global.bug_data, bug_type)) return 5;
+function scr_gem_rarity(bug_species) {
+    if (!variable_struct_exists(global.bug_data, bug_species)) return 5;
     
-    var bug_data = global.bug_data[$ bug_type];
+    var bug_data = global.bug_data[$ bug_species];
     var locations = bug_data.locations;
     var location_names = variable_struct_get_names(locations);
     

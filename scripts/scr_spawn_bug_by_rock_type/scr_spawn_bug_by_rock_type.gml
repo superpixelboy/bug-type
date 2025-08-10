@@ -2,12 +2,12 @@ function scr_spawn_bug_by_rock_type(spawn_x, spawn_y, rock_type) {
      // ADD THIS CHECK FIRST - Demo bug selection
     if (global.next_forced_bug != -1) {
         var bug_instance = instance_create_layer(spawn_x, spawn_y, "Bugs", o_bug_parent);
-        bug_instance.bug_type = global.next_forced_bug;
+        bug_instance.bug_species = global.next_forced_bug;
         
         // Load the bug data
         with (bug_instance) {
-            if (variable_struct_exists(global.bug_data, bug_type)) {
-                var data = global.bug_data[$ bug_type];
+            if (variable_struct_exists(global.bug_data, bug_species)) {
+                var data = global.bug_data[$ bug_species];
                 bug_name = data.name;
                 flavor_text = data.flavor_text;
                 sprite_index = data.sprite;
