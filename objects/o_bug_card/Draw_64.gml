@@ -136,6 +136,56 @@ if (milestone_text != "" && content_ready) {
     draw_set_alpha(1);
 }
 
+// ---- CATCH COUNT COIN (in upper left corner) ----
+if (show_coin && content_ready) {  // Changed: removed coin_pop_scale > 0 check
+    var coin_x = cx_gui - (frame_w_gui * 0.32);  // Upper left corner
+    var coin_y = cy_gui - (frame_h_gui * 0.38);
+    
+    // FIXED: Start coin animation immediately when content is ready
+    if (coin_pop_timer < 15) {
+        coin_pop_timer++;
+        var coin_progress = coin_pop_timer / 15;
+        if (coin_progress < 0.5) {
+            coin_pop_scale = lerp(0, 1.4, coin_progress / 0.5);
+        } else {
+            var snap_progress = (coin_progress - 0.5) / 0.5;
+            coin_pop_scale = lerp(1.4, 1.0, snap_progress * snap_progress);
+        }
+    } else {
+        coin_pop_scale = 1.0;
+    }
+    
+    // Choose coin color based on catch count
+    var coin_sprite = s_coin_bronze; // Default
+    if (catch_count >= 20) coin_sprite = s_coin_gold;
+    else if (catch_count >= 10) coin_sprite = s_coin_silver;
+    else coin_sprite = s_coin_bronze;
+    
+    // Draw coin with pop animation
+    draw_sprite_ext(coin_sprite, 0, coin_x, coin_y, 
+                   2.0 * coin_pop_scale, 2.0 * coin_pop_scale, 0, c_white, image_alpha * content_fade_alpha);
+    
+    // Draw count number on top of coin
+    draw_set_font(fnt_card_title_2x);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    
+    // Black outline for number
+    draw_set_color(c_black);
+    for (var dx = -2; dx <= 2; dx += 2) {
+        for (var dy = -2; dy <= 2; dy += 2) {
+            if (dx != 0 || dy != 0) {
+                draw_text(coin_x + dx, coin_y + dy, string(catch_count));
+            }
+        }
+    }
+    
+    // White number
+    draw_set_color(c_white);
+    draw_text(coin_x, coin_y, string(catch_count));
+    
+    show_debug_message("Drawing coin at " + string(coin_x) + "," + string(coin_y) + " with count: " + string(catch_count));
+}
 // ---- BONUS ESSENCE TEXT (if applicable) ----
 if (bonus_essence > 0 && content_ready) {
     var bonus_y = cy_gui + (frame_h_gui * 0.52); // Below milestone text

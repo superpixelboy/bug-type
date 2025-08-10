@@ -58,6 +58,7 @@ switch(card_state) {
         
     // Replace the animation section in your Step Event "showing" case:
 
+
 case "showing":
     animation_timer++;
     
@@ -71,14 +72,14 @@ case "showing":
         bug_pop_timer = 0;
         gem_pop_timer = 8;
         
-        // NEW: Start coin animation if count > 1
-        if (catch_count > 1) {
-            show_coin = true;
-            coin_pop_timer = 15; // Delay coin after gem
+        // FIXED: Always start coin animation when content is ready
+        if (show_coin) {
+            coin_pop_timer = 0; // Start immediately, not delayed
+            show_debug_message("Starting coin animation with count: " + string(catch_count));
         }
     }
     
-    // Bug pop-in animation (existing code...)
+    // Bug pop-in animation
     if (content_ready && bug_pop_timer < 20) {
         bug_pop_timer++;
         var pop_progress = bug_pop_timer / 20;
@@ -92,7 +93,7 @@ case "showing":
         bug_pop_scale = 1.0;
     }
     
-    // Gem pop-in animation (existing code...)
+    // Gem pop-in animation
     if (content_ready && gem_pop_timer < 15) {
         gem_pop_timer++;
         var gem_progress = gem_pop_timer / 15;
@@ -106,19 +107,7 @@ case "showing":
         gem_pop_scale = 1.0;
     }
     
-    // NEW: Coin pop-in animation
-    if (show_coin && coin_pop_timer < 15) {
-        coin_pop_timer++;
-        var coin_progress = coin_pop_timer / 15;
-        if (coin_progress < 0.5) {
-            coin_pop_scale = lerp(0, 1.4, coin_progress / 0.5); // Even bouncier!
-        } else {
-            var snap_progress = (coin_progress - 0.5) / 0.5;
-            coin_pop_scale = lerp(1.4, 1.0, snap_progress * snap_progress);
-        }
-    } else if (show_coin) {
-        coin_pop_scale = 1.0;
-    }
+    // MOVED: Coin animation now handled in Draw event for consistency
     
     // Click to continue
     if (mouse_check_button_pressed(mb_left) || keyboard_check_pressed(vk_space)) {

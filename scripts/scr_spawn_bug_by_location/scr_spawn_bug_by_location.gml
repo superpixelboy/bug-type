@@ -48,14 +48,14 @@ function scr_spawn_bug_by_location(spawn_x, spawn_y, location, rock_type) {
     // Create the bug instance
     var bug_instance = instance_create_layer(spawn_x, spawn_y, "Bugs", o_bug_parent);
     
-    // CRITICAL: Set bug_type FIRST
-    bug_instance.bug_type = selected_bug;
-    show_debug_message("Set bug_type to: " + string(bug_instance.bug_type));
+    // CRITICAL: Set bug_species FIRST
+    bug_instance.bug_species = selected_bug;
+    show_debug_message("Set bug_species to: " + string(bug_instance.bug_species));
     
     // Load the bug data
     with (bug_instance) {
-        if (variable_struct_exists(global.bug_data, bug_type)) {
-            var data = global.bug_data[$ bug_type];
+        if (variable_struct_exists(global.bug_data, bug_species)) {
+            var data = global.bug_data[$ bug_species];
             bug_name = data.name;
             flavor_text = data.flavor_text;
             sprite_index = data.sprite;
@@ -66,7 +66,7 @@ function scr_spawn_bug_by_location(spawn_x, spawn_y, location, rock_type) {
             
             show_debug_message("Loaded bug data for: " + bug_name);
         } else {
-            show_debug_message("ERROR: Could not find bug data for: " + string(bug_type));
+            show_debug_message("ERROR: Could not find bug data for: " + string(bug_species));
         }
     }
     

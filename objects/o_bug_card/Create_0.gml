@@ -39,7 +39,7 @@ bug_name = "Unknown Bug";
 bug_sprite = s_bug_test;
 flavor_text = "Mystery bug";
 essence_value = 1;
-bug_type = "unknown";
+bug_species = "unknown";
 
 // ALWAYS use the template card sprite now
 card_sprite = s_card_template;

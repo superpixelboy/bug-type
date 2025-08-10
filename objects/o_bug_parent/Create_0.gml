@@ -1,6 +1,6 @@
 // ===========================================
 // NEW: Bug data system
-bug_type = "unknown";
+bug_species = "unknown";
 bug_name = "Unknown Bug";
 flavor_text = "";
 
