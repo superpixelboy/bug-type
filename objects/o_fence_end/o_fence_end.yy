@@ -8,8 +8,8 @@
   "name":"o_fence_end",
   "overriddenProperties":[],
   "parent":{
-    "name":"Decorations",
-    "path":"folders/Objects/Decorations.yy",
+    "name":"Fences",
+    "path":"folders/Objects/Decorations/Fences.yy",
   },
   "parentObjectId":{
     "name":"o_tree_parent",

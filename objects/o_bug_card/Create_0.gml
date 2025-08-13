@@ -89,7 +89,7 @@ coin_value = irandom_range(1, 15);
 if (coin_value <= 4) {
     coin_sprite = s_coin_copper;
 } else if (coin_value <= 9) {
-    coin_sprite = s_coin_sliver; // (asset name spelled "sliver")
+    coin_sprite = s_coin_silver;
 } else {
     coin_sprite = s_coin_gold;
 }
