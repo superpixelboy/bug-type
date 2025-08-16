@@ -1,18 +1,20 @@
 {
   "$GMObject":"",
-  "%Name":"o_bed",
+  "%Name":"o_tree_dead",
   "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"o_bed",
+  "name":"o_tree_dead",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"Trees",
+    "path":"folders/Objects/Trees.yy",
   },
-  "parentObjectId":null,
+  "parentObjectId":{
+    "name":"o_tree_parent",
+    "path":"objects/o_tree_parent/o_tree_parent.yy",
+  },
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,
@@ -31,8 +33,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"s_bed",
-    "path":"sprites/s_bed/s_bed.yy",
+    "name":"s_dead_trees",
+    "path":"sprites/s_dead_trees/s_dead_trees.yy",
   },
   "spriteMaskId":null,
   "visible":true,

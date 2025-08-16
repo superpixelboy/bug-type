@@ -1,6 +1,6 @@
 // Check if player is near bed and pressing up/W
 if (distance_to_object(o_player) < 16) {
-    if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W"))) {
+    if (keyboard_check_pressed(vk_space)) {
         // Save position globally before starting fade
         global.sleep_x = o_player.x;
         global.sleep_y = o_player.y;
