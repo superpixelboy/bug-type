@@ -1,3 +1,14 @@
+// Skip all player logic if movement is disabled (during intro)
+if (movement_mode == "disabled") {
+    exit;
+}
+
+// Exit early if collection UI is open
+if (instance_exists(o_bug_collection_ui) && o_bug_collection_ui.is_open) {
+    exit;
+}
+
+
 if (instance_exists(o_bug_collection_ui) && o_bug_collection_ui.is_open) {
     // Collection is open, don't move or interact
     exit;

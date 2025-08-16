@@ -1,7 +1,14 @@
-// Draw the bed sprite first
+// o_hole - Draw Event (Updated)
+
+// Draw the hole sprite first
 draw_self();
 
-// Then show prompt when player is near
+// Don't show sleep prompt during intro
+if (variable_instance_exists(id, "intro_active") && intro_active) {
+    exit;  // Skip sleep prompt during intro
+}
+
+// Then show prompt when player is near (original logic)
 if (distance_to_object(o_player) < 16) {
     draw_set_font(-1);
     draw_set_halign(fa_center);

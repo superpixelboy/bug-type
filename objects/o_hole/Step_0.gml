@@ -1,3 +1,11 @@
+// o_hole - Step Event (Updated)
+
+// Don't allow sleep during intro sequence
+if (variable_instance_exists(id, "intro_active") && intro_active) {
+    exit;  // Skip all sleep logic during intro
+}
+
+// Original sleep logic
 // Check if player is near bed and pressing up/W
 if (distance_to_object(o_player) < 16) {
     if (keyboard_check_pressed(vk_space)) {

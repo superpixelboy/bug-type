@@ -1,14 +1,13 @@
 {
   "$GMObject":"",
-  "%Name":"o_player",
+  "%Name":"o_player_jump_intro",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":4,"eventType":7,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"o_player",
+  "name":"o_player_jump_intro",
   "overriddenProperties":[],
   "parent":{
     "name":"Player",
@@ -36,12 +35,9 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"s_player_idle_d",
-    "path":"sprites/s_player_idle_d/s_player_idle_d.yy",
+    "name":"s_player_jump",
+    "path":"sprites/s_player_jump/s_player_jump.yy",
   },
-  "spriteMaskId":{
-    "name":"s_player_HB",
-    "path":"sprites/s_player_HB/s_player_HB.yy",
-  },
+  "spriteMaskId":null,
   "visible":true,
 }
