@@ -1,15 +1,24 @@
-// o_bug_collection_ui - Updated Create Event
+// o_bug_collection_ui - Fixed Create Event
 // UI state
 is_open = false;
 page = 0;
-bugs_per_page = 4;  // 2x2 grid - very spacious
-ui_x = 40;
-ui_y = 20;
-ui_width = 400;
-ui_height = 230;
+bugs_per_page = 4;  // 4 cards horizontally across the book pages
 
-// NO MORE HARDCODED ARRAYS - Use the global bug data instead!
-// The bug data is now dynamic and pulled from global.bug_data
+// Base UI dimensions (these are the "design" dimensions)
+ui_x = 0;      // Start from left edge
+ui_y = 0;      // Start from top edge  
+ui_width = 480;   // Full width to match your game resolution
+ui_height = 270;  // Full height to match your game resolution
+
+// GUI scale factor for high-resolution display
+gui_scale = 2;
+
+// Card positioning (centered on screen)
+card_width = 60;        // Smaller card width
+card_height = 90;       // Smaller card height
+card_start_x = 98;     // Move cards back left a bit to center better
+card_y = 135;           // Middle of screen (270/2 = 135)
+card_spacing = 95;      // Spacing between cards (fits 4 cards better)
 
 // Track discovered bugs
 if (!variable_global_exists("discovered_bugs")) {
@@ -30,5 +39,4 @@ function update_collection_counts() {
 
 // Initialize counts
 update_collection_counts();
-
 depth = -10000;  // Very negative = draws on top

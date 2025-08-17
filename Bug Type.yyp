@@ -341,6 +341,7 @@
     {"id":{"name":"s_coin_copper","path":"sprites/s_coin_copper/s_coin_copper.yy",},},
     {"id":{"name":"s_coin_gold","path":"sprites/s_coin_gold/s_coin_gold.yy",},},
     {"id":{"name":"s_coin_silver","path":"sprites/s_coin_silver/s_coin_silver.yy",},},
+    {"id":{"name":"s_collection_page","path":"sprites/s_collection_page/s_collection_page.yy",},},
     {"id":{"name":"s_cup_black_cat_rat","path":"sprites/s_cup_black_cat_rat/s_cup_black_cat_rat.yy",},},
     {"id":{"name":"s_dead_trees_lights","path":"sprites/s_dead_trees_lights/s_dead_trees_lights.yy",},},
     {"id":{"name":"s_dead_trees","path":"sprites/s_dead_trees/s_dead_trees.yy",},},
