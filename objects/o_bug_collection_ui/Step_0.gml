@@ -1,33 +1,13 @@
-// Combined Step Event - Hover Detection + Navigation
+// o_bug_collection_ui Step Event - NO BUTTON HANDLING
+// Let o_collection_button handle all opening/closing
 
-// COLLECTION BUTTON CLICK DETECTION (always active)
 var mouse_gui_x = device_mouse_x_to_gui(0);
 var mouse_gui_y = device_mouse_y_to_gui(0);
 
-if (mouse_check_button_pressed(mb_left)) {
-    // Check collection button click (bottom left corner - ALWAYS active)
-    var btn_x = 20;
-    var btn_y = room_height - 50;
-    var btn_width = 100;
-    var btn_height = 30;
-    
-    if (mouse_gui_x >= btn_x && mouse_gui_x <= btn_x + btn_width &&
-        mouse_gui_y >= btn_y && mouse_gui_y <= btn_y + btn_height) {
-        // Toggle collection
-        is_open = !is_open;
-        if (!is_open) {
-            // Reset everything when closing
-            detail_view_open = false;
-            detail_bug_key = "";
-            detail_bug_data = {};
-            hovered_card = -1;
-            hover_timer = 0;
-        }
-    }
-}
+// REMOVED: Collection button click detection - let o_collection_button handle it
 
-// Handle TAB key for closing only (not opening)
-if (keyboard_check_pressed(vk_tab) || keyboard_check_pressed(vk_escape)) {
+// Handle ESCAPE key for closing only (Tab handled by UI Manager)
+if (keyboard_check_pressed(vk_escape)) {
     if (is_open && detail_view_open) {
         // Close detail view first
         detail_view_open = false;
@@ -41,7 +21,6 @@ if (keyboard_check_pressed(vk_tab) || keyboard_check_pressed(vk_escape)) {
         hovered_card = -1;
         hover_timer = 0;
     }
-    // Don't handle opening here - let the button handle that
 }
 
 // Only handle hover/navigation when collection is open
@@ -53,8 +32,14 @@ if (!is_open) {
 
 // Don't handle hover/navigation when detail view is open
 if (detail_view_open) {
-    hovered_card = -1;
-    hover_timer = 0;
+    // Handle clicks to close detail view
+    if (mouse_check_button_pressed(mb_left)) {
+        detail_view_open = false;
+        detail_bug_key = "";
+        detail_bug_data = {};
+        hovered_card = -1;
+        hover_timer = 0;
+    }
     exit;
 }
 
@@ -64,10 +49,6 @@ if (!variable_global_exists("bug_data")) {
     hover_timer = 0;
     exit;
 }
-
-// Get mouse position in GUI coordinates (already got it above)
-// var mouse_gui_x = device_mouse_x_to_gui(0);
-// var mouse_gui_y = device_mouse_y_to_gui(0);
 
 // Get all bugs from the data system
 var all_bug_keys = variable_struct_get_names(global.bug_data);
@@ -112,7 +93,7 @@ for (var i = 0; i < cards_per_page_grid; i++) {
     var row = floor(i / cards_per_row);
     var col = i % cards_per_row;
     
-    // Calculate card position
+    // Calculate card position (EXACT same as your draw event)
     var card_x = (grid_start_x + (col * card_spacing_x)) * gui_scale;
     var card_y_pos = (grid_start_y + (row * card_spacing_y)) * gui_scale;
     
@@ -142,7 +123,6 @@ if (hovered_card != -1) {
 if (keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A"))) {
     if (page > 0) {
         page--;
-        // Reset hover when changing pages
         hovered_card = -1;
         hover_timer = 0;
     }
@@ -151,7 +131,6 @@ if (keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A"))) {
 if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D"))) {
     if (page < total_pages - 1) {
         page++;
-        // Reset hover when changing pages
         hovered_card = -1;
         hover_timer = 0;
     }
@@ -180,7 +159,7 @@ if (mouse_check_button_pressed(mb_left)) {
         }
     }
     
-    // Left arrow click
+    // Left arrow click (matches your draw event positioning)
     if (!mouse_handled && total_pages > 1 && page > 0) {
         var left_arrow_x = 60 * gui_scale;
         var left_arrow_y = (ui_height/2) * gui_scale;
@@ -194,7 +173,7 @@ if (mouse_check_button_pressed(mb_left)) {
         }
     }
     
-    // Right arrow click
+    // Right arrow click (matches your draw event positioning)
     if (!mouse_handled && total_pages > 1 && page < total_pages - 1) {
         var right_arrow_x = (ui_width - 30) * gui_scale;
         var right_arrow_y = (ui_height/2) * gui_scale;
@@ -208,7 +187,7 @@ if (mouse_check_button_pressed(mb_left)) {
         }
     }
     
-    // Close button click
+    // Close button click (matches your draw event positioning)
     if (!mouse_handled) {
         var close_x = (ui_width - 35) * gui_scale;
         var close_y = 15 * gui_scale;
