@@ -30,6 +30,19 @@ if (!is_open) {
     exit;
 }
 
+// If a collection card is showing, only allow ESC to close collection
+if (instance_exists(o_bug_card_collection)) {
+    // Still allow ESC to close the entire collection
+    if (keyboard_check_pressed(vk_escape)) {
+        // Close both the card and collection
+        with(o_bug_card_collection) instance_destroy();
+        is_open = false;
+        hovered_card = -1;
+        hover_timer = 0;
+    }
+    exit;
+}
+
 // Don't handle hover/navigation when detail view is open
 if (detail_view_open) {
     // Handle clicks to close detail view
@@ -148,12 +161,13 @@ if (mouse_check_button_pressed(mb_left)) {
             var is_discovered = ds_map_exists(global.discovered_bugs, bug_key);
             
             if (is_discovered) {
-                // Open detail view for this bug
-                detail_view_open = true;
-                detail_bug_key = bug_key;
-                detail_bug_data = global.bug_data[$ bug_key];
-                hovered_card = -1; // Clear hover
-                hover_timer = 0;
+                // Create and show the bug card popup (like when catching)
+                if (scr_collection_show_card(bug_key)) {
+                    // DON'T close the collection - just hide it temporarily
+                    // Collection will become visible again when card is closed
+                    hovered_card = -1;
+                    hover_timer = 0;
+                }
                 mouse_handled = true;
             }
         }
