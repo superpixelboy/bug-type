@@ -37,7 +37,7 @@ shadow_offset_x = 4;      // Slight offset to the right
 shadow_offset_y = 10;      // Just below the player's feet
 shadow_scale_x = .9;     // Slightly smaller than player
 shadow_scale_y = 0.3;     // Very flat shadow
-shadow_alpha = 0.5;       // Semi-transparent
+shadow_alpha = 0.2;       // Semi-transparent
 
 
 

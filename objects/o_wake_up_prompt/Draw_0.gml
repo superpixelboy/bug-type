@@ -14,6 +14,7 @@ if (waiting_for_input) {
     draw_set_alpha(text_alpha);
     
     // Black outline (8-direction for crisp look)
+	/*
     draw_set_color(c_black);
     for (var dx = -1; dx <= 1; dx++) {
         for (var dy = -1; dy <= 1; dy++) {
@@ -22,10 +23,12 @@ if (waiting_for_input) {
             }
         }
     }
-    
+    */
+	
     // Main text (bright white/yellow for attention)
     draw_set_color(c_yellow);
-    draw_text(text_x, text_y, prompt_text);
+	
+ //   draw_text(text_x, text_y, prompt_text);
     
     // Reset draw settings
     draw_set_alpha(1);

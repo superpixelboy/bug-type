@@ -21,7 +21,7 @@ if (waiting_for_input) {
         }
         
         // Create the jump intro object
-        var jump_obj = instance_create_layer(x, y, "Instances", o_player_jump_intro);
+        var jump_obj = instance_create_layer(x, y, "Controllers", o_player_jump_intro);
         
         // Destroy this prompt
         instance_destroy();

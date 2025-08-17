@@ -16,14 +16,16 @@ if (distance_to_object(o_player) < 16) {
     
     // Black outline
     draw_set_color(c_black);
+	/*
     draw_text(x+1, y-5+1, "Press space to Sleep");
     draw_text(x-1, y-5-1, "Press space to Sleep");
     draw_text(x+1, y-5-1, "Press space to Sleep");
     draw_text(x-1, y-5+1, "Press space to Sleep");
+	*/
     
     // White text
     draw_set_color(c_white);
-    draw_text(x, y-5, "Press space to Sleep");
+  //  draw_text(x, y-5, "Press space to Sleep");
     
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);

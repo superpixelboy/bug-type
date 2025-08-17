@@ -19,6 +19,7 @@
   "height":49,
   "HTile":false,
   "layers":[
+    {"$GMImageLayer":"","%Name":"7cf82b26-2a89-4a68-b202-9d8196f078a1","blendMode":0,"displayName":"Layer 1","isLocked":false,"name":"7cf82b26-2a89-4a68-b202-9d8196f078a1","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
     {"$GMImageLayer":"","%Name":"bb263655-047a-4627-82ca-33aa734f3b25","blendMode":0,"displayName":"default","isLocked":false,"name":"bb263655-047a-4627-82ca-33aa734f3b25","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"s_sign_hole",

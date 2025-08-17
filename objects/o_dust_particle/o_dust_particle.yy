@@ -1,17 +1,17 @@
 {
   "$GMObject":"",
-  "%Name":"o_player_jump_intro",
+  "%Name":"o_dust_particle",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"o_player_jump_intro",
+  "name":"o_dust_particle",
   "overriddenProperties":[],
   "parent":{
-    "name":"Player",
-    "path":"folders/Objects/Player.yy",
+    "name":"Objects",
+    "path":"folders/Objects.yy",
   },
   "parentObjectId":null,
   "persistent":false,
@@ -32,8 +32,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"s_player_jump_dirty",
-    "path":"sprites/s_player_jump_dirty/s_player_jump_dirty.yy",
+    "name":"s_dust_particle",
+    "path":"sprites/s_dust_particle/s_dust_particle.yy",
   },
   "spriteMaskId":null,
   "visible":true,
