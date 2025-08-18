@@ -1,4 +1,4 @@
-// o_bug_collection_ui - Enhanced Draw GUI Event with EXACT Card Matching
+// o_bug_collection_ui - FIXED Draw GUI Event with Smooth Hover
 // REMOVED: Collection button drawing - let o_collection_button handle it
 
 // Only draw collection panel when open
@@ -51,19 +51,6 @@ for (var i = 0; i < cards_per_page_grid; i++) {
     var card_x = (grid_start_x + (col * card_spacing_x)) * gui_scale;
     var card_y_pos = (grid_start_y + (row * card_spacing_y)) * gui_scale;
     
-    // Add wiggle effect if this card is hovered and within duration
-    var wiggle_x = 0;
-    var wiggle_y = 0;
-    if (hovered_card == i && hover_timer < wiggle_duration) {
-        // Create a fade-out effect as the wiggle duration ends
-        var wiggle_strength = 1 - (hover_timer / wiggle_duration);
-        wiggle_x = sin(hover_timer) * wiggle_amount * wiggle_strength;
-        wiggle_y = cos(hover_timer * 1.3) * wiggle_amount * 0.5 * wiggle_strength;
-    }
-    
-    card_x += wiggle_x;
-    card_y_pos += wiggle_y;
-    
     // Get bug data using the bug key
     var bug_key = all_bug_keys[bug_index];
     var bug_data = global.bug_data[$ bug_key];
@@ -71,17 +58,41 @@ for (var i = 0; i < cards_per_page_grid; i++) {
     // Check if discovered using the bug_key
     var is_discovered = ds_map_exists(global.discovered_bugs, bug_key);
     
+    // FIXED: Calculate hover effects with easing and smaller scale
+    var hover_scale = 1.0;
+    var hover_offset_y = 0;
+    var shadow_alpha = 0;
+    
+    if (hovered_card == i && is_discovered) {
+        // Smooth hover animation with ease-in using power curve
+        var hover_progress = min(1, hover_timer / 8); // 12 frames to reach full hover
+        hover_progress = power(hover_progress, 0.8); // Ease-in curve for snappy feel
+        
+        hover_scale = lerp(1.0, 1.08, hover_progress); // Smaller 8% scale increase
+        hover_offset_y = lerp(0, -6, hover_progress); // Float up 6 pixels (less dramatic)
+        shadow_alpha = lerp(0, 0.35, hover_progress); // Slightly lighter shadow
+    }
+    
+    card_y_pos += hover_offset_y; // Add hover float
+    
     if (is_discovered) {
-        // SIMPLER APPROACH - Scale everything together properly
-        var collection_scale = 0.4; // Overall scale for collection view
+        // FIXED: Apply hover scale properly to everything
+        var base_collection_scale = 0.4; // Base scale for collection view
+        var final_collection_scale = base_collection_scale * hover_scale; // Apply hover scaling
+        
+        // Draw drop shadow for hovered cards
+        if (shadow_alpha > 0) {
+            draw_sprite_ext(s_card_template, 1, card_x + 6, card_y_pos + 6, 
+                           final_collection_scale * gui_scale, final_collection_scale * gui_scale, 0, c_black, shadow_alpha);
+        }
         
         // 1. Draw card background first
         draw_sprite_ext(s_card_template, 1, card_x, card_y_pos, 
-                       collection_scale * gui_scale, collection_scale * gui_scale, 0, c_white, 1);
+                       final_collection_scale * gui_scale, final_collection_scale * gui_scale, 0, c_white, 1);
         
         // 2. Calculate scaled card dimensions for positioning
-        var card_w_scaled = sprite_get_width(s_card_template) * collection_scale * gui_scale;
-        var card_h_scaled = sprite_get_height(s_card_template) * collection_scale * gui_scale;
+        var card_w_scaled = sprite_get_width(s_card_template) * final_collection_scale * gui_scale;
+        var card_h_scaled = sprite_get_height(s_card_template) * final_collection_scale * gui_scale;
         
         // 3. Position everything relative to card center
         draw_set_halign(fa_center);
@@ -109,7 +120,7 @@ for (var i = 0; i < cards_per_page_grid; i++) {
         var dark_purple = make_color_rgb(45, 25, 60);
         var name_y_offset = card_h_scaled * 0.08; // Same proportion as catch screen
         var name_width = card_w_scaled * 0.8; // 80% of card width
-        var name_line_sep = 7 * collection_scale * gui_scale; // Scale line separation (half of original)
+        var name_line_sep = 7 * final_collection_scale * gui_scale; // Scale line separation with hover
         
         // Shadow
         draw_set_alpha(0.5);
@@ -133,7 +144,7 @@ for (var i = 0; i < cards_per_page_grid; i++) {
         var light_gold = make_color_rgb(255,223,128);
         var flavor_y_offset = card_h_scaled * 0.28; // Same proportion as catch screen
         var flavor_width = card_w_scaled * 0.65; // 65% of card width (tighter)
-        var flavor_line_sep = 10 * collection_scale * gui_scale; // Good spacing for readability
+        var flavor_line_sep = 10 * final_collection_scale * gui_scale; // Scale with hover
         
         // Outline
         draw_set_color(c_black);
@@ -162,9 +173,9 @@ for (var i = 0; i < cards_per_page_grid; i++) {
         draw_set_color(make_color_rgb(255,215,0));
         draw_text(card_x, card_y_pos + essence_y_offset, essence_text);
         
-        // 5. Draw gems and coins OVER the card
-        var card_w_scaled = sprite_get_width(s_card_template) * collection_scale * gui_scale;
-        var card_h_scaled = sprite_get_height(s_card_template) * collection_scale * gui_scale;
+        // 5. Draw gems and coins OVER the card (scaled with hover)
+        var card_w_scaled = sprite_get_width(s_card_template) * final_collection_scale * gui_scale;
+        var card_h_scaled = sprite_get_height(s_card_template) * final_collection_scale * gui_scale;
         
         // Gem (upper right)
         var gem_x = card_x + (card_w_scaled * 0.32);
@@ -172,7 +183,7 @@ for (var i = 0; i < cards_per_page_grid; i++) {
         var gem_rarity = scr_gem_rarity(bug_key);
         var gem_sprite = get_gem_sprite(gem_rarity);
         draw_sprite_ext(gem_sprite, 0, gem_x, gem_y, 
-                       collection_scale * gui_scale, collection_scale * gui_scale, 0, c_white, 1);
+                       final_collection_scale * gui_scale, final_collection_scale * gui_scale, 0, c_white, 1);
         
         // Coin (upper left)
         var coin_x = card_x - (card_w_scaled * 0.32);
@@ -183,7 +194,7 @@ for (var i = 0; i < cards_per_page_grid; i++) {
         else if (coin_value > 4) coin_sprite = s_coin_silver;
         
         draw_sprite_ext(coin_sprite, 0, coin_x, coin_y, 
-                       collection_scale * gui_scale, collection_scale * gui_scale, 0, c_white, 1);
+                       final_collection_scale * gui_scale, final_collection_scale * gui_scale, 0, c_white, 1);
         
         // Coin number
         draw_set_font(fnt_card_title);  // Use smaller font for collection
@@ -267,3 +278,12 @@ draw_text(close_x + close_size/2, close_y + close_size/2, "X");
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 draw_set_color(c_white);
+
+// If a collection card is showing, draw dark overlay OVER everything we just drew
+if (instance_exists(o_bug_card_collection)) {
+    draw_set_alpha(0.6); // Dark overlay
+    draw_set_color(c_black);
+    draw_rectangle(0, 0, display_get_gui_width(), display_get_gui_height(), false);
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+}

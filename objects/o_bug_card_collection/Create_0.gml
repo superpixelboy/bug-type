@@ -17,6 +17,9 @@ card_rotation = 0;
 card_scale_x = 1;
 card_scale_y = 1;
 
+// Slide animation
+slide_offset_y = display_get_gui_height() * 0.6; // Start offset for slide animation
+
 // Card data (will be set by the script that creates this)
 bug_name = "Unknown Bug";
 bug_sprite = s_bug_test;
@@ -63,16 +66,3 @@ if (coin_value <= 4) {
 gui_scale = 2;
 
 show_debug_message("Collection card created for: " + bug_name);
-
-// Create the dark overlay
-overlay_instance = instance_create_layer(0, 0, "Instances", o_black_box);
-if (instance_exists(overlay_instance)) {
-    with(overlay_instance) {
-        // Set overlay properties
-        image_alpha = 0.15; // 15% opacity
-        image_xscale = room_width;
-        image_yscale = room_height;
-        depth = -14000; // Behind the card but in front of everything else
-    }
-    show_debug_message("Created overlay for collection card");
-}

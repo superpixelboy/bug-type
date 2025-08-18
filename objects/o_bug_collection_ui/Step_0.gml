@@ -1,10 +1,8 @@
-// o_bug_collection_ui Step Event - NO BUTTON HANDLING
+// o_bug_collection_ui Step Event - FIXED HOVER SYSTEM
 // Let o_collection_button handle all opening/closing
 
 var mouse_gui_x = device_mouse_x_to_gui(0);
 var mouse_gui_y = device_mouse_y_to_gui(0);
-
-// REMOVED: Collection button click detection - let o_collection_button handle it
 
 // Handle ESCAPE key for closing only (Tab handled by UI Manager)
 if (keyboard_check_pressed(vk_escape)) {
@@ -123,13 +121,15 @@ for (var i = 0; i < cards_per_page_grid; i++) {
     }
 }
 
-// Update hover timer for wiggle animation
+// FIXED: Update hover timer with snappier timing
 if (hovered_card != -1) {
-    if (hover_timer < wiggle_duration) {
-        hover_timer += wiggle_speed;
+    if (hover_timer < 12) { // 12 frames to reach full hover effect (snappier)
+        hover_timer += 1.5; // Faster fade-in
     }
 } else {
-    hover_timer = 0;
+    if (hover_timer > 0) {
+        hover_timer -= 3; // Even faster fade-out for snappy feel
+    }
 }
 
 // === KEYBOARD NAVIGATION ===

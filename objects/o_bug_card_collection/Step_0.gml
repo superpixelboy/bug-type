@@ -1,4 +1,4 @@
-// o_bug_card_collection Step Event - FINAL WITH ANIMATIONS
+// o_bug_card_collection Step Event - WITH SLIDE ANIMATION
 
 // Handle mouse clicks to close the card
 if (mouse_check_button_pressed(mb_left)) {
@@ -23,35 +23,50 @@ switch(card_state) {
     case "flipping_in":
         animation_timer++;
         
-        // Quick entry animation (15 frames = 0.25 seconds)
-        var entry_progress = animation_timer / 15;
+        // Slide in animation (20 frames = 0.33 seconds)
+        var entry_progress = animation_timer / 20;
         if (entry_progress >= 1) {
             card_state = "displayed";
             animation_timer = 0;
             content_ready = true;
-            show_debug_message("Collection card animation complete");
+            // Card reaches final position
+            slide_offset_y = 0;
+            show_debug_message("Collection card slide complete");
+        } else {
+            // Smooth easing - starts fast, slows down at end
+            var eased_progress = 1 - power(1 - entry_progress, 3); // Ease out cubic
+            
+            // Slide from bottom of screen to center
+            var start_offset = display_get_gui_height() * 0.6; // Start 60% down from center
+            slide_offset_y = lerp(start_offset, 0, eased_progress);
         }
         break;
         
     case "displayed":
         // Card is fully shown and interactive
+        slide_offset_y = 0; // Ensure it stays in position
         break;
         
     case "exiting":
         animation_timer++;
         
-        // Quick fade out
-        content_fade_alpha = lerp(1, 0, animation_timer / 10);
+        // Quick fade and slide down
+        content_fade_alpha = lerp(1, 0, animation_timer / 12);
         
         var exit_progress = animation_timer / 15;
         if (exit_progress >= 1) {
             show_debug_message("Collection card exit complete");
             instance_destroy();
+        } else {
+            // Slide down while fading
+            var eased_progress = power(exit_progress, 2); // Ease in
+            var end_offset = display_get_gui_height() * 0.4; // Slide down 40% from center
+            slide_offset_y = lerp(0, end_offset, eased_progress);
         }
         break;
 }
 
-// Handle content pop animations
+// Handle content pop animations (same as before)
 if (content_ready) {
     // Bug sprite pop animation
     if (bug_pop_scale < 1) {
