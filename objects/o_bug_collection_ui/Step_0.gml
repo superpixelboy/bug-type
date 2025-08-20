@@ -28,6 +28,18 @@ if (!is_open) {
     exit;
 }
 
+
+// In o_bug_collection_ui Step_0 Event - Matching fine-tuned positioning
+
+// Calculate grid positioning (MATCH the Draw event exactly)
+var left_page_center = ui_width * 0.31;   // Same as draw event (was 0.32)
+var right_page_center = ui_width * 0.69;  // Same as draw event (was 0.68)
+
+var grid_start_y = ui_height * 0.30;      // Same as draw event (was 0.29)
+var card_spacing_y = ui_height * 0.36;    // Same as draw event
+
+// Calculate horizontal spacing for 2 cards per page
+var horizontal_spread = ui_width * 0.15;  // Same as draw event
 // If a collection card is showing, only allow ESC to close collection
 if (instance_exists(o_bug_card_collection)) {
     // Still allow ESC to close the entire collection
@@ -72,11 +84,9 @@ var cards_per_page_grid = cards_per_row * rows; // 8 cards per page
 var total_pages = ceil(total_bugs / cards_per_page_grid);
 var start_bug = page * cards_per_page_grid;
 
-// Calculate grid positioning (same as draw event)
-var grid_start_x = ui_width * 0.2;
-var grid_start_y = ui_height * 0.25;
-var card_spacing_x = (ui_width * 0.6) / (cards_per_row - 1);
-var card_spacing_y = ui_height * 0.35;
+
+
+
 
 // Collection scale
 var collection_scale = 0.4;
@@ -100,13 +110,24 @@ for (var i = 0; i < cards_per_page_grid; i++) {
     // Only check hover for unlocked cards
     if (!is_discovered) continue;
     
-    // Calculate row and column
+ // Calculate row and column
     var row = floor(i / cards_per_row);
     var col = i % cards_per_row;
     
-    // Calculate card position (EXACT same as your draw event)
-    var card_x = (grid_start_x + (col * card_spacing_x)) * gui_scale;
-    var card_y_pos = (grid_start_y + (row * card_spacing_y)) * gui_scale;
+    // Calculate card position (MATCH draw event exactly)
+    var card_x, card_y_pos;
+
+	if (col < 2) {
+	    // Left page (columns 0 and 1)
+	    var local_col = col; // 0 or 1
+	    card_x = (left_page_center + ((local_col - 0.5) * horizontal_spread)) * gui_scale;
+	} else {
+	    // Right page (columns 2 and 3)
+	    var local_col = col - 2; // 0 or 1 (relative to right page)
+	    card_x = (right_page_center + ((local_col - 0.5) * horizontal_spread)) * gui_scale;
+	}
+
+	card_y_pos = (grid_start_y + (row * card_spacing_y)) * gui_scale;
     
     // Check if mouse is over this card
     var card_left = card_x - (card_w_scaled * 0.5);
@@ -202,17 +223,17 @@ if (mouse_check_button_pressed(mb_left)) {
     }
     
     // Close button click (matches your draw event positioning)
-    if (!mouse_handled) {
-        var close_x = (ui_width - 35) * gui_scale;
-        var close_y = 15 * gui_scale;
-        var close_size = 20 * gui_scale;
-        
-        if (mouse_gui_x >= close_x && mouse_gui_x <= close_x + close_size &&
-            mouse_gui_y >= close_y && mouse_gui_y <= close_y + close_size) {
-            is_open = false;
-            hovered_card = -1;
-            hover_timer = 0;
-            mouse_handled = true;
-        }
-    }
+	if (!mouse_handled) {
+	    var close_x = (ui_width - 35) * gui_scale;
+	    var close_y = 5 * gui_scale;  // Updated to match draw event
+	    var close_size = 20 * gui_scale;
+    
+	    if (mouse_gui_x >= close_x && mouse_gui_x <= close_x + close_size &&
+	        mouse_gui_y >= close_y && mouse_gui_y <= close_y + close_size) {
+	        is_open = false;
+	        hovered_card = -1;
+	        hover_timer = 0;
+	        mouse_handled = true;
+	    }
+	}
 }

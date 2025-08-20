@@ -9,7 +9,8 @@ if (!is_open) {
 // Draw the book background (centered on screen)
 var screen_center_x = (480 / 2) * gui_scale;
 var screen_center_y = (270 / 2) * gui_scale;
-draw_sprite_ext(s_collection_page, 0, screen_center_x, screen_center_y, gui_scale, gui_scale, 0, c_white, 1);
+var book_scale = gui_scale * .5;  // Half scale since sprite is double resolution
+draw_sprite_ext(s_collection_page, 0, screen_center_x, screen_center_y, book_scale, book_scale, 0, c_white, 1);
 
 // Check if bug data exists
 if (!variable_global_exists("bug_data")) {
@@ -33,11 +34,27 @@ var total_pages = ceil(total_bugs / cards_per_page_grid);
 // Draw cards in 2 rows of 4 (8 cards per page)
 var start_bug = page * cards_per_page_grid;
 
-// Calculate grid positioning
-var grid_start_x = ui_width * 0.2; // Start further from left edge
-var grid_start_y = ui_height * 0.25; // Start from upper portion
-var card_spacing_x = (ui_width * 0.6) / (cards_per_row - 1); // Spread across 60% of width
-var card_spacing_y = ui_height * 0.35; // Vertical spacing between rows
+
+
+// Calculate grid positioning - ADJUSTED FOR BETTER CENTERING
+var grid_start_x = ui_width * 0.25;    // Keep horizontal centering
+var grid_start_y = ui_height * 0.30;   // Move top row up a bit (was 0.35)
+var card_spacing_x = (ui_width * 0.5) / (cards_per_row - 1); // Keep horizontal spacing
+var card_spacing_y = ui_height * 0.40;  // Increase vertical gap between rows (was 0.25)
+
+
+// Calculate grid positioning - CENTERED ON EACH PAGE (ONLY VERSION)
+
+
+// Calculate grid positioning - MICRO ADJUSTMENTS
+var left_page_center = ui_width * 0.31;   // Move left columns slightly left (was 0.32)
+var right_page_center = ui_width * 0.69;  // Move right columns slightly right (was 0.68)
+
+var grid_start_y = ui_height * 0.30;      // Move all cards down a fraction (was 0.29)
+var card_spacing_y = ui_height * 0.36;    // Keep same row spacing
+
+// Calculate horizontal spacing for 2 cards per page
+var horizontal_spread = ui_width * 0.15;  // Keep same horizontal spread
 
 for (var i = 0; i < cards_per_page_grid; i++) {
     var bug_index = start_bug + i;
@@ -47,10 +64,22 @@ for (var i = 0; i < cards_per_page_grid; i++) {
     var row = floor(i / cards_per_row);
     var col = i % cards_per_row;
     
-    // Calculate card position
-    var card_x = (grid_start_x + (col * card_spacing_x)) * gui_scale;
-    var card_y_pos = (grid_start_y + (row * card_spacing_y)) * gui_scale;
+    // Calculate card position based on which page (left/right)
+    var card_x, card_y_pos;
     
+    if (col < 2) {
+        // Left page (columns 0 and 1)
+        var local_col = col; // 0 or 1
+        card_x = (left_page_center + ((local_col - 0.5) * horizontal_spread)) * gui_scale;
+    } else {
+        // Right page (columns 2 and 3)
+        var local_col = col - 2; // 0 or 1 (relative to right page)
+        card_x = (right_page_center + ((local_col - 0.5) * horizontal_spread)) * gui_scale;
+    }
+    
+    card_y_pos = (grid_start_y + (row * card_spacing_y)) * gui_scale;
+    
+
     // Get bug data using the bug key
     var bug_key = all_bug_keys[bug_index];
     var bug_data = global.bug_data[$ bug_key];
@@ -232,7 +261,7 @@ if (total_pages > 1) {
     draw_set_halign(fa_center);
     draw_set_color(c_black);
     draw_set_font(fnt_card_title_2x);
-    draw_text((ui_width/2) * gui_scale, (ui_height - 60) * gui_scale, 
+    draw_text((ui_width/2) * gui_scale, (ui_height - 45) * gui_scale,  // Moved from -60 to -45
               "Page " + string(page + 1) + "/" + string(total_pages));
 }
 
@@ -240,8 +269,8 @@ if (total_pages > 1) {
 draw_set_halign(fa_center);
 draw_set_color(make_color_rgb(101, 67, 33));
 draw_set_font(fnt_flavor_text_2x);
-draw_text((ui_width/2) * gui_scale, (ui_height - 40) * gui_scale, "TAB: Close  ←→: Navigate");
-
+draw_text((ui_width/2) * gui_scale, (ui_height - 25) * gui_scale,  // Moved from -40 to -25
+          "TAB: Close  ←→: Navigate");
 // Draw navigation arrows
 if (total_pages > 1) {
     draw_set_font(fnt_card_title_2x);
@@ -260,7 +289,7 @@ if (total_pages > 1) {
 
 // Draw close button
 var close_x = (ui_width - 35) * gui_scale;
-var close_y = 15 * gui_scale;
+var close_y = 5 * gui_scale;  // Moved from 15 to 5 (higher up, off book)
 var close_size = 20 * gui_scale;
 
 draw_set_color(c_ltgray);
