@@ -1,4 +1,4 @@
-// o_bug_collection_ui - FIXED Create Event
+// o_bug_collection_ui - Create Event with Animation Variables
 // UI state
 is_open = false;
 page = 0;
@@ -49,3 +49,12 @@ hover_timer = 0; // Timer for smooth scale/shadow animation (0-20 frames)
 detail_view_open = false; // Is the detail view currently open?
 detail_bug_key = ""; // Which bug is being shown in detail
 detail_bug_data = {}; // The bug data for detail view
+
+// NEW: Button animation system
+arrow_hover_offset = 0; // Gentle back-and-forth movement for arrows
+arrow_animation_timer = 0; // Timer for smooth animation
+button_hover_states = {
+    left_arrow: false,
+    right_arrow: false,
+    close_button: false
+};
