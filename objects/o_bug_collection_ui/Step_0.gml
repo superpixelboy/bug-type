@@ -42,7 +42,7 @@ var grid_start_y = ui_height * 0.30;      // Same as draw event
 var card_spacing_y = ui_height * 0.36;    // Same as draw event
 var horizontal_spread = ui_width * 0.15;  // Same as draw event
 
-// Calculate screen center for button positioning
+// Calculate screen center for button positioning_
 var screen_center_x = (480 / 2) * gui_scale;
 var screen_center_y = (270 / 2) * gui_scale;
 var book_scale = gui_scale * .5;
@@ -159,7 +159,7 @@ if (mouse_check_button_pressed(mb_left)) {
         if (bug_index < array_length(all_bug_keys)) {
             var bug_key = all_bug_keys[bug_index];
             if (ds_map_exists(global.discovered_bugs, bug_key)) {
-                if (scr_collection_show_card(bug_key)) {
+                if (scr_collection_show_card(bug_key,id)) {
                     hovered_card = -1;
                     hover_timer = 0;
                 }

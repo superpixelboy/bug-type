@@ -93,26 +93,32 @@ for (var i = 0; i < cards_per_page_grid; i++) {
         
         draw_set_alpha(shadow_alpha);
         draw_set_color(c_black);
-        draw_sprite_ext(s_card_template, 0, 
+        draw_sprite_ext(s_card_template, 1, // Use frame 1 (front) for discovered cards shadow
                        card_x + shadow_offset, card_y_pos + shadow_offset, 
                        final_collection_scale * gui_scale, final_collection_scale * gui_scale, 
                        0, c_black, 1);
         draw_set_alpha(1);
         draw_set_color(c_white);
         
-        // Draw the main card
-        draw_sprite_ext(s_card_template, 0, card_x, card_y_pos, 
+        // Draw the main card (frame 1 = front)
+        draw_sprite_ext(s_card_template, 1, card_x, card_y_pos, // Use frame 1 (front) for discovered cards
                        final_collection_scale * gui_scale, final_collection_scale * gui_scale, 0, c_white, 1);
         
-        // Draw bug sprite on card
-        var bug_sprite = bug_data.sprite;
-        draw_sprite_ext(bug_sprite, 0, card_x, card_y_pos - (15 * gui_scale * hover_scale), 
-                       (0.3 * hover_scale) * gui_scale, (0.3 * hover_scale) * gui_scale, 0, c_white, 1);
-        
-        // Draw gems and coins OVER the card (scaled with hover)
+        // Calculate scaled card dimensions for positioning
         var card_w_scaled = sprite_get_width(s_card_template) * final_collection_scale * gui_scale;
         var card_h_scaled = sprite_get_height(s_card_template) * final_collection_scale * gui_scale;
         
+        // Draw bug sprite on card (scaled and positioned)
+        var target_bug_size = card_h_scaled * 0.35;
+        var bug_w = sprite_get_width(bug_data.sprite);
+        var bug_h = sprite_get_height(bug_data.sprite);
+        var bug_scale = min(target_bug_size / bug_w, target_bug_size / bug_h);
+        var bug_y_offset = card_h_scaled * -0.20;
+        
+        draw_sprite_ext(bug_data.sprite, 0, card_x, card_y_pos + bug_y_offset, 
+                       bug_scale, bug_scale, 0, c_white, 1);
+        
+        // Draw gems and coins OVER the card (scaled with hover)
         // Gem (upper right)
         var gem_x = card_x + (card_w_scaled * 0.32);
         var gem_y = card_y_pos - (card_h_scaled * 0.38);
@@ -151,6 +157,66 @@ for (var i = 0; i < cards_per_page_grid; i++) {
         draw_set_color(cream);
         draw_text(coin_x, coin_y, nstr);
         
+        // ---- BUG NAME ----
+        // Use regular fonts for smaller text
+        draw_set_font(fnt_card_title);
+        var cream = make_color_rgb(245,235,215);
+        var dark_purple = make_color_rgb(45, 25, 60);
+        var name_y_offset = card_h_scaled * 0.08; // Same proportion as catch screen
+        var name_width = card_w_scaled * 0.8; // 80% of card width
+        var name_line_sep = 7 * final_collection_scale * gui_scale; // Scale line separation with hover
+        
+        // Shadow
+        draw_set_alpha(0.5);
+        draw_set_color(c_black);
+        draw_text_ext(card_x + 2, card_y_pos + name_y_offset + 2, bug_data.name, name_line_sep, name_width);
+        draw_set_alpha(1);
+        
+        // Outline
+        draw_set_color(dark_purple);
+        draw_text_ext(card_x + 1, card_y_pos + name_y_offset + 1, bug_data.name, name_line_sep, name_width);
+        draw_text_ext(card_x - 1, card_y_pos + name_y_offset - 1, bug_data.name, name_line_sep, name_width);
+        draw_text_ext(card_x + 1, card_y_pos + name_y_offset - 1, bug_data.name, name_line_sep, name_width);
+        draw_text_ext(card_x - 1, card_y_pos + name_y_offset + 1, bug_data.name, name_line_sep, name_width);
+        
+        // Main text
+        draw_set_color(cream);
+        draw_text_ext(card_x, card_y_pos + name_y_offset, bug_data.name, name_line_sep, name_width);
+        
+        // ---- FLAVOR TEXT ----
+        draw_set_font(fnt_flavor_text);
+        var light_gold = make_color_rgb(255,223,128);
+        var flavor_y_offset = card_h_scaled * 0.28; // Same proportion as catch screen
+        var flavor_width = card_w_scaled * 0.65; // 65% of card width (tighter)
+        var flavor_line_sep = 10 * final_collection_scale * gui_scale; // Scale with hover
+        
+        // Outline
+        draw_set_color(c_black);
+        draw_text_ext(card_x + 1, card_y_pos + flavor_y_offset + 1, bug_data.flavor_text, flavor_line_sep, flavor_width);
+        draw_text_ext(card_x - 1, card_y_pos + flavor_y_offset - 1, bug_data.flavor_text, flavor_line_sep, flavor_width);
+        draw_text_ext(card_x + 1, card_y_pos + flavor_y_offset - 1, bug_data.flavor_text, flavor_line_sep, flavor_width);
+        draw_text_ext(card_x - 1, card_y_pos + flavor_y_offset + 1, bug_data.flavor_text, flavor_line_sep, flavor_width);
+        
+        // Main text
+        draw_set_color(light_gold);
+        draw_text_ext(card_x, card_y_pos + flavor_y_offset, bug_data.flavor_text, flavor_line_sep, flavor_width);
+        
+        // ---- ESSENCE TEXT ----
+        draw_set_font(fnt_flavor_text);
+        var essence_y_offset = card_h_scaled * 0.40; // Same proportion as catch screen
+        var essence_text = "Essence: +" + string(bug_data.essence);
+        
+        // Outline
+        draw_set_color(c_black);
+        draw_text(card_x + 1, card_y_pos + essence_y_offset + 1, essence_text);
+        draw_text(card_x - 1, card_y_pos + essence_y_offset - 1, essence_text);
+        draw_text(card_x + 1, card_y_pos + essence_y_offset - 1, essence_text);
+        draw_text(card_x - 1, card_y_pos + essence_y_offset + 1, essence_text);
+        
+        // Main text
+        draw_set_color(make_color_rgb(255,215,0));
+        draw_text(card_x, card_y_pos + essence_y_offset, essence_text);
+        
     } else {
         // Draw card back with bug silhouette (no shadow for undiscovered)
         draw_sprite_ext(s_card_template, 0, card_x, card_y_pos, 
@@ -166,18 +232,20 @@ for (var i = 0; i < cards_per_page_grid; i++) {
 // Page navigation text
 if (total_pages > 1) {
     draw_set_halign(fa_center);
-    draw_set_color(c_black);
     draw_set_font(fnt_card_title_2x);
-    draw_text((ui_width/2) * gui_scale, (ui_height - 45) * gui_scale,
+	draw_set_color(make_color_rgb(58, 28, 16));
+	draw_set_alpha(.65);
+    draw_text(((ui_width/2) * gui_scale)-8, (ui_height - 48) * gui_scale,
               "Page " + string(page + 1) + "/" + string(total_pages));
 }
 
 // Instructions
+/*
 draw_set_halign(fa_center);
 draw_set_color(make_color_rgb(101, 67, 33));
 draw_set_font(fnt_flavor_text_2x);
 draw_text((ui_width/2) * gui_scale, (ui_height - 25) * gui_scale,
-          "TAB: Close  ←→: Navigate");
+          "TAB: Close  ←→: Navigate");*/
 
 // Draw navigation arrows with NEW SPRITES and animations
 if (total_pages > 1) {
@@ -212,7 +280,7 @@ if (total_pages > 1) {
         
         // Drop shadow
         var shadow_alpha = button_hover_states.right_arrow ? 0.6 : 0.3;
-        draw_sprite_ext(s_carrot, 0, animated_x + 2, right_arrow_y + 2, 
+        draw_sprite_ext(s_carrot, 0, animated_x - 2, right_arrow_y + 2, 
                        arrow_scale, arrow_scale, 0, c_black, shadow_alpha);
         
         // Main sprite
@@ -225,11 +293,11 @@ if (total_pages > 1) {
 // Draw close button with NEW SPRITE - FIXED scale to be half the size
 var close_x = (ui_width - 64) * gui_scale; // Move LEFT (was -40, now -60)
 var close_y = 12 * gui_scale; // Move UP (was 20, now 10)
-var close_scale = gui_scale * 0.5; // Half the size (was 0.5, now 0.25)
+var close_scale = gui_scale * 0.50; // Half the size (was 0.5, now 0.25)
 
 // Drop shadow for close button
 var close_shadow_alpha = button_hover_states.close_button ? 0.6 : 0.3;
-draw_sprite_ext(s_book_x, 0, close_x + 2, close_y + 2, 
+draw_sprite_ext(s_book_x, 0, close_x - 2, close_y + 2, 
                close_scale, close_scale, 0, c_black, close_shadow_alpha);
 
 // Main close button sprite

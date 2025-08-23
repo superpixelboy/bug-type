@@ -64,5 +64,6 @@ if (coin_value <= 4) {
 
 // High-res rendering (simplified)
 gui_scale = 2;
+if (!variable_instance_exists(id, "ui_owner")) ui_owner = noone;
 
 show_debug_message("Collection card created for: " + bug_name);
