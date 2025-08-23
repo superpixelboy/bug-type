@@ -167,4 +167,4 @@ gpu_set_texfilter(false);           // nearest-neighbor for crisp downscales/rot
 
 
 
-audio_play_sound(sn_main_theme, 1, true);  // true = loop
+//audio_play_sound(sn_main_theme, 1, true);  // true = loop
