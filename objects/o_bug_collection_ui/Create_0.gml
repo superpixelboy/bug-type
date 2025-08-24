@@ -2,7 +2,8 @@
 // UI state
 is_open = false;
 page = 0;
-bugs_per_page = 4;  // 4 cards horizontally across the book pages
+// FIXED: Match the actual grid layout used in Draw event
+cards_per_page = 8;  // 4x2 grid = 8 cards per page (was incorrectly 4)
 
 // Base UI dimensions (these are the "design" dimensions)
 ui_x = 0;      // Start from left edge
@@ -30,7 +31,8 @@ function update_collection_counts() {
     if (variable_global_exists("bug_data")) {
         var all_bug_keys = variable_struct_get_names(global.bug_data);
         total_bugs = array_length(all_bug_keys);
-        total_pages = ceil(total_bugs / bugs_per_page);
+        // FIXED: Use correct cards per page (8, not 4)
+        total_pages = ceil(total_bugs / cards_per_page);
     } else {
         total_bugs = 0;
         total_pages = 1;

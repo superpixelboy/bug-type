@@ -215,7 +215,7 @@ if (gem_pop_scale > 0) {
             draw_text_ext(cx, cy + flavor_y, flavor_text, flavor_sep, txt_w);
 
             // ---- ESSENCE TEXT WITH OUTLINE ONLY ----
-            draw_set_font(fnt_flavor_text);
+            draw_set_font(fnt_flavor_text_2x);
             var essence_y = sprite_get_height(s_card_template) * 0.40 * 2;
             var essence_text = "Essence: +" + string(essence_value);
 

@@ -229,14 +229,23 @@ for (var i = 0; i < cards_per_page_grid; i++) {
     }
 }
 
-// Page navigation text
+// Page navigation text - FIXED VERSION
 if (total_pages > 1) {
+    // SAFETY: Explicitly reset ALL draw states before drawing page text
     draw_set_halign(fa_center);
+    draw_set_valign(fa_top);        // CRITICAL: Reset vertical alignment 
     draw_set_font(fnt_card_title_2x);
-	draw_set_color(make_color_rgb(58, 28, 16));
-	draw_set_alpha(.65);
+    draw_set_color(make_color_rgb(58, 28, 16));
+    draw_set_alpha(.65);
+    
+    // Draw the page text with consistent positioning
     draw_text(((ui_width/2) * gui_scale)-8, (ui_height - 48) * gui_scale,
               "Page " + string(page + 1) + "/" + string(total_pages));
+              
+    // SAFETY: Reset draw states after page text
+    draw_set_alpha(1);
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
 }
 
 // Instructions

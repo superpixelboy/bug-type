@@ -54,27 +54,46 @@ if (keyboard_check(vk_f1)) {  // Hold F1 to see debug info
 
 // Draw progress bar
 // Draw progress bar (replace the existing progress bar code in o_bug_parent Draw event)
+// ALTERNATIVE APPROACH: Use sprite as background, progress on top
+// This might look better if your sprite has interior detail
+// SAFETY: Keeping all existing logic - only changing visual appearance
+// Draw progress bar with your perfectly-sized overlay sprite
+// SAFETY: Keeping all existing logic - only changing visual appearance
+// Draw progress bar with your perfectly-sized overlay sprite
 if (state == "idle" || state == "recovering") {
     var bar_x = room_width/2 - catch_bar_width/2;
     var bar_y = room_height - 40;  // Bottom of screen with some padding
     var bar_height = 20;
     
-    // Background
+    // Position the green bar to fit perfectly in the center of your overlay sprite
+    var inner_padding_x = 12; // Padding from left/right edges
+    var inner_x = bar_x + inner_padding_x;
+    var inner_y = bar_y + 14; // Move bar down to center it in the frame
+    var inner_width = catch_bar_width - (inner_padding_x * 2); // Smaller width
+    var inner_height = 15; // FIXED HEIGHT - make the green bar much thinner!
+    
+    // Background fill inside the frame (optional dark background)
     draw_set_color(c_black);
-    draw_rectangle(bar_x, bar_y, bar_x + catch_bar_width, bar_y + bar_height, false);
+    draw_rectangle(inner_x, inner_y, inner_x + inner_width, inner_y + inner_height, false);
     
-    // Progress fill
+    // Green progress fill (fits inside the sprite's clear area)
     draw_set_color(c_green);
-    draw_rectangle(bar_x + 2, bar_y + 2, bar_x + (catch_bar_width - 4) * catch_progress, bar_y + bar_height - 2, false);
+    var progress_width = inner_width * catch_progress;
+    draw_rectangle(inner_x, inner_y, inner_x + progress_width, inner_y + inner_height, false);
     
-    // "Catching..." text centered on the bar itself
+    // Draw your overlay sprite OVER the progress bar (no scaling needed!)
+    var sprite_x = room_width/2 - sprite_get_width(s_catching_overlay)/2;
+    var sprite_y = bar_y; // Align with the bar position
+    draw_sprite(s_catching_overlay, 0, sprite_x, sprite_y);
+    
+    // "Catching..." text centered in the overlay frame (moved down)
     draw_set_color(c_white);
     draw_set_halign(fa_center);
     draw_set_valign(fa_middle);
-	draw_set_font(fnt_DOS);
-    draw_text(room_width/2, bar_y + bar_height/2, "Catching...");
+    draw_set_font(fnt_DOS);
+    draw_text(room_width/2, bar_y + bar_height/2 + 11, "Catching..."); // +4 moves text down
     
-    // Reset draw settings
+    // Reset draw settings - UNCHANGED
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
 }

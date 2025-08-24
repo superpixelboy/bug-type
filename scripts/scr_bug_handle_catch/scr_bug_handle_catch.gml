@@ -1,6 +1,8 @@
 
 // Protected scr_bug_handle_catch with debugging
 /// scr_bug_handle_catch
+// Protected scr_bug_handle_catch with debugging + ESSENCE PARTICLES
+/// scr_bug_handle_catch
 function scr_bug_handle_catch() {
     if (state != "ready_to_catch") return;
 
@@ -24,8 +26,12 @@ function scr_bug_handle_catch() {
     audio_play_sound(sn_bug_catch1, 1, false);
     capture_timer = 0;
 
+    // SPAWN PARTICLES! 
+    scr_spawn_catch_particles(x, y);  // Existing catch particles
+    scr_spawn_essence_particles(x, y, essence_value);  // ADD THIS LINE - Flying essence particles!
+
     // === Ensure exactly one card exists ===
-    // Kill any existing card FIRST (prevents “create then destroy the new one” race)
+    // Kill any existing card FIRST (prevents "create then destroy the new one" race)
     var existing = instance_find(o_bug_card, 0);
     if (instance_exists(existing)) {
         with (existing) instance_destroy();
