@@ -13,3 +13,9 @@ part_system_destroy(global.magic_particle_system);
 part_type_destroy(global.dirt_particle);
 part_type_destroy(global.gold_particle);
 part_type_destroy(global.magic_particle);
+
+// Add to existing Cleanup Event - Clean up essence fill surface
+
+if (surface_exists(essence_fill_surface)) {
+    surface_free(essence_fill_surface);
+}

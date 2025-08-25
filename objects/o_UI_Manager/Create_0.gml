@@ -165,6 +165,20 @@ global.next_forced_bug = -1;
 display_set_gui_size(960, 540);     // 2× the 480×270 world
 gpu_set_texfilter(false);           // nearest-neighbor for crisp downscales/rotations
 
+// Add to existing Create Event - Essence Orb Fill Variables
+
+// Essence fill effect variables
+essence_fill_percentage = 0;  // 0.0 to 1.0 (0% to 100%)
+essence_max_capacity = 100;   // Maximum essence for full orb
+essence_fill_color = c_white; // Color of the fill
+essence_fill_surface = -1;    // Surface for masking effect
+
+// Optional: Animation variables for smooth filling
+target_fill_percentage = 0;
+fill_lerp_speed = 0.05;       // How fast the fill animates (0.01 = slow, 0.1 = fast)
+
+// Burst detection
+last_essence_amount = 0;      // Track previous essence to detect milestone crossings
 
 
 //audio_play_sound(sn_main_theme, 1, true);  // true = loop
