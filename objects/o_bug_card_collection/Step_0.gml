@@ -1,4 +1,5 @@
-// o_bug_card_collection Step Event - WITH SLIDE ANIMATION
+// o_bug_card_collection Step Event - FIXED OPACITY FLASH
+// UPDATED: Everything appears together with eased entrance, proper opacity control
 
 // Handle mouse clicks to close the card
 if (mouse_check_button_pressed(mb_left)) {
@@ -20,24 +21,26 @@ if (keyboard_check_pressed(vk_escape)) {
 
 // Handle card animations
 switch(card_state) {
-    case "flipping_in":
+    case "sliding_in":
         animation_timer++;
         
-        // Slide in animation (20 frames = 0.33 seconds)
-        var entry_progress = animation_timer / 20;
+        // Smooth slide entrance with ease-out
+        var entry_progress = animation_timer / total_slide_time;
         if (entry_progress >= 1) {
             card_state = "displayed";
             animation_timer = 0;
-            content_ready = true;
-            // Card reaches final position
             slide_offset_y = 0;
-            show_debug_message("Collection card slide complete");
+            content_fade_alpha = 1.0;  // FIXED: Ensure full opacity when complete
+            show_debug_message("Collection card entrance complete");
         } else {
-            // Smooth easing - starts fast, slows down at end
-            var eased_progress = 1 - power(1 - entry_progress, 3); // Ease out cubic
+            // Smooth ease-out cubic animation
+            var eased_progress = 1 - power(1 - entry_progress, 3);
             
-            // Slide from bottom of screen to center
-            var start_offset = display_get_gui_height() * 0.6; // Start 60% down from center
+            // FIXED: Fade in opacity along with slide animation
+            content_fade_alpha = eased_progress;
+            
+            // Slide from below screen to center
+            var start_offset = display_get_gui_height() * 0.6; // Start 60% below center
             slide_offset_y = lerp(start_offset, 0, eased_progress);
         }
         break;
@@ -45,6 +48,11 @@ switch(card_state) {
     case "displayed":
         // Card is fully shown and interactive
         slide_offset_y = 0; // Ensure it stays in position
+        content_fade_alpha = 1.0;  // FIXED: Ensure opacity stays at 1.0
+        
+        // Optional: Add subtle floating animation
+        gem_float_timer += 0.05;
+        // This can be used in Draw event for gentle gem bobbing if desired
         break;
         
     case "exiting":
@@ -66,19 +74,5 @@ switch(card_state) {
         break;
 }
 
-// Handle content pop animations (same as before)
-if (content_ready) {
-    // Bug sprite pop animation
-    if (bug_pop_scale < 1) {
-        bug_pop_timer++;
-        var pop_progress = bug_pop_timer / 10; // 10 frames
-        bug_pop_scale = min(1, pop_progress * pop_progress); // Ease in
-    }
-    
-    // Gem pop animation (slightly delayed)
-    if (bug_pop_scale >= 0.5 && gem_pop_scale < 1) {
-        gem_pop_timer++;
-        var gem_progress = gem_pop_timer / 8; // 8 frames
-        gem_pop_scale = min(1, gem_progress * gem_progress); // Ease in
-    }
-}
+// REMOVED: All pop-in animation code since content appears immediately
+// No more bug_pop_timer, gem_pop_timer, or content_ready checks

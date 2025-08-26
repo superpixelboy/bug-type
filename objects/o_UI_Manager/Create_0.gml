@@ -170,7 +170,7 @@ gpu_set_texfilter(false);           // nearest-neighbor for crisp downscales/rot
 // Essence fill effect variables
 essence_fill_percentage = 0;  // 0.0 to 1.0 (0% to 100%)
 essence_max_capacity = 100;   // Maximum essence for full orb
-essence_fill_color = c_white; // Color of the fill
+essence_fill_color = c_purple; // Color of the fill
 essence_fill_surface = -1;    // Surface for masking effect
 
 // Optional: Animation variables for smooth filling

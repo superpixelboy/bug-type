@@ -36,7 +36,7 @@ if (essence_fill_percentage > 0) {
     draw_clear_alpha(c_black, 0);
     
     // Draw the fill rectangle (bottom to top based on percentage) - darker shade
-    draw_set_color(make_color_rgb(230, 230, 230)); // Very light gray instead of pure white
+    draw_set_color(make_color_rgb(100, 10, 100)); 
     var fill_height = sprite_h * essence_fill_percentage;
     var fill_y = sprite_h - fill_height; // Start from bottom
     draw_rectangle(0, fill_y, sprite_w, sprite_h, false);

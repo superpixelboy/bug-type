@@ -1,11 +1,9 @@
 // o_bug_card_collection - Create Event
-// A simplified version of o_bug_card specifically for collection viewing
-
+// FIXED: Opacity starts at 0 to prevent flash, fades in with slide
 // Card state and animation
-card_state = "flipping_in";
+card_state = "sliding_in";  // Changed from "flipping_in"
 animation_timer = 0;
-total_flip_time = 30;
-flip_progress = 0;
+total_slide_time = 25;  // Smooth 25-frame entrance (was flip-based)
 
 // Card positioning and transform
 target_x = room_width/2;
@@ -17,8 +15,8 @@ card_rotation = 0;
 card_scale_x = 1;
 card_scale_y = 1;
 
-// Slide animation
-slide_offset_y = display_get_gui_height() * 0.6; // Start offset for slide animation
+// REMOVED: Slide animation offset - we'll use easing instead
+slide_offset_y = 0; 
 
 // Card data (will be set by the script that creates this)
 bug_name = "Unknown Bug";
@@ -34,13 +32,15 @@ card_sprite = s_card_template;
 drop_shadow_offset = 4;
 depth = -15000; // Even more negative than collection UI to ensure it's on top
 
-// Content animation
-bug_pop_timer = 0;
-bug_pop_scale = 0;
-gem_pop_timer = 0;
-gem_pop_scale = 0;
-content_ready = false;
-content_fade_alpha = 1.0;
+// FIXED: Content starts invisible and fades in during slide animation
+content_ready = true;  // Always ready now
+bug_pop_scale = 1.0;   // Start at full scale
+gem_pop_scale = 1.0;   // Start at full scale
+content_fade_alpha = 0.0;  // FIXED: Start invisible to prevent flash
+
+// Remove pop timers - not needed anymore
+// bug_pop_timer = 0; // REMOVED
+// gem_pop_timer = 0; // REMOVED
 
 // Card dimensions
 card_width = sprite_get_width(s_card_template);
