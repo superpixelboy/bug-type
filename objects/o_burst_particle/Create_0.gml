@@ -1,4 +1,3 @@
-// o_burst_particle Create Event
 // Particle movement
 target_x = 60;
 target_y = 30;

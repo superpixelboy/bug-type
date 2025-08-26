@@ -1,4 +1,4 @@
-// ESSENCE COUNTER WITH FILL EFFECT
+// ESSENCE COUNTER WITH FILL EFFECT + POTION STOPPER
 
 // Position and scale
 var base_x = 80;
@@ -11,7 +11,7 @@ var hundreds = floor(global.essence / 100) * 100;  // 200 for 250 essence
 var remainder = global.essence - hundreds;          // 250 - 200 = 50
 target_fill_percentage = remainder / 100.0;         // 50/100 = 0.5 (50%)
 
-// Smooth animation towards target (optional - remove if you want instant fill)
+// Smooth animation towards target (RESTORED - this was working perfectly!)
 essence_fill_percentage = lerp(essence_fill_percentage, target_fill_percentage, fill_lerp_speed);
 
 // Get sprite dimensions for masking
@@ -78,6 +78,9 @@ draw_text(base_x, base_y, essence_text);
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 draw_set_font(-1);
+
+// ✨ Step 5: Draw the potion stopper on top of everything!
+draw_sprite_ext(s_essence_icon_stopper, 0, base_x, base_y-54, sprite_scale, sprite_scale, 0, c_white, 1);
 
 // Screen flash effect (keep existing)
 if (flash_alpha > 0) {

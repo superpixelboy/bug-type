@@ -1,4 +1,4 @@
-// Clean o_UI_Manager Step Event - NO ESSENCE RESETS
+// Clean o_UI_Manager Step Event - WITH ESSENCE FILL RESET + SPEED BOOST
 
 // Fullscreen toggle with Shift+F
 if (keyboard_check(vk_shift) && keyboard_check_pressed(ord("F"))) {
@@ -64,23 +64,31 @@ if (global.essence != last_essence_amount) {
     show_debug_message("From: " + string(last_essence_amount) + " To: " + string(global.essence));
 }
 
-// Orb burst detection
+// Orb burst detection WITH FILL RESET + SPEED BOOST
 var current_milestone = floor(global.essence / 100);
 var previous_milestone = floor(last_essence_amount / 100);
 
 if (current_milestone > previous_milestone && global.essence > 0) {
-    show_debug_message(">>> BURST TRIGGERING <<<");
+    show_debug_message(">>> BURST TRIGGERING WITH FILL RESET <<<");
     show_debug_message("Essence BEFORE burst: " + string(global.essence));
     
-    // Effects only - NO ESSENCE CHANGES
+    // Effects - NO ESSENCE CHANGES
     scr_spawn_orb_burst_particles(80, 75);
     audio_play_sound(sn_bug_ready, 1, false);
     flash_alpha = 0.8;
     flash_duration = 30;
     flash_timer = 0;
     
+    // ✨ Reset the visual fill to 0 AND make it fill faster temporarily
+    essence_fill_percentage = 0;
+    fill_lerp_speed = 0.15;  // Much faster refill after burst
+    
+    show_debug_message("Fill percentage RESET to 0, speed boosted");
     show_debug_message("Essence AFTER burst: " + string(global.essence));
     show_debug_message(">>> BURST COMPLETE <<<");
+} else {
+    // Normal speed when not bursting
+    fill_lerp_speed = 0.05;  // Back to normal speed
 }
 
 // Update tracking (last line)

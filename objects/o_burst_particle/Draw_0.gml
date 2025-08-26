@@ -1,12 +1,12 @@
-// o_burst_particle Draw Event
+// o_essence_particle Draw Event
 
 // Calculate animation progress (0.0 to 1.0)
 var progress = timer / flight_time;
 progress = clamp(progress, 0, 1);
 
-// BURST PARTICLES: Dark purple to white (opposite of regular essence particles)
-var end_color = make_color_rgb(100, 10, 100);  // Dark purple at start
-var start_color = c_white;  // White at end
+// Interpolate color from dark purple to white (opposite of before)
+var start_color = make_color_rgb(100, 10, 100);  // Dark purple at start
+var end_color = c_white;  // White at end
 
 // Use merge_color for smooth interpolation
 var current_color = merge_color(start_color, end_color, progress);
@@ -18,6 +18,6 @@ draw_sprite_ext(
     x, y, 
     image_xscale, image_yscale, 
     image_angle, 
-    current_color,  // Color changes from dark purple to white
+    current_color,  // Color changes from white to purple
     image_alpha
 );

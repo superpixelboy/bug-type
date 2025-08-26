@@ -1,4 +1,4 @@
-// o_burst_particle Step Event
+// o_essence_particle Step Event
 timer++;
 
 // Fly toward target using smooth interpolation
