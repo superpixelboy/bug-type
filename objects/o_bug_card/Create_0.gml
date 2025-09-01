@@ -1,4 +1,5 @@
-// o_bug_card - Updated Create Event (Template-based)
+// o_bug_card - Updated Create Event
+// SAFETY: Updating coin system to use real catch counts instead of random numbers
 
 // STRONGER protection against multiple cards
 if (instance_number(o_bug_card) > 1) {
@@ -17,7 +18,6 @@ if (global.showing_card) {
 // Set the flag immediately
 global.showing_card = true;
 
-// Rest of your existing Create Event code...
 // Card state and animation
 card_state = "waiting";
 animation_timer = 0;
@@ -40,6 +40,7 @@ bug_sprite = s_bug_test;
 flavor_text = "Mystery bug";
 essence_value = 1;
 bug_type = "unknown";
+type_id = "unknown";  // Make sure both exist
 
 // ALWAYS use the template card sprite now
 card_sprite = s_card_template;
@@ -49,7 +50,6 @@ drop_shadow_offset = 4;
 card_depth = -1000;
 
 // Bug bounce animation
-// Add these variables to o_bug_card Create Event:
 bug_pop_timer = 0;
 bug_pop_scale = 0;
 gem_pop_timer = 0;
@@ -57,10 +57,7 @@ gem_pop_scale = 0;
 content_ready = false;  // Flag to know when to start pop animations
 depth = card_depth;
 
-
-
 content_fade_alpha = 1.0;  // Controls fade of bug/gem/text during exit
-
 
 // Card dimensions (using template)
 card_width = sprite_get_width(s_card_template);
@@ -84,12 +81,21 @@ gem_sprite = s_gem_very_common;  // Default gem
 gem_float_timer = 0;
 gem_glow_timer = 0;
 
-// ----- Coin value & sprite (1..15) -----
-coin_value = irandom_range(1, 15);
-if (coin_value <= 4) {
-    coin_sprite = s_coin_copper;
-} else if (coin_value <= 9) {
-    coin_sprite = s_coin_silver;
-} else {
-    coin_sprite = s_coin_gold;
+// UPDATED: Coin system - Use real catch counts instead of random numbers
+// Default values (will be overridden when bug data is set)
+coin_value = 1;
+coin_sprite = s_coin_copper;
+
+// Function to update coin display based on bug type
+function update_coin_display() {
+    if (variable_instance_exists(id, "type_id") && type_id != "unknown") {
+        coin_value = get_bug_catch_count(type_id);
+        coin_sprite = get_coin_sprite_from_count(coin_value);
+        
+        show_debug_message("Updated coin for " + type_id + ": count=" + string(coin_value));
+    } else {
+        // Fallback to default values
+        coin_value = 1;
+        coin_sprite = s_coin_copper;
+    }
 }

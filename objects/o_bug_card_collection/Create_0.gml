@@ -1,4 +1,6 @@
-// o_bug_card_collection - Create Event
+// o_bug_card_collection - Updated Create Event
+// SAFETY: Updating coin system to use real catch counts
+
 // FIXED: Opacity starts at 0 to prevent flash, fades in with slide
 // Card state and animation
 card_state = "sliding_in";  // Changed from "flipping_in"
@@ -38,10 +40,6 @@ bug_pop_scale = 1.0;   // Start at full scale
 gem_pop_scale = 1.0;   // Start at full scale
 content_fade_alpha = 0.0;  // FIXED: Start invisible to prevent flash
 
-// Remove pop timers - not needed anymore
-// bug_pop_timer = 0; // REMOVED
-// gem_pop_timer = 0; // REMOVED
-
 // Card dimensions
 card_width = sprite_get_width(s_card_template);
 card_height = sprite_get_height(s_card_template);
@@ -52,14 +50,29 @@ gem_sprite = s_gem_very_common;
 gem_float_timer = 0;
 gem_glow_timer = 0;
 
-// Coin value & sprite
-coin_value = irandom_range(1, 15);
-if (coin_value <= 4) {
-    coin_sprite = s_coin_copper;
-} else if (coin_value <= 9) {
-    coin_sprite = s_coin_silver;
-} else {
-    coin_sprite = s_coin_gold;
+// UPDATED: Coin system - Use real catch counts instead of random numbers
+// Default values (will be updated when bug data is set)
+coin_value = 1;
+coin_sprite = s_coin_copper;
+
+// Function to update coin display based on bug type
+function update_coin_display() {
+    if (variable_instance_exists(id, "type_id") && type_id != "unknown") {
+        coin_value = get_bug_catch_count(type_id);
+        coin_sprite = get_coin_sprite_from_count(coin_value);
+        
+        // BACKUP: If somehow count is 0 but we're showing the card, default to 1
+        if (coin_value == 0) {
+            coin_value = 1;
+            coin_sprite = s_coin_copper;
+        }
+        
+        show_debug_message("Collection card coin updated for " + type_id + ": count=" + string(coin_value));
+    } else {
+        // Fallback to default values
+        coin_value = 1;
+        coin_sprite = s_coin_copper;
+    }
 }
 
 // High-res rendering (simplified)

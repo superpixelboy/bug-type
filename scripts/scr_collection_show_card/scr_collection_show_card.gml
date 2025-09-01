@@ -30,6 +30,11 @@ function scr_collection_show_card(bug_key, ui_owner) {
         bug_sprite    = bug_data.sprite;
         essence_value = bug_data.essence;
 
+
+	  update_coin_display();
+    
+	    show_debug_message("Collection card updated: " + bug_name + " (catch count: " + string(coin_value) + ")");
+
         if (type_id != "unknown") {
             bug_rarity_tier = scr_gem_rarity(type_id);
             gem_sprite      = get_gem_sprite(bug_rarity_tier);

@@ -130,10 +130,15 @@ for (var i = 0; i < cards_per_page_grid; i++) {
         // Coin (upper left)
         var coin_x = card_x - (card_w_scaled * 0.32);
         var coin_y = card_y_pos - (card_h_scaled * 0.38);
-        var coin_value = (bug_index % 15) + 1;
-        var coin_sprite = s_coin_copper;
-        if (coin_value > 9) coin_sprite = s_coin_gold;
-        else if (coin_value > 4) coin_sprite = s_coin_silver;
+		
+    var coin_value = get_bug_catch_count(bug_key);
+	var coin_sprite = get_coin_sprite_from_count(coin_value);
+
+	// BACKUP: If catch count is 0 but bug is discovered, show 1
+	if (coin_value == 0 && ds_map_exists(global.discovered_bugs, bug_key)) {
+	    coin_value = 1;
+	    coin_sprite = s_coin_copper;
+	}										
         
         draw_sprite_ext(coin_sprite, 0, coin_x, coin_y, 
                        final_collection_scale * gui_scale, final_collection_scale * gui_scale, 0, c_white, 1);

@@ -1,8 +1,4 @@
-
-// Protected scr_bug_handle_catch with debugging
-/// scr_bug_handle_catch
-// Protected scr_bug_handle_catch with debugging + ESSENCE PARTICLES
-/// scr_bug_handle_catch
+// scr_bug_handle_catch - Updated with catch count tracking
 function scr_bug_handle_catch() {
     if (state != "ready_to_catch") return;
 
@@ -14,8 +10,27 @@ function scr_bug_handle_catch() {
     show_debug_message("bug_name exists: " + string(variable_instance_exists(id, "bug_name")));
     show_debug_message("flavor_text exists: " + string(variable_instance_exists(id, "flavor_text")));
 
-    // Give essence
-    global.essence += essence_value;
+    // NEW: Track catch count and check for tier advancement
+    var old_count = 0;
+    var new_count = 1;
+    var bonus_essence = 0;
+    
+    if (variable_instance_exists(id, "bug_type")) {
+        old_count = get_bug_catch_count(bug_type);
+        new_count = increment_bug_catch_count(bug_type);
+        
+        // Check if we advanced a coin tier and award bonus essence
+        if (check_coin_tier_advancement(old_count, new_count)) {
+            var new_tier = get_coin_tier_from_count(new_count);
+            bonus_essence = get_tier_advancement_bonus(new_tier);
+            
+            show_debug_message("COIN TIER ADVANCEMENT! " + bug_type + " reached tier " + string(new_tier) + " (count: " + string(new_count) + ")");
+            show_debug_message("Bonus essence awarded: " + string(bonus_essence));
+        }
+    }
+
+    // Give essence (base + bonus)
+    global.essence += essence_value + bonus_essence;
 
     // Register bug discovery safely
     if (variable_instance_exists(id, "bug_type")) {
@@ -28,7 +43,9 @@ function scr_bug_handle_catch() {
 
     // SPAWN PARTICLES! 
     scr_spawn_catch_particles(x, y);  // Existing catch particles
-    scr_spawn_essence_particles(x, y, essence_value);  // ADD THIS LINE - Flying essence particles!
+    
+    // TODO: Add essence particle function if it exists
+    // scr_spawn_essence_particles(x, y, essence_value + bonus_essence);
 
     // === Ensure exactly one card exists ===
     // Kill any existing card FIRST (prevents "create then destroy the new one" race)
@@ -78,6 +95,14 @@ function scr_bug_handle_catch() {
         bug_sprite     = other.sprite_index;
         essence_value  = other.essence_value;
 
+        // NEW: Store the bonus essence for display
+        if (variable_instance_exists(id, "bonus_essence")) {
+            bonus_essence = other.bonus_essence;
+        } else {
+            // Create the variable if it doesn't exist
+            bonus_essence = other.bonus_essence;
+        }
+
         // Visuals
         card_sprite    = s_card_template;
 
@@ -98,7 +123,12 @@ function scr_bug_handle_catch() {
         animation_timer = 0;
 
         show_debug_message("Card created for bug: " + bug_name + " | rarity tier: " + string(bug_rarity_tier));
-    }
+  
+		 update_coin_display();
+        
+        show_debug_message("Catch card coin updated: " + bug_name + " (catch count: " + string(coin_value) + ")");
+	
+  }
 
     global.showing_card = true;
 }
