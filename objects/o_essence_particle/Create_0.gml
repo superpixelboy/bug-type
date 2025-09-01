@@ -1,4 +1,4 @@
-// o_burst_particle Create Event
+// o_essence_particle Create Event - FIXED: Add depth for visibility
 // Particle movement
 target_x = 60;
 target_y = 30;
@@ -16,3 +16,6 @@ image_index = 0;  // Start with big white pixel
 // Visual
 image_xscale = 1;
 image_yscale = 1;
+
+// FIXED: Set depth so essence particles show above everything else
+depth = -25000;

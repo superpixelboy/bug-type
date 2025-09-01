@@ -87,15 +87,37 @@ coin_value = 1;
 coin_sprite = s_coin_copper;
 
 // Function to update coin display based on bug type
+
 function update_coin_display() {
     if (variable_instance_exists(id, "type_id") && type_id != "unknown") {
-        coin_value = get_bug_catch_count(type_id);
+        // Get FRESH count directly from global system
+        var fresh_count = get_bug_catch_count(type_id);
+        
+        // Update both coin value and sprite
+        coin_value = fresh_count;
         coin_sprite = get_coin_sprite_from_count(coin_value);
         
-        show_debug_message("Updated coin for " + type_id + ": count=" + string(coin_value));
+        // SAFETY: If somehow count is 0 but we're showing the card, default to 1
+        if (coin_value == 0) {
+            coin_value = 1;
+            coin_sprite = s_coin_copper;
+            show_debug_message("WARNING: Count was 0 for displayed bug " + type_id + ", defaulting to 1");
+        }
+        
+        // Debug output for verification
+        var card_type = (object_index == o_bug_card) ? "catch card" : "collection card";
+        show_debug_message("Coin display updated for " + card_type + " " + type_id + ": count=" + string(coin_value));
+        
+        // Optional: Special handling for duplicate catches on catch cards
+        if (object_index == o_bug_card && coin_value > 1) {
+            show_debug_message("DUPLICATE CATCH! " + type_id + " now caught " + string(coin_value) + " times");
+            // Could add special visual effects here later (sparkle, "+1" animation, etc.)
+        }
+        
     } else {
-        // Fallback to default values
+        // Fallback values for unknown bugs
         coin_value = 1;
         coin_sprite = s_coin_copper;
+        show_debug_message("Using fallback coin values for unknown bug");
     }
 }

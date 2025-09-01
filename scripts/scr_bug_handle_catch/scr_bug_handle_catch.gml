@@ -1,4 +1,5 @@
 // scr_bug_handle_catch - Fixed version without bonus_essence assignment error
+// scr_bug_handle_catch - FIXED: Add missing essence particles
 function scr_bug_handle_catch() {
     if (state != "ready_to_catch") return;
 
@@ -53,8 +54,11 @@ function scr_bug_handle_catch() {
     audio_play_sound(sn_bug_catch1, 1, false);
     capture_timer = 0;
 
-    // SPAWN PARTICLES! 
+    // SPAWN PARTICLES - FIXED: Add the missing essence particles!
     scr_spawn_catch_particles(x, y);  // Existing catch particles
+    
+    // MISSING: Spawn the white essence particles that fly to the essence counter
+    scr_spawn_essence_particles(x, y, total_essence);
 
     // === Ensure exactly one card exists ===
     // Kill any existing card FIRST (prevents "create then destroy the new one" race)
@@ -126,28 +130,9 @@ function scr_bug_handle_catch() {
         show_debug_message("Card created for bug: " + bug_name + " | rarity tier: " + string(bug_rarity_tier));
         
         // Update coin display with real catch count
-     //   update_coin_display();
-          show_debug_message("Card created for bug: " + bug_name + " | rarity tier: " + string(bug_rarity_tier));
-        
-        // TEMPORARILY COMMENT OUT this call until we fix the function:
-        // update_coin_display();
-        
-        // MANUALLY set coin values for now:
-        if (type_id != "unknown") {
-            coin_value = get_bug_catch_count(type_id);
-            coin_sprite = get_coin_sprite_from_count(coin_value);
-        } else {
-            coin_value = 1;
-            coin_sprite = s_coin_copper;
-        }
-        
-        show_debug_message("Catch card coin updated: " + bug_name + " (catch count: " + string(coin_value) + ")");
-		
-		
-        show_debug_message("Catch card coin updated: " + bug_name + " (catch count: " + string(coin_value) + ")");
+        update_coin_display();
+        show_debug_message("Card created for bug: " + bug_name + " | rarity tier: " + string(bug_rarity_tier));
     }
-
-    global.showing_card = true;
 }
 /*
 function scr_create_bug_card_immediate() {

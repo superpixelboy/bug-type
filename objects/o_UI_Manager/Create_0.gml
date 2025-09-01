@@ -1,4 +1,4 @@
-// o_UI_Manager Create Event - COMPLETE with new bug catch tracking system
+// o_UI_Manager Create Event - FIXED: Particle depths for visibility
 
 global.bugs_caught = 0;
 global.flipped_rocks = ds_list_create();
@@ -11,8 +11,6 @@ global.showing_card = false;  // Prevents multiple cards from spawning
 if (!variable_global_exists("bug_catch_counts")) {
     global.bug_catch_counts = ds_map_create();
 }
-
-
 
 // Add this new map for tracking spawned rocks
 if (!variable_global_exists("spawned_rocks")) {
@@ -31,10 +29,10 @@ global.dirt_particle_system = part_system_create();
 global.gold_particle_system = part_system_create();
 global.magic_particle_system = part_system_create();
 
-// Set depth for particles (draw above bugs but below UI)
-part_system_depth(global.dirt_particle_system, -10);
-part_system_depth(global.gold_particle_system, -10);
-part_system_depth(global.magic_particle_system, -10);
+// FIXED: Set much more negative depths so particles show above everything
+part_system_depth(global.dirt_particle_system, -20000);    // Above UI elements
+part_system_depth(global.gold_particle_system, -20000);    // Above UI elements
+part_system_depth(global.magic_particle_system, -20000);   // Above UI elements
 
 // ===========================================
 // DIRT PARTICLES (Combo 0-1)  
@@ -111,43 +109,6 @@ part_type_gravity(global.magic_particle, -0.02, 90);
 // Sparkle and fade
 part_type_alpha3(global.magic_particle, 0, 1, 0);
 part_type_life(global.magic_particle, 40, 60);
-
-// ===========================================
-// PARTICLE SPAWNING SCRIPTS
-// ===========================================
-
-/// @description Spawn dirt particles for normal hits
-/// @param x_pos
-/// @param y_pos  
-/// @param count
-function scr_spawn_dirt_particles(x_pos, y_pos, count) {
-    part_particles_create(global.dirt_particle_system, x_pos, y_pos, global.dirt_particle, count);
-}
-
-/// @description Spawn gold particles for medium combos
-/// @param x_pos
-/// @param y_pos
-/// @param count
-function scr_spawn_gold_particles(x_pos, y_pos, count) {
-    part_particles_create(global.gold_particle_system, x_pos, y_pos, global.gold_particle, count);
-}
-
-/// @description Spawn magic particles for high combos
-/// @param x_pos
-/// @param y_pos
-/// @param count
-function scr_spawn_magic_particles(x_pos, y_pos, count) {
-    part_particles_create(global.magic_particle_system, x_pos, y_pos, global.magic_particle, count);
-}
-
-/// @description Spawn massive particle burst for catching
-/// @param x_pos
-/// @param y_pos
-function scr_spawn_catch_particles(x_pos, y_pos) {
-    // Mix of gold and magic particles for epic effect - MORE PARTICLES!
-    part_particles_create(global.gold_particle_system, x_pos, y_pos, global.gold_particle, 12);
-    part_particles_create(global.magic_particle_system, x_pos, y_pos, global.magic_particle, 18);
-}
 
 // Screen flash variables (add to existing Create Event)
 flash_alpha = 0;
