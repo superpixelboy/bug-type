@@ -9,7 +9,9 @@ total_slide_time = 25;  // Smooth 25-frame entrance (was flip-based)
 
 // Card positioning and transform
 target_x = room_width/2;
-target_y = room_height/2;
+var gui_center_target = display_get_gui_height() / 2;
+var view_y = camera_get_view_y(view_camera[0]);
+target_y = (gui_center_target / 2) + view_y;
 start_y = room_height + 100;
 x = target_x;
 y = start_y;

@@ -143,4 +143,37 @@ fill_lerp_speed = 0.05;       // How fast the fill animates (0.01 = slow, 0.1 = 
 // Burst detection
 last_essence_amount = 0;      // Track previous essence to detect milestone crossings
 
+
+// ADD THIS TO YOUR GAME INITIALIZATION (probably in a Game Start event or init script)
+// Global essence multipliers based on catch count
+global.essence_multiplier_tier1 = 1.0;   // 1-4 catches: normal value
+global.essence_multiplier_tier2 = 1.5;   // 5-9 catches: 1.5x bonus  
+global.essence_multiplier_tier3 = 2.0;   // 10+ catches: 2x bonus
+function get_essence_with_multiplier(base_essence, catch_count) {
+    var multiplier = 1.0; // Default 1.0x
+    
+    if (catch_count >= 10) {
+        multiplier = 2.0; // 2.0x for 10+ catches
+    } else if (catch_count >= 5) {
+        multiplier = 1.5; // 1.5x for 5-9 catches
+    }
+    
+    return ceil(base_essence * multiplier); // Round up to avoid decimals
+}
+
+// Function for card display text
+function get_essence_display_text(base_essence, catch_count) {
+    var final_essence = get_essence_with_multiplier(base_essence, catch_count);
+    var multiplier_text = "";
+    
+    // Show multiplier info for bonuses
+    if (catch_count >= 10) {
+        multiplier_text = " (x2.0)";
+    } else if (catch_count >= 5) {
+        multiplier_text = " (x1.5)";
+    }
+    
+    return "Essence: +" + string(final_essence) + multiplier_text;
+}
+
 //audio_play_sound(sn_main_theme, 1, true);  // true

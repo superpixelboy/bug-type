@@ -2,7 +2,9 @@
 
 // Get GUI center position with slide animation
 var gui_center_x = display_get_gui_width() / 2;
-var gui_center_y = (display_get_gui_height() / 2) + slide_offset_y;
+var cam = view_camera[0];
+var view_y = camera_get_view_y(cam);
+var gui_center_y = (y - view_y) * 2;
 
 // Use same scaling as o_bug_card
 var card_scale_x = 1.0;
@@ -185,7 +187,22 @@ if (content_ready && content_fade_alpha > 0) {
 
             // ===== ESSENCE TEXT =====
             var essence_y = sprite_get_height(s_card_template) * 0.40 * 2;
-            var essence_text = "Essence: +" + string(essence_value);
+          var catch_count = get_bug_catch_count(type_id);
+			var multiplier = 1.0;
+			if (catch_count >= 10) {
+			    multiplier = 2.0;
+			} else if (catch_count >= 5) {
+			    multiplier = 1.5;
+			}
+			var final_essence = ceil(essence_value * multiplier);
+			var essence_text = "Essence: +" + string(final_essence);
+
+			// Add multiplier display
+			if (catch_count >= 10) {
+			    essence_text += " (x2.0)";
+			} else if (catch_count >= 5) {
+			    essence_text += " (x1.5)";
+			}
 
             // 8-direction outline
             draw_set_color(c_black);

@@ -43,7 +43,7 @@ function scr_bug_handle_catch() {
     show_debug_message("Essence calculation: " + string(base_essence) + " * " + string(essence_multiplier) + " + " + string(milestone_bonus) + " = " + string(total_essence));
     
     // Give essence
-    global.essence += total_essence;
+    global.essence += ceil(total_essence);
 
     // Register bug discovery safely
     if (variable_instance_exists(id, "bug_type")) {

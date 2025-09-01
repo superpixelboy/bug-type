@@ -168,6 +168,7 @@
     {"id":{"name":"scr_bug_handle_click","path":"scripts/scr_bug_handle_click/scr_bug_handle_click.yy",},},
     {"id":{"name":"scr_bug_load_data","path":"scripts/scr_bug_load_data/scr_bug_load_data.yy",},},
     {"id":{"name":"scr_collection_show_card","path":"scripts/scr_collection_show_card/scr_collection_show_card.yy",},},
+    {"id":{"name":"scr_essence_multipliers","path":"scripts/scr_essence_multipliers/scr_essence_multipliers.yy",},},
     {"id":{"name":"scr_gem_rarity","path":"scripts/scr_gem_rarity/scr_gem_rarity.yy",},},
     {"id":{"name":"scr_initialize_bug_data","path":"scripts/scr_initialize_bug_data/scr_initialize_bug_data.yy",},},
     {"id":{"name":"scr_play_combo_sound","path":"scripts/scr_play_combo_sound/scr_play_combo_sound.yy",},},

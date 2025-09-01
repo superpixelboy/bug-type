@@ -217,9 +217,28 @@ if (gem_pop_scale > 0) {
             // ---- ESSENCE TEXT WITH OUTLINE ONLY ----
             draw_set_font(fnt_flavor_text_2x);
             var essence_y = sprite_get_height(s_card_template) * 0.40 * 2;
-            var essence_text = "Essence: +" + string(essence_value);
+    
+			//var essence_text = get_essence_display_text(essence_value, coin_value);
+ 
+		 // TEST: Direct calculation instead of function call
+		var catch_count = get_bug_catch_count(type_id);
+		var multiplier = 1.0;
+		if (catch_count >= 10) {
+		    multiplier = 2.0;
+		} else if (catch_count >= 5) {
+		    multiplier = 1.5;
+		}
+		var final_essence = round(essence_value * multiplier);
+		var essence_text = "Essence: +" + string(final_essence);
 
-            // Draw black outline (8-direction)
+		// Add multiplier display
+		if (catch_count >= 10) {
+		    essence_text += " (x2.0)";
+		} else if (catch_count >= 5) {
+		    essence_text += " (x1.5)";
+		}
+		   
+		   // Draw black outline (8-direction)
             draw_set_color(c_black);
             draw_text(cx + 1, cy + essence_y + 1, essence_text);
             draw_text(cx - 1, cy + essence_y - 1, essence_text);

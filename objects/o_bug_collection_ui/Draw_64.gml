@@ -209,7 +209,24 @@ for (var i = 0; i < cards_per_page_grid; i++) {
         // ---- ESSENCE TEXT ----
         draw_set_font(fnt_flavor_text);
         var essence_y_offset = card_h_scaled * 0.40; // Same proportion as catch screen
-        var essence_text = "Essence: +" + string(bug_data.essence);
+		var catch_count = get_bug_catch_count(bug_key);
+		// Calculate essence with multipliers
+		var catch_count = get_bug_catch_count(bug_key);
+		var multiplier = 1.0;
+		if (catch_count >= 10) {
+		    multiplier = 2.0;
+		} else if (catch_count >= 5) {
+		    multiplier = 1.5;
+		}
+		var final_essence = round(bug_data.essence * multiplier);
+		var essence_text = "Essence: +" + string(final_essence);
+
+		// Add multiplier display
+		if (catch_count >= 10) {
+		    essence_text += " (x2.0)";
+		} else if (catch_count >= 5) {
+		    essence_text += " (x1.5)";
+		}
         
         // Outline
         draw_set_color(c_black);
