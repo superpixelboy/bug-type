@@ -1,3 +1,6 @@
+// o_bug_card Step Event - FIXED: Add missing coin refresh logic
+
+// Handle state transitions and animation timing
 switch(card_state) {
     case "waiting":
         // Count down delay timer
@@ -56,88 +59,105 @@ switch(card_state) {
         }
         break;
         
-    // Replace the animation section in your Step Event "showing" case:
+    case "showing":
+        animation_timer++;
+        
+        // Gentle floating animation while showing
+        var float_offset = sin(animation_timer * 0.1) * 2;
+        y = target_y + float_offset;
+        
+        // Start content pop-in animations when card is fully visible
+        if (!content_ready && animation_timer > 5) {  // Shorter delay - was 10
+            content_ready = true;
+            bug_pop_timer = 0;
+            gem_pop_timer = 8;  // Gem pops in after bug - was 5
+        }
+        
+        // SNAPPIER Bug pop-in animation
+        if (content_ready && bug_pop_timer < 20) {  // Faster duration - was 30
+            bug_pop_timer++;
+            var pop_progress = bug_pop_timer / 20;  // Faster - was 30
+            
+            // MORE DRAMATIC bouncy scale: 0 → 1.6 → 1.0 (bigger overshoot)
+            if (pop_progress < 0.5) {  // First half - was 0.6
+                bug_pop_scale = lerp(0, 1.3, pop_progress / 0.5);  // Bigger overshoot - was 1.3
+            } else {
+                // Snap back faster
+                var snap_progress = (pop_progress - 0.5) / 0.5;
+                bug_pop_scale = lerp(1.3, 1.0, snap_progress * snap_progress);  // Quadratic easing for snap
+            }
+        } else if (content_ready) {
+            bug_pop_scale = 1.0;
+        }
+        
+        // SNAPPIER Gem pop-in animation (slightly delayed)
+        if (content_ready && gem_pop_timer < 15) {  // Even faster for gem - was 30
+            gem_pop_timer++;
+            var gem_progress = gem_pop_timer / 15;  // Faster - was 30
+            
+            // Same dramatic bouncy scale for gem
+            if (gem_progress < 0.5) {
+                gem_pop_scale = lerp(0, 1.3, gem_progress / 0.5);  // Bigger overshoot
+            } else {
+                var snap_progress = (gem_progress - 0.5) / 0.5;
+                gem_pop_scale = lerp(1.3, 1.0, snap_progress * snap_progress);  // Quadratic snap
+            }
+        } else if (content_ready) {
+            gem_pop_scale = 1.0;
+        }
+        
+        // Click to continue
+        if (mouse_check_button_pressed(mb_left) || keyboard_check_pressed(vk_space)) {
+            card_state = "flipping_out";
+            animation_timer = 0;
+        }
+        break;
+        
+    case "flipping_out":
+        animation_timer++;
+        flip_progress = animation_timer / (total_flip_time * 0.7);  // Faster exit
+        
+        var ease_progress = power(flip_progress, 2);  // Ease in
+        
+        // QUICK FADE for content (much faster than card movement)
+        if (animation_timer < 6) {  // Fade content in first 10 frames
+            content_fade_alpha = lerp(1.0, 0.0, animation_timer / 6);
+        } else {
+            content_fade_alpha = 0.0;  // Fully faded after 10 frames
+        }
+        
+        // Move up and fade (card background only)
+        y = lerp(target_y, target_y - 100, ease_progress);
+        card_scale_x = lerp(0.8, 0.6, ease_progress);
+        card_scale_y = lerp(0.8, 0.6, ease_progress);
+        
+        // Fade out card background
+        image_alpha = lerp(1, 0, ease_progress);
+        
+        if (flip_progress >= 1) {
+            // Return to overworld
+            room_goto(global.return_room);
+            instance_destroy();
+        }
+        break;
+}
 
-case "showing":
-    animation_timer++;
+// MISSING: Add the coin refresh logic like the collection cards have!
+// FIXED: Update coin count every frame like the collection UI does
+if (type_id != "unknown") {
+    var fresh_count = get_bug_catch_count(type_id);
     
-    // Gentle floating animation while showing
-    var float_offset = sin(animation_timer * 0.1) * 2;
-    y = target_y + float_offset;
-    
-    // Start content pop-in animations when card is fully visible
-    if (!content_ready && animation_timer > 5) {  // Shorter delay - was 10
-        content_ready = true;
-        bug_pop_timer = 0;
-        gem_pop_timer = 8;  // Gem pops in after bug - was 5
-    }
-    
-    // SNAPPIER Bug pop-in animation
-    if (content_ready && bug_pop_timer < 20) {  // Faster duration - was 30
-        bug_pop_timer++;
-        var pop_progress = bug_pop_timer / 20;  // Faster - was 30
+    // Only update if the count has changed to avoid unnecessary operations
+    if (coin_value != fresh_count) {
+        coin_value = fresh_count;
+        coin_sprite = get_coin_sprite_from_count(coin_value);
         
-        // MORE DRAMATIC bouncy scale: 0 → 1.6 → 1.0 (bigger overshoot)
-        if (pop_progress < 0.5) {  // First half - was 0.6
-            bug_pop_scale = lerp(0, 1.3, pop_progress / 0.5);  // Bigger overshoot - was 1.3
-        } else {
-            // Snap back faster
-            var snap_progress = (pop_progress - 0.5) / 0.5;
-            bug_pop_scale = lerp(1.3, 1.0, snap_progress * snap_progress);  // Quadratic easing for snap
+        show_debug_message("CATCH CARD coin refreshed for " + type_id + ": count updated to " + string(coin_value));
+        
+        // SAFETY: Ensure minimum value of 1
+        if (coin_value == 0) {
+            coin_value = 1;
+            coin_sprite = s_coin_copper;
         }
-    } else if (content_ready) {
-        bug_pop_scale = 1.0;
     }
-    
-    // SNAPPIER Gem pop-in animation (slightly delayed)
-    if (content_ready && gem_pop_timer < 15) {  // Even faster for gem - was 30
-        gem_pop_timer++;
-        var gem_progress = gem_pop_timer / 15;  // Faster - was 30
-        
-        // Same dramatic bouncy scale for gem
-        if (gem_progress < 0.5) {
-            gem_pop_scale = lerp(0, 1.3, gem_progress / 0.5);  // Bigger overshoot
-        } else {
-            var snap_progress = (gem_progress - 0.5) / 0.5;
-            gem_pop_scale = lerp(1.3, 1.0, snap_progress * snap_progress);  // Quadratic snap
-        }
-    } else if (content_ready) {
-        gem_pop_scale = 1.0;
-    }
-    
-    // Click to continue
-    if (mouse_check_button_pressed(mb_left) || keyboard_check_pressed(vk_space)) {
-        card_state = "flipping_out";
-        animation_timer = 0;
-    }
-    break;
-        
-   
-case "flipping_out":
-    animation_timer++;
-    flip_progress = animation_timer / (total_flip_time * 0.7);  // Faster exit
-    
-    var ease_progress = power(flip_progress, 2);  // Ease in
-    
-    // QUICK FADE for content (much faster than card movement)
-    if (animation_timer < 6) {  // Fade content in first 10 frames
-        content_fade_alpha = lerp(1.0, 0.0, animation_timer / 6);
-    } else {
-        content_fade_alpha = 0.0;  // Fully faded after 10 frames
-    }
-    
-    // Move up and fade (card background only)
-    y = lerp(target_y, target_y - 100, ease_progress);
-    card_scale_x = lerp(0.8, 0.6, ease_progress);
-    card_scale_y = lerp(0.8, 0.6, ease_progress);
-    
-    // Fade out card background
-    image_alpha = lerp(1, 0, ease_progress);
-    
-    if (flip_progress >= 1) {
-        // Return to overworld
-        room_goto(global.return_room);
-        instance_destroy();
-    }
-    break;
 }

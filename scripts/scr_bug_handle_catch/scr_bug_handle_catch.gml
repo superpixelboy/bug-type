@@ -112,13 +112,15 @@ function scr_bug_handle_catch() {
         card_sprite    = s_card_template;
 
         // Rarity calc (uses type_id now, not bug_type)
-        if (type_id != "unknown") {
-            bug_rarity_tier = scr_gem_rarity(type_id);
-            gem_sprite      = get_gem_sprite(bug_rarity_tier);
+  if (type_id != "unknown") {
+            coin_value = get_bug_catch_count(type_id);
+            coin_sprite = get_coin_sprite_from_count(coin_value);
         } else {
-            bug_rarity_tier = 5;                // default very common
-            gem_sprite      = s_gem_very_common;
+            coin_value = 1;
+            coin_sprite = s_coin_copper;
         }
+        
+        show_debug_message("SIMPLE FIX: Card coin set to " + string(coin_value) + " for " + type_id);
 
         gem_float_timer = 0;
         gem_glow_timer  = 0;
@@ -132,7 +134,9 @@ function scr_bug_handle_catch() {
         // Update coin display with real catch count
         update_coin_display();
         show_debug_message("Card created for bug: " + bug_name + " | rarity tier: " + string(bug_rarity_tier));
-    }
+ 
+ 
+ }
 }
 /*
 function scr_create_bug_card_immediate() {
