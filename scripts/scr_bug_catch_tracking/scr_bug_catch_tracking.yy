@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"sc",
+  "%Name":"scr_bug_catch_tracking",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"sc",
+  "name":"scr_bug_catch_tracking",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

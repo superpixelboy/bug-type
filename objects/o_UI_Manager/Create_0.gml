@@ -12,58 +12,7 @@ if (!variable_global_exists("bug_catch_counts")) {
     global.bug_catch_counts = ds_map_create();
 }
 
-// Function to get catch count for a bug type
-function get_bug_catch_count(bug_key) {
-    if (ds_map_exists(global.bug_catch_counts, bug_key)) {
-        return ds_map_find_value(global.bug_catch_counts, bug_key);
-    }
-    return 0;
-}
 
-// Function to increment catch count and return new count
-function increment_bug_catch_count(bug_key) {
-    var current_count = get_bug_catch_count(bug_key);
-    var new_count = current_count + 1;
-    ds_map_set(global.bug_catch_counts, bug_key, new_count);
-    return new_count;
-}
-
-// Function to get coin sprite based on catch count
-function get_coin_sprite_from_count(catch_count) {
-    if (catch_count >= 20) {
-        return s_coin_gold;  // Could add platinum sprite later
-    } else if (catch_count >= 10) {
-        return s_coin_gold;
-    } else if (catch_count >= 5) {
-        return s_coin_silver;
-    } else {
-        return s_coin_copper;
-    }
-}
-
-// Function to check if this catch count triggers a coin tier advancement
-function check_coin_tier_advancement(old_count, new_count) {
-    var old_tier = get_coin_tier_from_count(old_count);
-    var new_tier = get_coin_tier_from_count(new_count);
-    return new_tier > old_tier;
-}
-
-function get_coin_tier_from_count(count) {
-    if (count >= 20) return 4;  // Platinum (future)
-    if (count >= 10) return 3;  // Gold
-    if (count >= 5) return 2;   // Silver
-    return 1;  // Copper
-}
-
-// Function to get bonus essence for tier advancement
-function get_tier_advancement_bonus(new_tier) {
-    switch(new_tier) {
-        case 2: return 5;   // Silver bonus
-        case 3: return 10;  // Gold bonus  
-        case 4: return 20;  // Platinum bonus
-        default: return 0;
-    }
-}
 
 // Add this new map for tracking spawned rocks
 if (!variable_global_exists("spawned_rocks")) {
