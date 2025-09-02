@@ -253,3 +253,13 @@ if (keyboard_check_pressed(vk_space) && can_interact) {
 
 // Update player depth for tree sorting
 depth = -y;  // Player sorts based on feet position
+
+// Add this as the FIRST LINE in Step events of objects that should pause
+// (like o_player_walk, o_bug_parent, etc.)
+
+// Exit early if game is paused
+if (variable_global_exists("game_paused") && global.game_paused) {
+    exit; // Skip the rest of the Step event
+}
+
+// ... rest of your existing Step event code below ...

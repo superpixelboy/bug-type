@@ -93,3 +93,38 @@ if (current_milestone > previous_milestone && global.essence > 0) {
 
 // Update tracking (last line)
 last_essence_amount = global.essence;
+
+
+// ESC key for pause menu (only if no other menus are open)
+if (keyboard_check_pressed(vk_escape)) {
+    show_debug_message("ESC pressed - checking conditions...");
+    
+    // Don't open pause menu if debug console is active
+    if (instance_exists(o_bug_selector) && o_bug_selector.menu_active) {
+        show_debug_message("Bug selector active - ignoring ESC");
+        exit; // Let bug selector handle ESC
+    }
+    
+    // Don't open pause menu if collection is open (let collection handle ESC)
+    var collection_ui = instance_find(o_bug_collection_ui, 0);
+    if (collection_ui != noone && collection_ui.is_open) {
+        show_debug_message("Collection open - ignoring ESC");
+        exit; // Let collection handle ESC
+    }
+    
+    // Don't open during bug catching/card display
+    if (instance_exists(o_bug_card) || instance_exists(o_bug_card_collection)) {
+        show_debug_message("Bug card active - ignoring ESC");
+        exit; // Let cards handle their own closing
+    }
+    
+    // Check if pause menu already exists
+    if (!instance_exists(o_pause_menu)) {
+        show_debug_message("Creating pause menu...");
+        var pause_menu = instance_create_layer(0, 0, "Instances", o_pause_menu);
+        show_debug_message("Pause menu instance ID: " + string(pause_menu));
+        audio_play_sound(sn_bugtap1, 1, false);
+    } else {
+        show_debug_message("Pause menu already exists");
+    }
+}

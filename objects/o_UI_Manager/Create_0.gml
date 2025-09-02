@@ -176,4 +176,6 @@ function get_essence_display_text(base_essence, catch_count) {
     return "Essence: +" + string(final_essence) + multiplier_text;
 }
 
+
+
 //audio_play_sound(sn_main_theme, 1, true);  // true
