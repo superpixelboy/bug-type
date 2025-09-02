@@ -1,3 +1,9 @@
+// Exit early if game is paused
+if (variable_global_exists("game_paused") && global.game_paused) {
+    exit; // Skip the rest of the Step event - pause bug animation/logic
+}
+
+
 // Simplified state machine
 switch(state) {
  

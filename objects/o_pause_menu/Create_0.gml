@@ -1,7 +1,7 @@
-// o_pause_menu Create Event - SIMPLE VERSION
+// o_pause_menu Create Event - MATCH COLLECTION UI DEPTH EXACTLY
 menu_active = true;
 selected_index = 0;
-menu_scale = 0; // Start scaled down for entrance animation
+menu_scale = 0; // Start at zero scale for entrance animation
 target_scale = 1;
 
 // Menu items
@@ -19,12 +19,13 @@ menu_height = 250;
 item_height = 35;
 
 // Animation
-animation_timer = 0;
+animation_timer = 0; // Start animation from beginning
 entrance_duration = 15; // frames
 
-// Set up global pause flag instead of deactivating instances
+// Set up global pause flag
 global.game_paused = true;
 
-depth = -20000; // Draw on top of everything
+// CRITICAL: Use EXACT same depth as collection UI
+depth = -10000;  // Exactly the same as collection UI
 
-show_debug_message("Pause menu created - game_paused set to true");
+show_debug_message("Pause menu created - depth: " + string(depth) + " - game_paused: " + string(global.game_paused));

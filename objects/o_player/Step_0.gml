@@ -1,8 +1,16 @@
 // Skip all player logic if movement is disabled (during intro)
+// Add this as the VERY FIRST LINE in o_player Step Event
+// Exit early if game is paused
+if (variable_global_exists("game_paused") && global.game_paused) {
+    exit; // Skip the rest of the Step event
+}
+
+// Exit early if movement is disabled (during intro)
 if (movement_mode == "disabled") {
     exit;
 }
 
+// ... rest of your existing Step event code continues below ...
 // Exit early if collection UI is open
 if (instance_exists(o_bug_collection_ui) && o_bug_collection_ui.is_open) {
     exit;
@@ -257,9 +265,6 @@ depth = -y;  // Player sorts based on feet position
 // Add this as the FIRST LINE in Step events of objects that should pause
 // (like o_player_walk, o_bug_parent, etc.)
 
-// Exit early if game is paused
-if (variable_global_exists("game_paused") && global.game_paused) {
-    exit; // Skip the rest of the Step event
-}
+
 
 // ... rest of your existing Step event code below ...

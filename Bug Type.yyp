@@ -393,6 +393,7 @@
     {"id":{"name":"s_item_oak_wand","path":"sprites/s_item_oak_wand/s_item_oak_wand.yy",},},
     {"id":{"name":"s_leaf_pile","path":"sprites/s_leaf_pile/s_leaf_pile.yy",},},
     {"id":{"name":"s_log","path":"sprites/s_log/s_log.yy",},},
+    {"id":{"name":"s_menu_page","path":"sprites/s_menu_page/s_menu_page.yy",},},
     {"id":{"name":"s_orange_catch_background","path":"sprites/s_orange_catch_background/s_orange_catch_background.yy",},},
     {"id":{"name":"s_player_HB","path":"sprites/s_player_HB/s_player_HB.yy",},},
     {"id":{"name":"s_player_idle_d","path":"sprites/s_player_idle_d/s_player_idle_d.yy",},},
