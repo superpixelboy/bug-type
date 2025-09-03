@@ -1,68 +1,60 @@
-// SAFETY: Preserving all original click logic, adding sprite hover effects
-
-// Don't process hover when collection is open
+// Don't process hover/input when collection is open (PRESERVED ORIGINAL LOGIC)
 if (instance_exists(o_bug_collection_ui) && o_bug_collection_ui.is_open) {
     is_hovered = false;
-    hover_scale = 1.0;
-    image_index = 0;
+    hover_scale = lerp(hover_scale, 1.0, 0.1);
     exit;
 }
 
-// Get GUI mouse coordinates for proper hover detection
+// NEW: Don't process hover/input when pause menu is active
+if (instance_exists(o_pause_menu)) {
+    is_hovered = false;
+    hover_scale = lerp(hover_scale, 1.0, 0.1);
+    exit;
+}
+
+// SAFETY: Get GUI mouse coordinates for proper detection
 var mouse_gui_x = device_mouse_x_to_gui(0);
 var mouse_gui_y = device_mouse_y_to_gui(0);
 
 var gui_width = display_get_gui_width();
 var gui_height = display_get_gui_height();
 
-// Calculate sprite position - FIXED positioning to match actual sprite center
+// Calculate actual position to match Draw event exactly
 var btn_x = gui_width - btn_margin - (btn_sprite_width * base_scale / 2);
 var btn_y = gui_height - btn_margin - (btn_sprite_height * base_scale / 2);
 
-// REFINED: Make hitbox skinnier to match the book shape better
-var current_scale = base_scale * hover_scale;
-var half_width = (btn_sprite_width * current_scale * 0.8) / 2;  // 20% narrower
-var half_height = (btn_sprite_height * current_scale * 0.9) / 2; // 10% shorter
+// Calculate button bounds for hover detection
+var button_width = btn_sprite_width * base_scale;
+var button_height = btn_sprite_height * base_scale;
 
-is_hovered = (mouse_gui_x >= btn_x - half_width && 
-              mouse_gui_x <= btn_x + half_width && 
-              mouse_gui_y >= btn_y - half_height && 
-              mouse_gui_y <= btn_y + half_height);
+// Check if mouse is within button bounds
+is_hovered = (mouse_gui_x >= btn_x - button_width/2 && 
+              mouse_gui_x <= btn_x + button_width/2 && 
+              mouse_gui_y >= btn_y - button_height/2 && 
+              mouse_gui_y <= btn_y + button_height/2);
 
-// Update sprite frame and scale based on hover
+// Smooth hover animation
 if (is_hovered) {
-    image_index = 1; // Assume frame 1 is hover/lit state
-    hover_scale = lerp(hover_scale, 1.05, 0.15); // Gentle scale up
+    hover_scale = lerp(hover_scale, 1.1, 0.1);
 } else {
-    image_index = 0; // Normal state
-    hover_scale = lerp(hover_scale, 1.0, 0.15); // Scale back to normal
+    hover_scale = lerp(hover_scale, 1.0, 0.1);
 }
 
-// SAFETY: Keeping exact original click logic
-if (mouse_check_button_pressed(mb_left)) {
-    // Check if click is on button using the same hover bounds
-    if (is_hovered) {
-        // Find and toggle the collection (ORIGINAL LOGIC PRESERVED)
-        var collection_ui = instance_find(o_bug_collection_ui, 0);
-        if (collection_ui != noone) {
-            // Toggle the collection
-            collection_ui.is_open = !collection_ui.is_open;
-            
-            // Reset states when opening OR closing
-            if (collection_ui.is_open) {
-                // Opening - reset to first page
-                collection_ui.page = 0;
-            }
-            
-            // Always reset these when toggling
-            collection_ui.detail_view_open = false;
-            collection_ui.detail_bug_key = "";
-            collection_ui.detail_bug_data = {};
-            collection_ui.hovered_card = -1;
-            collection_ui.hover_timer = 0;
+// Handle clicks in GUI space
+if (mouse_check_button_pressed(mb_left) && is_hovered) {
+    // Toggle collection menu
+    var collection_ui = instance_find(o_bug_collection_ui, 0);
+    if (collection_ui != noone) {
+        collection_ui.is_open = !collection_ui.is_open;
+        if (collection_ui.is_open) {
+            collection_ui.page = 0;
         }
-        
-        // Add click sound feedback
-        audio_play_sound(sn_rock_click, 1, false);
+        collection_ui.detail_view_open = false;
+        collection_ui.detail_bug_key = "";
+        collection_ui.detail_bug_data = {};
+        collection_ui.hovered_card = -1;
+        collection_ui.hover_timer = 0;
     }
+    
+    audio_play_sound(sn_bugtap1, 1, false);
 }

@@ -176,6 +176,7 @@ function get_essence_display_text(base_essence, catch_count) {
     return "Essence: +" + string(final_essence) + multiplier_text;
 }
 
-
+// ESC key cooldown protection
+esc_cooldown = 0;  // Frames remaining before ESC can be used again
 
 //audio_play_sound(sn_main_theme, 1, true);  // true

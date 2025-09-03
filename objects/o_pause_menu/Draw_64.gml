@@ -11,7 +11,7 @@ var screen_center_y = (270 / 2) * 2;
 // Dark overlay at 15% opacity over EVERYTHING
 var gui_w = display_get_gui_width();
 var gui_h = display_get_gui_height();
-draw_set_alpha(0.15);
+draw_set_alpha(0.4);
 draw_set_color(c_black);
 draw_rectangle(0, 0, gui_w, gui_h, false);
 draw_set_alpha(1);
@@ -37,27 +37,36 @@ if (menu_scale > 0.01) {
         if (menu_scale > 0.7) {
             draw_set_halign(fa_center); // Center align for cleaner look on the page
             
+            // Define colors
+            var dark_purple = make_color_rgb(64, 32, 96);  // Dark purple for normal text
+            
             for (var i = 0; i < array_length(menu_items); i++) {
                 var item_y = items_start_y + (i * item_spacing);
                 
-                // Selection highlight (rounded rectangle that fits the page style)
+                // Menu item text with selection styling
                 if (i == selected_index && animation_timer >= entrance_duration) {
-                    draw_set_color(c_blue);
-                    draw_set_alpha(0.3);
-                    var highlight_w = 200 * menu_scale;
-                    var highlight_h = 25 * menu_scale;
-                    draw_rectangle(screen_center_x - highlight_w/2, item_y - highlight_h/2, 
-                                 screen_center_x + highlight_w/2, item_y + highlight_h/2, false);
-                    draw_set_alpha(1);
+                    // Selected item: White text with dark purple outline
+                    // Draw outline by drawing text multiple times with offset
+                    draw_set_color(dark_purple);
+                    var outline_offset = 1;
+                    // Draw outline in 8 directions
+                    draw_text_transformed(screen_center_x - outline_offset, item_y - outline_offset, menu_items[i].text, menu_scale, menu_scale, 0);
+                    draw_text_transformed(screen_center_x + outline_offset, item_y - outline_offset, menu_items[i].text, menu_scale, menu_scale, 0);
+                    draw_text_transformed(screen_center_x - outline_offset, item_y + outline_offset, menu_items[i].text, menu_scale, menu_scale, 0);
+                    draw_text_transformed(screen_center_x + outline_offset, item_y + outline_offset, menu_items[i].text, menu_scale, menu_scale, 0);
+                    draw_text_transformed(screen_center_x - outline_offset, item_y, menu_items[i].text, menu_scale, menu_scale, 0);
+                    draw_text_transformed(screen_center_x + outline_offset, item_y, menu_items[i].text, menu_scale, menu_scale, 0);
+                    draw_text_transformed(screen_center_x, item_y - outline_offset, menu_items[i].text, menu_scale, menu_scale, 0);
+                    draw_text_transformed(screen_center_x, item_y + outline_offset, menu_items[i].text, menu_scale, menu_scale, 0);
                     
-                    // Selection arrow (positioned to the left)
-                    draw_set_color(c_yellow);
-                    draw_text_transformed(screen_center_x - 120 * menu_scale, item_y, ">", menu_scale, menu_scale, 0);
+                    // Draw main white text on top
+                    draw_set_color(c_white);
+                    draw_text_transformed(screen_center_x, item_y, menu_items[i].text, menu_scale, menu_scale, 0);
+                } else {
+                    // Non-selected item: Dark purple text
+                    draw_set_color(dark_purple);
+                    draw_text_transformed(screen_center_x, item_y, menu_items[i].text, menu_scale, menu_scale, 0);
                 }
-                
-                // Menu item text (centered on the page)
-                draw_set_color(c_white);
-                draw_text_transformed(screen_center_x, item_y, menu_items[i].text, menu_scale, menu_scale, 0);
             }
         }
         
