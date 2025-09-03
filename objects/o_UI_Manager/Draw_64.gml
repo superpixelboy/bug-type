@@ -1,3 +1,24 @@
+// o_UI_Manager Draw_64 Event - MAIN MENU AWARENESS
+
+// SAFETY: Don't draw essence UI in main menu
+if (room == rm_main_menu) {
+    // Only draw essential stuff in main menu (like screen flash)
+    
+    // Screen flash effect (works everywhere)
+    if (flash_alpha > 0) {
+        draw_set_alpha(flash_alpha);
+        draw_set_color(c_white);
+        draw_rectangle(0, 0, display_get_width(), display_get_height(), false);
+        draw_set_alpha(1);
+        draw_set_color(c_white);
+    }
+    
+    // EXIT EARLY - Don't draw game UI in main menu
+    exit;
+}
+
+// ===== GAME UI (only draw outside main menu) =====
+
 // ESSENCE COUNTER WITH FILL EFFECT + POTION STOPPER
 
 // Position and scale

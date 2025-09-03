@@ -116,6 +116,7 @@
     {"id":{"name":"o_hole","path":"objects/o_hole/o_hole.yy",},},
     {"id":{"name":"o_large_rock_spawner","path":"objects/o_large_rock_spawner/o_large_rock_spawner.yy",},},
     {"id":{"name":"o_log","path":"objects/o_log/o_log.yy",},},
+    {"id":{"name":"o_main_menu","path":"objects/o_main_menu/o_main_menu.yy",},},
     {"id":{"name":"o_moonlight_moth","path":"objects/o_moonlight_moth/o_moonlight_moth.yy",},},
     {"id":{"name":"o_moss_grub","path":"objects/o_moss_grub/o_moss_grub.yy",},},
     {"id":{"name":"o_pause_menu","path":"objects/o_pause_menu/o_pause_menu.yy",},},
@@ -159,6 +160,7 @@
     {"id":{"name":"rm_deep_woods","path":"rooms/rm_deep_woods/rm_deep_woods.yy",},},
     {"id":{"name":"rm_forest_clearing","path":"rooms/rm_forest_clearing/rm_forest_clearing.yy",},},
     {"id":{"name":"rm_home","path":"rooms/rm_home/rm_home.yy",},},
+    {"id":{"name":"rm_main_menu","path":"rooms/rm_main_menu/rm_main_menu.yy",},},
     {"id":{"name":"rm_rock_catching","path":"rooms/rm_rock_catching/rm_rock_catching.yy",},},
     {"id":{"name":"rm_shadow_grove","path":"rooms/rm_shadow_grove/rm_shadow_grove.yy",},},
     {"id":{"name":"rm_spooky_forest","path":"rooms/rm_spooky_forest/rm_spooky_forest.yy",},},
@@ -455,6 +457,7 @@
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
+    {"roomId":{"name":"rm_main_menu","path":"rooms/rm_main_menu/rm_main_menu.yy",},},
     {"roomId":{"name":"rm_spooky_forest","path":"rooms/rm_spooky_forest/rm_spooky_forest.yy",},},
     {"roomId":{"name":"rm_rock_catching","path":"rooms/rm_rock_catching/rm_rock_catching.yy",},},
     {"roomId":{"name":"rm_wichhouse","path":"rooms/rm_wichhouse/rm_wichhouse.yy",},},
