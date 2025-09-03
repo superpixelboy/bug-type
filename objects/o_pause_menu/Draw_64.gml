@@ -15,6 +15,7 @@ draw_set_alpha(0.15);
 draw_set_color(c_black);
 draw_rectangle(0, 0, gui_w, gui_h, false);
 draw_set_alpha(1);
+draw_set_font(fnt_flavor_text_2x);
 
 // Only draw menu if scale is visible
 if (menu_scale > 0.01) {
@@ -27,20 +28,10 @@ if (menu_scale > 0.01) {
         // Calculate text positioning relative to the sprite
         var title_y = screen_center_y - 100 * menu_scale;
         var essence_y = screen_center_y - 70 * menu_scale;
-        var items_start_y = screen_center_y - 30 * menu_scale;
+        var items_start_y = screen_center_y + 0 * menu_scale;
         var item_spacing = 35 * menu_scale;
         var instructions_y = screen_center_y + 110 * menu_scale;
-        
-        // Title
-        draw_set_font(-1);
-        draw_set_halign(fa_center);
-        draw_set_color(c_yellow);
-        draw_text_transformed(screen_center_x, title_y, "GAME PAUSED", menu_scale, menu_scale, 0);
-        
-        // Current essence display
-        draw_set_color(c_aqua);
-        draw_text_transformed(screen_center_x, essence_y, "Essence: " + string(global.essence), 
-                             menu_scale * 0.8, menu_scale * 0.8, 0);
+
         
         // Menu items (only show if animation is far enough along)
         if (menu_scale > 0.7) {
@@ -70,14 +61,7 @@ if (menu_scale > 0.01) {
             }
         }
         
-        // Instructions at bottom (only when fully animated)
-        if (animation_timer >= entrance_duration) {
-            draw_set_halign(fa_center);
-            draw_set_color(c_ltgray);
-            draw_text_transformed(screen_center_x, instructions_y, 
-                                "↑↓: Navigate  ENTER: Select  ESC: Resume", 
-                                menu_scale * 0.7, menu_scale * 0.7, 0);
-        }
+      
     }
 }
 
