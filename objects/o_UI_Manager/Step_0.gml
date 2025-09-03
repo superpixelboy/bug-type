@@ -1,6 +1,4 @@
-// o_UI_Manager Step Event - MAIN MENU AWARENESS ADDED
-
-// SAFETY: Don't run game UI systems in main menu
+// Clean o_UI_Manager Step Event - WITH ESSENCE FILL RESET + SPEED BOOST
 if (room == rm_main_menu) {
     // Only handle essential stuff in main menu - NO ESC, NO ESSENCE, NO PAUSE
     
@@ -27,9 +25,6 @@ if (room == rm_main_menu) {
     // EXIT EARLY - Don't run game systems in main menu
     exit;
 }
-
-// ===== GAME SYSTEMS (only run outside main menu) =====
-
 // Fullscreen toggle with Shift+F
 if (keyboard_check(vk_shift) && keyboard_check_pressed(ord("F"))) {
     // Toggle fullscreen
@@ -124,51 +119,37 @@ if (current_milestone > previous_milestone && global.essence > 0) {
 // Update tracking (last line)
 last_essence_amount = global.essence;
 
-// ESC COOLDOWN: Countdown timer
-if (esc_cooldown > 0) {
-    esc_cooldown--;
-}
 
-// CENTRALIZED ESC HANDLING - Handles both opening AND closing pause menus
-if (keyboard_check_pressed(vk_escape) && esc_cooldown <= 0) {
-    show_debug_message("ESC pressed - centralized handling");
+// ESC key for pause menu (only if no other menus are open)
+if (keyboard_check_pressed(vk_escape)) {
+    show_debug_message("ESC pressed - checking conditions...");
     
-    // Don't handle ESC if debug console is active
+    // Don't open pause menu if debug console is active
     if (instance_exists(o_bug_selector) && o_bug_selector.menu_active) {
-        show_debug_message("Bug selector active - letting it handle ESC");
-        exit;
+        show_debug_message("Bug selector active - ignoring ESC");
+        exit; // Let bug selector handle ESC
     }
     
-    // Don't handle ESC if collection is open (let collection handle ESC)
+    // Don't open pause menu if collection is open (let collection handle ESC)
     var collection_ui = instance_find(o_bug_collection_ui, 0);
     if (collection_ui != noone && collection_ui.is_open) {
-        show_debug_message("Collection open - letting it handle ESC");
-        exit;
+        show_debug_message("Collection open - ignoring ESC");
+        exit; // Let collection handle ESC
     }
     
-    // Don't handle ESC during bug catching/card display
+    // Don't open during bug catching/card display
     if (instance_exists(o_bug_card) || instance_exists(o_bug_card_collection)) {
-        show_debug_message("Bug card active - letting cards handle ESC");
-        exit;
+        show_debug_message("Bug card active - ignoring ESC");
+        exit; // Let cards handle their own closing
     }
     
-    // CENTRALIZED LOGIC: If pause menu exists, close it. If not, open it.
-    var pause_menu = instance_find(o_pause_menu, 0);
-    if (pause_menu != noone) {
-        // CLOSE pause menu
-        show_debug_message("Closing pause menu via UI_Manager");
-        audio_play_sound(sn_bug_catch1, 1, false);
-        global.game_paused = false;
-        instance_destroy(pause_menu);
-    } else {
-        // OPEN pause menu
-        show_debug_message("Creating pause menu via UI_Manager");
-        var new_pause_menu = instance_create_layer(0, 0, "Instances", o_pause_menu);
-        show_debug_message("Pause menu instance ID: " + string(new_pause_menu));
+    // Check if pause menu already exists
+    if (!instance_exists(o_pause_menu)) {
+        show_debug_message("Creating pause menu...");
+        var pause_menu = instance_create_layer(0, 0, "Instances", o_pause_menu);
+        show_debug_message("Pause menu instance ID: " + string(pause_menu));
         audio_play_sound(sn_bugtap1, 1, false);
+    } else {
+        show_debug_message("Pause menu already exists");
     }
-    
-    // Set cooldown to prevent double-hits
-    esc_cooldown = 10;
-    show_debug_message("ESC cooldown set to: " + string(esc_cooldown));
 }

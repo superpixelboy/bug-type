@@ -8,23 +8,40 @@ if (!menu_active) {
 var screen_center_x = (480 / 2) * 2; // gui_scale is 2
 var screen_center_y = (270 / 2) * 2; 
 
-// Set font to match your other menus - BEFORE any drawing
-draw_set_font(fnt_flavor_text_2x);
+// SAFETY: Try to set custom font, fall back to default if missing
+if (font_exists(fnt_flavor_text_2x)) {
+    draw_set_font(fnt_flavor_text_2x);
+} else {
+    draw_set_font(-1); // Use default font as fallback
+    show_debug_message("WARNING: fnt_flavor_text_2x missing, using default font");
+}
 
 // Only draw menu if scale is visible
 if (menu_scale > 0.01) {
-    // Draw the beautiful menu page background sprite (same scale as pause menu)
-    draw_sprite_ext(s_menu_page, 0, screen_center_x, screen_center_y, 
-                   menu_scale * 2, menu_scale * 2, 0, c_white, 1);
+    // SAFETY: Try to draw menu background sprite, fall back to rectangle if missing
+    if (sprite_exists(s_menu_page)) {
+        draw_sprite_ext(s_menu_page, 0, screen_center_x, screen_center_y, 
+                       menu_scale * 2, menu_scale * 2, 0, c_white, 1);
+    } else {
+        // Fallback: Draw a simple menu background
+        draw_set_alpha(0.9);
+        draw_set_color(make_color_rgb(40, 30, 60)); // Dark purple background
+        var bg_w = 300 * menu_scale;
+        var bg_h = 250 * menu_scale;
+        draw_rectangle(screen_center_x - bg_w/2, screen_center_y - bg_h/2, 
+                      screen_center_x + bg_w/2, screen_center_y + bg_h/2, false);
+        draw_set_alpha(1);
+        show_debug_message("WARNING: s_menu_page missing, using fallback background");
+    }
     
     // Only draw text content after animation is mostly complete
     if (menu_scale > 0.3) {
         // Calculate positioning - tighter spacing for main menu
         var title_y = screen_center_y - 110 * menu_scale;
         var items_start_y = screen_center_y - 20 * menu_scale; 
-        var item_spacing = 28 * menu_scale; // Reduced from 40 to 28 for tighter spacing
+        var item_spacing = 28 * menu_scale;
         
-        // OPTIONAL: Game title at the top
+        // Game title at the top
         if (menu_scale > 0.7) {
             draw_set_halign(fa_center);
             draw_set_color(make_color_rgb(64, 32, 96)); // Dark purple
@@ -75,7 +92,7 @@ if (menu_scale > 0.01) {
             }
         }
         
-        // OPTIONAL: Instructions at bottom
+        // Instructions at bottom
         if (menu_scale > 0.8) {
             var instructions_y = screen_center_y + 100 * menu_scale;
             draw_set_color(make_color_rgb(100, 100, 100));

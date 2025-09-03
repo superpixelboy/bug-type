@@ -44,7 +44,12 @@ if (menu_active) {
                     
                 case "settings":
                     // TODO: Open settings menu (placeholder for now)
-                    show_debug_message("Settings menu - placeholder");
+                  if (window_get_fullscreen()) {
+					        window_set_fullscreen(false);
+					    } else {
+					        window_set_fullscreen(true);
+					    }
+                        break;
                     break;
                     
                 case "main_menu":
