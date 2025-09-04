@@ -1,4 +1,4 @@
-// o_pause_menu Step Event - NAVIGATION ONLY (NO ESC HANDLING!)
+// o_pause_menu Step Event - FIXED MAIN MENU RETURN
 if (menu_active) {
     // Animate menu entrance
     animation_timer = min(animation_timer + 1, entrance_duration);
@@ -43,19 +43,29 @@ if (menu_active) {
                     break;
                     
                 case "settings":
-                    // TODO: Open settings menu (placeholder for now)
-                  if (window_get_fullscreen()) {
-					        window_set_fullscreen(false);
-					    } else {
-					        window_set_fullscreen(true);
-					    }
-                        break;
+                    // Toggle fullscreen as placeholder settings
+                    if (window_get_fullscreen()) {
+                        window_set_fullscreen(false);
+                    } else {
+                        window_set_fullscreen(true);
+                    }
                     break;
                     
                 case "main_menu":
-                    // Return to main menu
+                    // FIXED: Properly return to main menu
+                    show_debug_message("Returning to main menu...");
+                    
+                    // Clean up game state first
                     global.game_paused = false;
-                    room_goto(rm_main_menu); // Adjust room name as needed
+                    
+                    // Stop all audio
+                    audio_stop_all();
+                    
+                    // CRITICAL: Destroy this pause menu instance BEFORE room transition
+                    instance_destroy();
+                    
+                    // Go to main menu
+                    room_goto(rm_main_menu);
                     break;
                     
                 case "quit":

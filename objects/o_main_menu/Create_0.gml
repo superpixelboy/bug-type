@@ -1,4 +1,4 @@
-// o_main_menu Create Event - SAFE VERSION WITH DEBUG
+// o_main_menu Create Event - FIXED TO USE SAVE SYSTEM
 show_debug_message("=== MAIN MENU STARTING UP ===");
 
 menu_active = true;
@@ -6,12 +6,16 @@ selected_index = 0;
 menu_scale = 0; // Start at zero for entrance animation
 target_scale = 1;
 
-// Menu items - matching your pause menu pattern
+// FIXED: Actually check if save data exists using our save system
+has_save_data = scr_has_save_data();
+show_debug_message("Save file check result: " + string(has_save_data));
+
+// Menu items - Continue is enabled/disabled based on actual save data
 menu_items = [
-    {text: "NEW GAME", action: "new_game"}, 
-    {text: "CONTINUE", action: "continue"},
-    {text: "SETTINGS", action: "settings"},
-    {text: "QUIT", action: "quit"}
+    {text: "NEW GAME", action: "new_game", enabled: true}, 
+    {text: "CONTINUE", action: "continue", enabled: has_save_data},
+    {text: "SETTINGS", action: "settings", enabled: true},
+    {text: "QUIT", action: "quit", enabled: true}
 ];
 
 show_debug_message("Menu items created: " + string(array_length(menu_items)));
@@ -24,11 +28,6 @@ item_height = 40;
 // Animation - same system as pause menu
 animation_timer = 0;
 entrance_duration = 20;
-
-// Check if save data exists for Continue button
-has_save_data = false;
-// TODO: Replace with your actual save check
-// has_save_data = file_exists("your_save_file.dat");
 
 // Set depth high priority for main menu
 depth = -5000;

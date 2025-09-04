@@ -137,6 +137,35 @@ function scr_bug_handle_catch() {
  
  
  }
+    // === AUTO-SAVE TRIGGERS ===
+    // Auto-save on significant milestones
+    var should_auto_save = false;
+    
+    // Save on first catch of new bug type
+    if (variable_instance_exists(id, "bug_type")) {
+        if (old_count == 0 && new_count == 1) {
+            should_auto_save = true;
+            show_debug_message("Auto-save triggered: First catch of " + bug_type);
+        }
+        
+        // Save on milestone catches (every 5th catch of same bug)
+        if (new_count % 5 == 0) {
+            should_auto_save = true;
+            show_debug_message("Auto-save triggered: 5x milestone for " + bug_type);
+        }
+    }
+    
+    // Save on essence milestones (every 50 essence)
+    if (global.essence % 50 < (global.essence - ceil(total_essence)) % 50) {
+        should_auto_save = true;
+        show_debug_message("Auto-save triggered: 50 essence milestone");
+    }
+    
+    // Perform auto-save if triggered
+    if (should_auto_save) {
+        // Small delay so the catch animation completes first
+        call_later(60, time_source_units_frames, scr_auto_save); // 1 second delay
+    }
 }
 /*
 function scr_create_bug_card_immediate() {

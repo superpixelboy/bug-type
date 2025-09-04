@@ -17,6 +17,10 @@ if (!variable_global_exists("spawned_rocks")) {
     global.spawned_rocks = ds_map_create();
 }
 
+// Initialize discovered bugs map for save system
+if (!variable_global_exists("discovered_bugs")) {
+    global.discovered_bugs = ds_map_create();
+}
 // Position memory
 global.return_x = 626;
 global.return_y = 525;

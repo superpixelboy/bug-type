@@ -42,3 +42,9 @@ if (variable_global_exists("magic_particle") && part_type_exists(global.magic_pa
 if (surface_exists(essence_fill_surface)) {
     surface_free(essence_fill_surface);
 }
+
+
+// Clean up discovered bugs map
+if (variable_global_exists("discovered_bugs") && ds_exists(global.discovered_bugs, ds_type_map)) {
+    ds_map_destroy(global.discovered_bugs);
+}

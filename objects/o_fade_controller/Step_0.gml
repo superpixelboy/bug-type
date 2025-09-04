@@ -11,7 +11,10 @@ switch(fade_state) {
             
             // Perform the action while screen is black
             if (action_to_perform == "sleep") {
-                scr_reset_rock_spawns();
+               show_debug_message("Saving progress before sleep...");
+				scr_save_game();
+				
+			   scr_reset_rock_spawns();
             }
         }
         break;

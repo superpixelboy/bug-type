@@ -1,4 +1,4 @@
-// o_main_menu Step Event - MAIN MENU NAVIGATION (CORRECTED VERSION)
+// o_main_menu Step Event - FIXED TO PROPERLY SAVE/LOAD
 if (menu_active) {
     // Animate menu entrance
     animation_timer = min(animation_timer + 1, entrance_duration);
@@ -7,56 +7,57 @@ if (menu_active) {
     // Only handle input after entrance animation completes
     if (animation_timer >= entrance_duration) {
         
-        // Navigation
+        // Navigation - skip disabled items
         if (keyboard_check_pressed(vk_up)) {
-            // Skip disabled items when navigating
             do {
                 selected_index = (selected_index - 1 + array_length(menu_items)) % array_length(menu_items);
-            } until (!(menu_items[selected_index].action == "continue" && !has_save_data));
+            } until (menu_items[selected_index].enabled == true);
             audio_play_sound(sn_bugtap1, 1, false);
         }
         
         if (keyboard_check_pressed(vk_down)) {
-            // Skip disabled items when navigating
             do {
                 selected_index = (selected_index + 1) % array_length(menu_items);
-            } until (!(menu_items[selected_index].action == "continue" && !has_save_data));
+            } until (menu_items[selected_index].enabled == true);
             audio_play_sound(sn_bugtap1, 1, false);
         }
         
         // Selection
         if (keyboard_check_pressed(vk_enter) || keyboard_check_pressed(vk_space)) {
             var selected_action = menu_items[selected_index].action;
-            var is_disabled = (selected_action == "continue" && !has_save_data);
             
-            if (!is_disabled) {
+            // Only process if item is enabled
+            if (menu_items[selected_index].enabled) {
                 audio_play_sound(sn_bug_catch1, 1, false);
                 
                 switch(selected_action) {
                     case "continue":
-                        // Load saved game and go to main world
+                        // FIXED: Actually load the saved game
                         show_debug_message("Loading saved game...");
-                        // TODO: Load your save data here
-                        room_goto(rm_spooky_forest); // Or wherever your main game starts
+                        if (scr_load_game()) {
+                            show_debug_message("Save loaded successfully!");
+                            room_goto(rm_spooky_forest); // Or your main game room
+                        } else {
+                            show_debug_message("ERROR: Failed to load save!");
+                            // Could show error message to player here
+                        }
                         break;
                         
                     case "new_game":
-                        // Start new game
+                        // FIXED: Properly initialize new game
                         show_debug_message("Starting new game...");
-                        // TODO: Reset game data here
-                        global.essence = 0;
-                        // Clear any existing bug data if needed
+                        scr_initialize_new_game();
                         room_goto(rm_spooky_forest); // Or your starting room
                         break;
                         
                     case "settings":
-                        // TODO: Open settings menu (placeholder for now)
+                        // Toggle fullscreen as placeholder
                         show_debug_message("Settings menu - placeholder");
-						if (window_get_fullscreen()) {
-					        window_set_fullscreen(false);
-					    } else {
-					        window_set_fullscreen(true);
-					    }
+                        if (window_get_fullscreen()) {
+                            window_set_fullscreen(false);
+                        } else {
+                            window_set_fullscreen(true);
+                        }
                         break;
                         
                     case "quit":

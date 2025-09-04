@@ -1,4 +1,4 @@
-// o_main_menu Draw GUI Event - Beautiful Main Menu with s_menu_page
+// o_main_menu Draw GUI Event - FIXED TO SHOW DISABLED ITEMS
 // Exit early if menu not active (following your pattern)
 if (!menu_active) {
     exit;
@@ -42,66 +42,52 @@ if (menu_scale > 0.01) {
         var item_spacing = 28 * menu_scale;
         
         // Game title at the top
-        if (menu_scale > 0.7) {
-            draw_set_halign(fa_center);
-            draw_set_color(make_color_rgb(64, 32, 96)); // Dark purple
-            draw_text_transformed(screen_center_x, title_y, "BUG WITCH", menu_scale * 1.2, menu_scale * 1.2, 0);
-        }
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_color(c_white);
+        draw_text_transformed(screen_center_x, title_y, "WITCH BUG CATCHER", 
+                            menu_scale * 1.2, menu_scale * 1.2, 0);
         
-        // Menu items (only show if animation is far enough along)
-        if (menu_scale > 0.7) {
-            draw_set_halign(fa_center);
+        // Draw menu items with your UI style (white with purple outline for selected)
+        for (var i = 0; i < array_length(menu_items); i++) {
+            var item = menu_items[i];
+            var item_y = items_start_y + (i * item_spacing);
+            var is_selected = (i == selected_index);
             
-            // Define colors
-            var dark_purple = make_color_rgb(64, 32, 96);
-            var disabled_gray = make_color_rgb(100, 100, 100);
-            
-            for (var i = 0; i < array_length(menu_items); i++) {
-                var item_y = items_start_y + (i * item_spacing);
+            if (!item.enabled) {
+                // Disabled items are greyed out
+                draw_set_color(c_gray);
+                draw_text_transformed(screen_center_x, item_y, item.text, menu_scale, menu_scale, 0);
+            } else if (is_selected) {
+                // Selected item: White text with purple outline (your UI style)
+                var dark_purple = make_color_rgb(75, 50, 130);
+                var outline_offset = 1 * menu_scale;
                 
-                // Check if this item should be disabled
-                var is_disabled = (menu_items[i].action == "continue" && !has_save_data);
+                // Draw purple outline in 8 directions
+                draw_set_color(dark_purple);
+                draw_text_transformed(screen_center_x - outline_offset, item_y - outline_offset, item.text, menu_scale, menu_scale, 0);
+                draw_text_transformed(screen_center_x + outline_offset, item_y - outline_offset, item.text, menu_scale, menu_scale, 0);
+                draw_text_transformed(screen_center_x - outline_offset, item_y + outline_offset, item.text, menu_scale, menu_scale, 0);
+                draw_text_transformed(screen_center_x + outline_offset, item_y + outline_offset, item.text, menu_scale, menu_scale, 0);
+                draw_text_transformed(screen_center_x - outline_offset, item_y, item.text, menu_scale, menu_scale, 0);
+                draw_text_transformed(screen_center_x + outline_offset, item_y, item.text, menu_scale, menu_scale, 0);
+                draw_text_transformed(screen_center_x, item_y - outline_offset, item.text, menu_scale, menu_scale, 0);
+                draw_text_transformed(screen_center_x, item_y + outline_offset, item.text, menu_scale, menu_scale, 0);
                 
-                // Menu item text with selection styling
-                if (i == selected_index && animation_timer >= entrance_duration && !is_disabled) {
-                    // Selected item: White text with dark purple outline
-                    draw_set_color(dark_purple);
-                    var outline_offset = 1;
-                    // Draw outline in 8 directions
-                    draw_text_transformed(screen_center_x - outline_offset, item_y - outline_offset, menu_items[i].text, menu_scale, menu_scale, 0);
-                    draw_text_transformed(screen_center_x + outline_offset, item_y - outline_offset, menu_items[i].text, menu_scale, menu_scale, 0);
-                    draw_text_transformed(screen_center_x - outline_offset, item_y + outline_offset, menu_items[i].text, menu_scale, menu_scale, 0);
-                    draw_text_transformed(screen_center_x + outline_offset, item_y + outline_offset, menu_items[i].text, menu_scale, menu_scale, 0);
-                    draw_text_transformed(screen_center_x - outline_offset, item_y, menu_items[i].text, menu_scale, menu_scale, 0);
-                    draw_text_transformed(screen_center_x + outline_offset, item_y, menu_items[i].text, menu_scale, menu_scale, 0);
-                    draw_text_transformed(screen_center_x, item_y - outline_offset, menu_items[i].text, menu_scale, menu_scale, 0);
-                    draw_text_transformed(screen_center_x, item_y + outline_offset, menu_items[i].text, menu_scale, menu_scale, 0);
-                    
-                    // Draw main white text on top
-                    draw_set_color(c_white);
-                    draw_text_transformed(screen_center_x, item_y, menu_items[i].text, menu_scale, menu_scale, 0);
-                } else if (is_disabled) {
-                    // Disabled item: Gray text
-                    draw_set_color(disabled_gray);
-                    draw_text_transformed(screen_center_x, item_y, menu_items[i].text, menu_scale, menu_scale, 0);
-                } else {
-                    // Non-selected item: Dark purple text
-                    draw_set_color(dark_purple);
-                    draw_text_transformed(screen_center_x, item_y, menu_items[i].text, menu_scale, menu_scale, 0);
-                }
+                // Draw main white text on top
+                draw_set_color(c_white);
+                draw_text_transformed(screen_center_x, item_y, item.text, menu_scale, menu_scale, 0);
+            } else {
+                // Non-selected enabled items: Regular dark purple text
+                var dark_purple = make_color_rgb(75, 50, 130);
+                draw_set_color(dark_purple);
+                draw_text_transformed(screen_center_x, item_y, item.text, menu_scale, menu_scale, 0);
             }
-        }
-        
-        // Instructions at bottom
-        if (menu_scale > 0.8) {
-            var instructions_y = screen_center_y + 100 * menu_scale;
-            draw_set_color(make_color_rgb(100, 100, 100));
-            draw_text_transformed(screen_center_x, instructions_y, "ARROW KEYS • ENTER", menu_scale * 0.7, menu_scale * 0.7, 0);
         }
     }
 }
 
-// Reset draw settings at the VERY END (exactly like your other menus)
+// Reset draw settings at the VERY END
 draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 draw_set_color(c_white);

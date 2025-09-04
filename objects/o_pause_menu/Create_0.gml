@@ -7,11 +7,13 @@ target_scale = 1;
 // Menu items
 menu_items = [
     {text: "RESUME", action: "resume"},
-    {text: "COLLECTION", action: "collection"}, 
+    {text: "SAVE GAME", action: "save"}, // <- ADD THIS LINE
+    {text: "BUG COLLECTION", action: "collection"},
     {text: "SETTINGS", action: "settings"},
     {text: "MAIN MENU", action: "main_menu"},
-    {text: "QUIT GAME", action: "quit"}
+	{text: "QUIT", action: "quit"}
 ];
+
 
 // Visual properties matching your GBA style
 menu_width = 300;
