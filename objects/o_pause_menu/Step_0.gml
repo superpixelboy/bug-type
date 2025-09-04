@@ -1,4 +1,4 @@
-// o_pause_menu Step Event - FIXED MAIN MENU RETURN
+// o_pause_menu Step Event - WITH SAVE ACTION ADDED
 if (menu_active) {
     // Animate menu entrance
     animation_timer = min(animation_timer + 1, entrance_duration);
@@ -29,6 +29,21 @@ if (menu_active) {
                     // Resume game - let UI_Manager handle this via ESC
                     global.game_paused = false;
                     instance_destroy();
+                    break;
+                    
+                case "save":
+                    // ADDED: Handle save game action
+                    show_debug_message("Manual save requested");
+                    if (scr_save_game()) {
+                        show_debug_message("Manual save successful");
+                        // Could show "Game Saved!" message briefly here
+                        // For now, just resume after saving
+                        global.game_paused = false;
+                        instance_destroy();
+                    } else {
+                        show_debug_message("Manual save failed");
+                        // Could show error message to player
+                    }
                     break;
                     
                 case "collection":

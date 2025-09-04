@@ -1,39 +1,37 @@
-// Clean o_UI_Manager Step Event - WITH ESSENCE FILL RESET + SPEED BOOST
-if (room == rm_main_menu) {
-    // Only handle essential stuff in main menu - NO ESC, NO ESSENCE, NO PAUSE
-    
-    // Fullscreen toggle still works everywhere
-    if (keyboard_check(vk_shift) && keyboard_check_pressed(ord("F"))) {
-        if (window_get_fullscreen()) {
-            window_set_fullscreen(false);
-        } else {
-            window_set_fullscreen(true);
+// o_UI_Manager Step Event - SINGLE F1 HANDLER ONLY
+// Handle F1 debug console FIRST (works in all rooms)
+if (keyboard_check_pressed(vk_f1)) {
+    show_debug_message("=== F1 Debug Console Toggle ===");
+    if (!instance_exists(o_bug_selector)) {
+        instance_create_layer(0, 0, "Instances", o_bug_selector);
+        show_debug_message("Created bug selector");
+    } else {
+        with(o_bug_selector) {
+            menu_active = !menu_active;
+            show_debug_message("Toggled bug selector: " + string(menu_active));
         }
     }
-    
-    // Debug console still works
-    if (keyboard_check_pressed(vk_f1)) {
-        if (!instance_exists(o_bug_selector)) {
-            instance_create_layer(0, 0, "Instances", o_bug_selector);
-        } else {
-            with(o_bug_selector) {
-                menu_active = !menu_active;
-            }
-        }
-    }
-    
-    // EXIT EARLY - Don't run game systems in main menu
-    exit;
 }
-// Fullscreen toggle with Shift+F
+
+if (keyboard_check_pressed(vk_f2)) scr_debug_essence_save();
+if (keyboard_check_pressed(vk_f3)) scr_test_full_save_load();
+
+// Fullscreen toggle (works everywhere)
 if (keyboard_check(vk_shift) && keyboard_check_pressed(ord("F"))) {
-    // Toggle fullscreen
     if (window_get_fullscreen()) {
         window_set_fullscreen(false);
     } else {
         window_set_fullscreen(true);
     }
 }
+
+// === MAIN MENU SPECIFIC BEHAVIOR ===
+if (room == rm_main_menu) {
+    // EXIT EARLY - Don't run game systems in main menu
+    exit;
+}
+
+// === GAME SYSTEMS (Only runs outside main menu) ===
 
 // TAB key toggle
 if (keyboard_check_pressed(vk_tab)) {
@@ -50,11 +48,6 @@ if (keyboard_check_pressed(vk_tab)) {
             if (collection_ui.is_open) {
                 collection_ui.page = 0;
             }
-            collection_ui.detail_view_open = false;
-            collection_ui.detail_bug_key = "";
-            collection_ui.detail_bug_data = {};
-            collection_ui.hovered_card = -1;
-            collection_ui.hover_timer = 0;
         }
     }
 }
@@ -70,17 +63,6 @@ if (flash_timer < flash_duration) {
     flash_alpha = lerp(0.8, 0, flash_timer / flash_duration);
 } else {
     flash_alpha = 0;
-}
-
-// Bug selector
-if (keyboard_check_pressed(vk_f1)) {
-    if (!instance_exists(o_bug_selector)) {
-        instance_create_layer(0, 0, "Instances", o_bug_selector);
-    } else {
-        with(o_bug_selector) {
-            menu_active = !menu_active;
-        }
-    }
 }
 
 // DEBUG: Track essence changes
@@ -118,7 +100,6 @@ if (current_milestone > previous_milestone && global.essence > 0) {
 
 // Update tracking (last line)
 last_essence_amount = global.essence;
-
 
 // ESC key for pause menu (only if no other menus are open)
 if (keyboard_check_pressed(vk_escape)) {

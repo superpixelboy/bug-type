@@ -1,4 +1,4 @@
-// o_main_menu Step Event - FIXED TO PROPERLY SAVE/LOAD
+// o_main_menu Step Event - REMOVED F1 HANDLER (UI_Manager handles it)
 if (menu_active) {
     // Animate menu entrance
     animation_timer = min(animation_timer + 1, entrance_duration);
@@ -68,24 +68,9 @@ if (menu_active) {
             }
         }
         
-        // Debug console still works in main menu
-        if (keyboard_check_pressed(vk_f1)) {
-            if (!instance_exists(o_bug_selector)) {
-                instance_create_layer(0, 0, "Instances", o_bug_selector);
-            } else {
-                with(o_bug_selector) {
-                    menu_active = !menu_active;
-                }
-            }
-        }
+        // REMOVED: F1 handler - UI_Manager handles this now
+        // Let UI_Manager be the single source of truth for F1
         
-        // Fullscreen toggle still works
-        if (keyboard_check(vk_shift) && keyboard_check_pressed(ord("F"))) {
-            if (window_get_fullscreen()) {
-                window_set_fullscreen(false);
-            } else {
-                window_set_fullscreen(true);
-            }
-        }
+       
     }
 }

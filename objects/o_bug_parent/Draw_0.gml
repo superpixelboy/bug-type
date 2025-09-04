@@ -31,6 +31,7 @@ if (is_flashing) {
 
 
 // DEBUG INFO - Add at the end of Draw Event
+/*
 if (keyboard_check(vk_f1)) {  // Hold F1 to see debug info
      draw_set_font(-1);
     draw_set_halign(fa_left);
@@ -50,7 +51,7 @@ if (keyboard_check(vk_f1)) {  // Hold F1 to see debug info
     draw_text(debug_x, debug_y + 24, "Essence: " + string(essence_value));
     
     draw_set_color(c_white);
-}
+}*/
 
 // Draw progress bar
 // Draw progress bar (replace the existing progress bar code in o_bug_parent Draw event)

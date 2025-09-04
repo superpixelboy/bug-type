@@ -1,11 +1,31 @@
-// o_UI_Manager Create Event - FIXED: Particle depths for visibility
+// o_UI_Manager Create Event - FIXED: No hardcoded essence reset
 
-global.bugs_caught = 0;
-global.flipped_rocks = ds_list_create();
-global.essence = 0;
+// === CORE GAME STATE INITIALIZATION ===
+// Only initialize if not already set (prevents overwriting loaded data)
+if (!variable_global_exists("essence")) {
+    global.essence = 0;
+    show_debug_message("Initialized global.essence to 0");
+} else {
+    show_debug_message("global.essence already exists: " + string(global.essence));
+}
 
-// ADD THIS LINE:
-global.showing_card = false;  // Prevents multiple cards from spawning
+if (!variable_global_exists("bugs_caught")) {
+    global.bugs_caught = 0;
+    show_debug_message("Initialized global.bugs_caught to 0");
+} else {
+    show_debug_message("global.bugs_caught already exists: " + string(global.bugs_caught));
+}
+
+if (!variable_global_exists("flipped_rocks")) {
+    global.flipped_rocks = ds_list_create();
+    show_debug_message("Created global.flipped_rocks list");
+} else {
+    show_debug_message("global.flipped_rocks already exists with " + string(ds_list_size(global.flipped_rocks)) + " entries");
+}
+
+if (!variable_global_exists("showing_card")) {
+    global.showing_card = false;
+}
 
 // NEW: Bug catch tracking system
 if (!variable_global_exists("bug_catch_counts")) {
@@ -21,6 +41,7 @@ if (!variable_global_exists("spawned_rocks")) {
 if (!variable_global_exists("discovered_bugs")) {
     global.discovered_bugs = ds_map_create();
 }
+
 // Position memory
 global.return_x = 626;
 global.return_y = 525;
@@ -147,12 +168,12 @@ fill_lerp_speed = 0.05;       // How fast the fill animates (0.01 = slow, 0.1 = 
 // Burst detection
 last_essence_amount = 0;      // Track previous essence to detect milestone crossings
 
-
 // ADD THIS TO YOUR GAME INITIALIZATION (probably in a Game Start event or init script)
 // Global essence multipliers based on catch count
 global.essence_multiplier_tier1 = 1.0;   // 1-4 catches: normal value
 global.essence_multiplier_tier2 = 1.5;   // 5-9 catches: 1.5x bonus  
 global.essence_multiplier_tier3 = 2.0;   // 10+ catches: 2x bonus
+
 function get_essence_with_multiplier(base_essence, catch_count) {
     var multiplier = 1.0; // Default 1.0x
     
@@ -182,5 +203,3 @@ function get_essence_display_text(base_essence, catch_count) {
 
 // ESC key cooldown protection
 esc_cooldown = 0;  // Frames remaining before ESC can be used again
-
-//audio_play_sound(sn_main_theme, 1, true);  // true
