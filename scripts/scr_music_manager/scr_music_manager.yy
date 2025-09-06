@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_play_combo_sound",
+  "%Name":"scr_music_manager",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_play_combo_sound",
+  "name":"scr_music_manager",
   "parent":{
     "name":"Sound",
     "path":"folders/Scripts/Sound.yy",

@@ -1,4 +1,8 @@
-// o_main_menu Create Event - FIXED TO USE SAVE SYSTEM
+// ===========================================
+// o_main_menu Create Event - WITH MUSIC INTEGRATION
+// ===========================================
+
+// Your existing main menu code
 show_debug_message("=== MAIN MENU STARTING UP ===");
 
 menu_active = true;
@@ -18,8 +22,6 @@ menu_items = [
     {text: "QUIT", action: "quit", enabled: true}
 ];
 
-show_debug_message("Menu items created: " + string(array_length(menu_items)));
-
 // Visual properties matching your GBA style
 menu_width = 300;
 menu_height = 200;
@@ -31,6 +33,9 @@ entrance_duration = 20;
 
 // Set depth high priority for main menu
 depth = -5000;
+
+// NEW: Start menu music
+scr_music_play_menu();
 
 show_debug_message("Main menu created successfully!");
 show_debug_message("Has save data: " + string(has_save_data));
