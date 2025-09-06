@@ -57,6 +57,7 @@
   "resources":[
     {"id":{"name":"fnt_card_title_2x","path":"fonts/fnt_card_title_2x/fnt_card_title_2x.yy",},},
     {"id":{"name":"fnt_card_title","path":"fonts/fnt_card_title/fnt_card_title.yy",},},
+    {"id":{"name":"fnt_dialogue","path":"fonts/fnt_dialogue/fnt_dialogue.yy",},},
     {"id":{"name":"fnt_DOS","path":"fonts/fnt_DOS/fnt_DOS.yy",},},
     {"id":{"name":"fnt_flavor_text_2x","path":"fonts/fnt_flavor_text_2x/fnt_flavor_text_2x.yy",},},
     {"id":{"name":"fnt_flavor_text","path":"fonts/fnt_flavor_text/fnt_flavor_text.yy",},},
@@ -105,6 +106,7 @@
     {"id":{"name":"o_fence_start","path":"objects/o_fence_start/o_fence_start.yy",},},
     {"id":{"name":"o_game_manager","path":"objects/o_game_manager/o_game_manager.yy",},},
     {"id":{"name":"o_gem_bug","path":"objects/o_gem_bug/o_gem_bug.yy",},},
+    {"id":{"name":"o_ghost_raven_manager","path":"objects/o_ghost_raven_manager/o_ghost_raven_manager.yy",},},
     {"id":{"name":"o_glade_hopper","path":"objects/o_glade_hopper/o_glade_hopper.yy",},},
     {"id":{"name":"o_gloom_might","path":"objects/o_gloom_might/o_gloom_might.yy",},},
     {"id":{"name":"o_haybale_1","path":"objects/o_haybale_1/o_haybale_1.yy",},},
