@@ -5,5 +5,4 @@
 // Automatically play appropriate music for the new room
 scr_music_play_for_room();
 
-show_debug_message("Room changed to: " + room_get_name(room) + 
-                  " - Playing music: " + scr_music_get_current_track());
+show_debug_message("Room changed to: " + room_get_name(room));

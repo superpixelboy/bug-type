@@ -183,6 +183,7 @@
     {"id":{"name":"scr_initialize_new_game","path":"scripts/scr_initialize_new_game/scr_initialize_new_game.yy",},},
     {"id":{"name":"scr_load_game","path":"scripts/scr_load_game/scr_load_game.yy",},},
     {"id":{"name":"scr_music_cleanup","path":"scripts/scr_music_cleanup/scr_music_cleanup.yy",},},
+    {"id":{"name":"scr_music_get_current_track","path":"scripts/scr_music_get_current_track/scr_music_get_current_track.yy",},},
     {"id":{"name":"scr_music_helpers","path":"scripts/scr_music_helpers/scr_music_helpers.yy",},},
     {"id":{"name":"scr_music_init","path":"scripts/scr_music_init/scr_music_init.yy",},},
     {"id":{"name":"scr_music_manager","path":"scripts/scr_music_manager/scr_music_manager.yy",},},
