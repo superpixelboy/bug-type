@@ -73,7 +73,7 @@ if (title_fully_visible && menu_alpha > 0.8 && menu_active) {
                     // FIXED: Properly initialize new game
                     show_debug_message("Starting new game...");
                     scr_initialize_new_game();
-                    room_goto(rm_spooky_forest); // Or your starting room
+                    room_goto(rm_backstory); // Or your starting room
                     break;
                     
                 case "settings":
