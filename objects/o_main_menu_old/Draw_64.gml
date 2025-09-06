@@ -18,8 +18,8 @@ if (font_exists(fnt_flavor_text_2x)) {
 var title_x = gui_w / 2;
 var title_y = gui_h * 0.35; // Position over the hole area
 
-// Draw the game title sprite with fade effect
-draw_set_alpha(title_alpha); // CORRECTED: Use title alpha for title
+// Draw the game title sprite with fade effect (UNCHANGED LOGIC)
+draw_set_alpha(menu_alpha); // Use fade alpha for menu
 
 if (sprite_exists(s_title_title)) {
     // Use your beautiful title sprite
@@ -48,8 +48,8 @@ if (title_fully_visible && menu_alpha > 0) {
     var menu_start_y = gui_h * 0.67;
     var menu_spacing = 25 * gui_scale; // Reduced from 35 to 25 for tighter spacing
     
-    // NEW: Use menu_alpha for menu items
-    draw_set_alpha(menu_alpha); // CORRECTED: Now properly in menu section
+    // NEW: Use menu_alpha instead of full opacity
+draw_set_alpha(title_alpha); // Use title alpha for title
     draw_set_halign(fa_center);
     draw_set_valign(fa_middle);
     

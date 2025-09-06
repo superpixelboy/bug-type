@@ -7,11 +7,11 @@ cloud_speed = 0.1; // Even slower, more peaceful movement
 
 // ENHANCED TITLE FADE ANIMATION SYSTEM
 title_alpha = 0;
-title_fade_speed = 0.006; // Keep same fade speed
+title_fade_speed = 0.008; // Keep same fade speed
 title_fully_visible = false;
 
 // NEW: Delay before title starts fading (half second = 30 frames at 60fps)
-title_fade_delay = 10; // Half second delay
+title_fade_delay = 120; // Half second delay
 title_fade_timer = 0;  // Track delay time
 title_started_fading = false;
 

@@ -118,7 +118,7 @@
     {"id":{"name":"o_hole","path":"objects/o_hole/o_hole.yy",},},
     {"id":{"name":"o_large_rock_spawner","path":"objects/o_large_rock_spawner/o_large_rock_spawner.yy",},},
     {"id":{"name":"o_log","path":"objects/o_log/o_log.yy",},},
-    {"id":{"name":"o_main_menu","path":"objects/o_main_menu/o_main_menu.yy",},},
+    {"id":{"name":"o_main_menu_old","path":"objects/o_main_menu_old/o_main_menu_old.yy",},},
     {"id":{"name":"o_moonlight_moth","path":"objects/o_moonlight_moth/o_moonlight_moth.yy",},},
     {"id":{"name":"o_moss_grub","path":"objects/o_moss_grub/o_moss_grub.yy",},},
     {"id":{"name":"o_pause_menu","path":"objects/o_pause_menu/o_pause_menu.yy",},},
