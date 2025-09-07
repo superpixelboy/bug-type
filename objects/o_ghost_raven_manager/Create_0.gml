@@ -1,5 +1,5 @@
 // o_ghost_raven_manager Create Event
-// Manages the ghost raven cutscene in rm_backstory_hole
+// Fixed - removed fade variables since o_fade_controller handles fades now
 
 // Cloud movement (same as main menu)
 cloud_x_offset = 0;
@@ -19,7 +19,7 @@ raven_frame_timer = 0;
 raven_frame_speed = 8; // Frames to hold each sprite frame
 
 // Cutscene state management
-cutscene_state = "raven_entrance"; // raven_entrance -> dialogue -> complete
+cutscene_state = "fade_in"; // Start with fade in
 raven_alpha = 0;
 raven_fade_speed = 0.015;
 
@@ -40,3 +40,15 @@ typewriter_complete = false;
 
 // Input cooldown
 input_cooldown = 0;
+
+// Create the initial fade in using the enhanced fade controller
+// (Make sure you've created the scr_fade_in_room script first)
+if (script_exists(asset_get_index("scr_fade_in_room"))) {
+    scr_fade_in_room(0.02); // Slow dramatic fade for intro
+} else {
+    // Fallback: create fade controller manually
+    var fade = instance_create_layer(0, 0, "Instances", o_fade_controller);
+    fade.fade_alpha = 1; // Start black
+    fade.fade_state = "room_entry";
+    fade.fade_speed = 0.02;
+}

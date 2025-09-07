@@ -1,7 +1,7 @@
 /// o_intro_manager : Create
 
 // --- CONFIG ---
-target_room          = rm_spooky_forest;
+target_room          = rm_backstory_hole;
 margin               = 24;
 line_spacing         = 50;
 text_color           = c_white;

@@ -52,32 +52,28 @@ if (title_fully_visible && menu_alpha > 0.8 && menu_active) {
         audio_play_sound(sn_bugtap1, 1, false);
     }
     
-    // Selection
+    // Selection - UPDATED to use enhanced fade system
     if (confirm) {
         var selected_item = menu_items[selected_index];
         if (selected_item.enabled) {
             switch(selected_item.action) {
                 case "continue":
-                    // FIXED: Actually load the saved game
                     show_debug_message("Loading saved game...");
                     if (scr_load_game()) {
                         show_debug_message("Save loaded successfully!");
-                        room_goto(rm_spooky_forest); // Or your main game room
+                        room_goto(rm_spooky_forest);
                     } else {
                         show_debug_message("ERROR: Failed to load save!");
-                        // Could show error message to player here
                     }
                     break;
                     
                 case "new_game":
-                    // FIXED: Properly initialize new game
                     show_debug_message("Starting new game...");
                     scr_initialize_new_game();
-                    room_goto(rm_backstory_hole); // Or your starting room
+                    room_goto(rm_backstory);
                     break;
                     
                 case "settings":
-                    // Toggle fullscreen as placeholder
                     show_debug_message("Settings menu - placeholder");
                     if (window_get_fullscreen()) {
                         window_set_fullscreen(false);
@@ -87,7 +83,6 @@ if (title_fully_visible && menu_alpha > 0.8 && menu_active) {
                     break;
                     
                 case "quit":
-                    // Quit game
                     game_end();
                     break;
             }

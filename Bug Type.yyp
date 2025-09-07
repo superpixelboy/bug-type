@@ -183,6 +183,7 @@
     {"id":{"name":"scr_collection_show_card","path":"scripts/scr_collection_show_card/scr_collection_show_card.yy",},},
     {"id":{"name":"scr_debug_essence_save","path":"scripts/scr_debug_essence_save/scr_debug_essence_save.yy",},},
     {"id":{"name":"scr_essence_multipliers","path":"scripts/scr_essence_multipliers/scr_essence_multipliers.yy",},},
+    {"id":{"name":"scr_fade_to_room","path":"scripts/scr_fade_to_room/scr_fade_to_room.yy",},},
     {"id":{"name":"scr_gem_rarity","path":"scripts/scr_gem_rarity/scr_gem_rarity.yy",},},
     {"id":{"name":"scr_has_save_data","path":"scripts/scr_has_save_data/scr_has_save_data.yy",},},
     {"id":{"name":"scr_initialize_bug_data","path":"scripts/scr_initialize_bug_data/scr_initialize_bug_data.yy",},},

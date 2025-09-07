@@ -1,7 +1,7 @@
 // o_UI_Manager Draw_64 Event - MAIN MENU AWARENESS
 
 // SAFETY: Don't draw essence UI in main menu
-if (room == rm_main_menu) {
+if (room == rm_main_menu||room == rm_backstory||room == rm_backstory_hole) {
     // Only draw essential stuff in main menu (like screen flash)
     
     // Screen flash effect (works everywhere)

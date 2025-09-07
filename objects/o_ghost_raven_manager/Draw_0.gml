@@ -1,51 +1,53 @@
 // o_ghost_raven_manager Draw Event
-// EXACT copy of o_start_screen_manager's cloud/background system
+// Working version that you had before
 
-// Layer 1: Draw moving clouds background (s_title_clouds) - positioned higher
-if (sprite_exists(s_title_clouds)) {
-    // Get cloud sprite dimensions
-    var cloud_width = sprite_get_width(s_title_clouds);
-    var cloud_height = sprite_get_height(s_title_clouds);
-    
-    // Position clouds higher up - adjust this offset to control height
-    var cloud_vertical_offset = -cloud_height * 0.45; // Move clouds up by 30% of their height
-    
-    // Calculate how many tiles we need to cover the screen
-    var tiles_x = ceil(room_width / cloud_width) + 2; // Extra for seamless scrolling
+// Layer 1: Background with sunset gradient
+draw_set_color(make_color_rgb(255, 140, 60)); // Orange sunset
+draw_rectangle(0, 0, room_width, room_height, false);
+
+// Try to draw clouds if available
+var cloud_sprite = asset_get_index("s_title_clouds");
+if (cloud_sprite != -1 && sprite_exists(cloud_sprite)) {
+    var cloud_width = sprite_get_width(cloud_sprite);
+    var cloud_height = sprite_get_height(cloud_sprite);
+    var cloud_vertical_offset = -cloud_height * 0.45;
+    var tiles_x = ceil(room_width / cloud_width) + 2;
     var tiles_y = ceil((room_height + abs(cloud_vertical_offset)) / cloud_height) + 1;
     
-    // Draw tiled clouds with slow horizontal movement, positioned higher
     for (var ty = 0; ty < tiles_y; ty++) {
         for (var tx = -1; tx < tiles_x; tx++) {
             var cloud_x = (tx * cloud_width) - (cloud_x_offset % cloud_width);
             var cloud_y = (ty * cloud_height) + cloud_vertical_offset;
-            draw_sprite(s_title_clouds, 0, cloud_x, cloud_y);
+            draw_sprite(cloud_sprite, 0, cloud_x, cloud_y);
         }
     }
-} else {
-    // Fallback: Simple sunset gradient
-    draw_set_color(make_color_rgb(255, 140, 60)); // Orange sunset
-    draw_rectangle(0, 0, room_width, room_height, false);
-    show_debug_message("WARNING: s_title_clouds missing, using fallback");
 }
 
-// Layer 2: Black overlay with hole cut out (s_title_black)
-if (sprite_exists(s_title_black)) {
-    // Center the black overlay on screen
+// Layer 2: Create hole effect
+var black_sprite = asset_get_index("s_title_black");
+if (black_sprite != -1 && sprite_exists(black_sprite)) {
     var black_x = room_width / 2;
     var black_y = room_height / 2;
-    draw_sprite(s_title_black, 0, black_x, black_y);
+    draw_sprite(black_sprite, 0, black_x, black_y);
 } else {
-    // Fallback: Simple black screen
+    // Manual hole effect
     draw_set_color(c_black);
     draw_rectangle(0, 0, room_width, room_height, false);
-    show_debug_message("WARNING: s_title_black missing, using fallback");
+    
+    var hole_x = room_width / 2;
+    var hole_y = room_height / 2;
+    var hole_radius = 120;
+    
+    gpu_set_blendmode(bm_subtract);
+    draw_set_color(c_white);
+    draw_circle(hole_x, hole_y, hole_radius, false);
+    gpu_set_blendmode(bm_normal);
 }
 
-// Reset color for other elements
+// Reset color
 draw_set_color(c_white);
 
-// Draw the ghost raven
-if (raven_alpha > 0) {
+// Layer 3: Draw the ghost raven
+if (sprite_exists(s_ghost_raven) && raven_alpha > 0) {
     draw_sprite_ext(s_ghost_raven, raven_frame, raven_x, raven_y, 1, 1, 0, c_white, raven_alpha);
 }

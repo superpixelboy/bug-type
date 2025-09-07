@@ -1,60 +1,53 @@
 // o_ghost_raven_manager Draw GUI Event
-// Simple dialogue box with text
+// Fixed - removed fade overlay since o_fade_controller handles it now
 
 if (dialogue_active) {
-    // Get GUI dimensions
     var gui_w = display_get_gui_width();
     var gui_h = display_get_gui_height();
-    
-    // Get dialogue sprite dimensions
     var box_w = sprite_get_width(s_dialogue_back);
     var box_h = sprite_get_height(s_dialogue_back);
     
-    // Center the dialogue box
-    var box_x = (gui_w - box_w) / 2;
-    var box_y = gui_h - box_h - 40;
+    var box_x = gui_w/2;
+    var box_y = gui_h/2 + box_h;
     
-    // Draw dialogue background
     draw_sprite(s_dialogue_back, 0, box_x, box_y);
     
-    // Set up font
     if (font_exists(fnt_dialogue)) {
         draw_set_font(fnt_dialogue);
     } else {
         draw_set_font(-1);
     }
     
-    // Get the current message
-    var current_message = dialogue_messages[dialogue_index];
+    // Use typewriter text
+    var display_text = typewriter_text;
     
-    // For now, just show the full message (we'll fix typewriter later)
-    var display_text = current_message;
-    
-    // Text position
-    var text_x = box_x + 30;
-    var text_y = box_y + 25;
+    var text_x = box_x/5;
+    var text_y = gui_h/1.45;
     var text_width = box_w - 60;
     
-    // Draw text with outline
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
     
-    draw_set_color(c_black);
-    draw_text_ext(text_x + 1, text_y + 1, display_text, 18, text_width);
-    draw_text_ext(text_x - 1, text_y - 1, display_text, 18, text_width);
+    // Dark brown text with transparency
+    var dark_brown = make_color_rgb(101, 67, 33);
+    var text_alpha = 0.85;
     
-    draw_set_color(c_white);
+    draw_set_alpha(text_alpha);
+    draw_set_color(dark_brown);
     draw_text_ext(text_x, text_y, display_text, 18, text_width);
     
-    // Continue prompt
-    draw_set_halign(fa_right);
-    draw_set_valign(fa_bottom);
-    draw_set_color(c_ltgray);
-    draw_text(box_x + box_w - 15, box_y + box_h - 10, "SPACE/CLICK");
+    if (typewriter_complete) {
+        draw_set_halign(fa_right);
+        draw_set_valign(fa_bottom);
+        draw_set_color(c_ltgray);
+        draw_text(gui_w-110, gui_h-10, "Continue");
+    }
     
-    // Reset
+    draw_set_alpha(1);
     draw_set_halign(fa_left);
     draw_set_valign(fa_top);
     draw_set_font(-1);
     draw_set_color(c_white);
 }
+
+// REMOVED: Fade overlay code - o_fade_controller handles this now

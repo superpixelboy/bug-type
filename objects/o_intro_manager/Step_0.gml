@@ -30,7 +30,7 @@ switch (global_fade) {
                     input_cooldown = 6;
                     page_alpha = 1;
                     page_state = "hold";
-                    _tap();
+               //     _tap();
                 } else {
                     page_alpha += page_fade_speed;
                     if (page_alpha >= 1) {
