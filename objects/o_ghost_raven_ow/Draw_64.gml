@@ -36,7 +36,7 @@ if (dialogue_active) {
     
     draw_set_alpha(text_alpha);
     draw_set_color(dark_brown);
-    draw_text_ext(text_x, text_y, display_text, 18, text_width);
+    draw_text_ext(text_x, text_y, display_text, 26, text_width);
     
     // Show continue prompt when typewriter is complete
     if (typewriter_complete) {

@@ -1,42 +1,13 @@
-// o_ghost_raven_ow Step Event
-// Player interaction and dialogue system
+// o_ghost_raven_ow Step Event - SIMPLIFIED VERSION
+// Player handles ALL interaction logic, we just handle dialogue progression
 
 // Reduce cooldowns
 if (input_cooldown > 0) input_cooldown--;
 if (dialogue_cooldown > 0) dialogue_cooldown--;
 
-// Check for player interaction (same pattern as o_babayaga)
-if (distance_to_object(o_player) < interaction_distance && dialogue_cooldown <= 0) {
-    // Space or mouse click to start dialogue
-    if ((keyboard_check_pressed(vk_space) || mouse_check_button_pressed(mb_left)) && !dialogue_active) {
-        // Start dialogue
-        dialogue_active = true;
-        dialogue_index = 0;
-        input_cooldown = 10;
-        
-        // Hide exclamation mark during dialogue
-        if (instance_exists(o_player)) {
-            o_player.show_exclamation = false;
-            o_player.exclamation_appeared = false;
-            o_player.exclamation_source = "none";
-        }
-        
-        // Initialize typewriter for first message
-        var current_message = dialogue_messages[dialogue_index];
-        typewriter_text = "";
-        typewriter_char_index = 0;
-        typewriter_complete = false;
-        typewriter_timer = 0;
-        
-        // Play interaction sound
-        var snd = asset_get_index("sn_bugtap1");
-        if (snd != -1) audio_play_sound(snd, 1, false);
-    }
-}
-
-// Handle dialogue progression when dialogue is active
+// Handle dialogue progression when dialogue is active (keep existing dialogue logic)
 if (dialogue_active) {
-    // Process typewriter effect (exact same logic as ghost raven manager)
+    // Process typewriter effect
     if (!typewriter_complete) {
         typewriter_timer++;
         if (typewriter_timer >= typewriter_speed) {
@@ -52,7 +23,7 @@ if (dialogue_active) {
         }
     }
     
-    // Handle dialogue input (same pattern as ghost raven manager)
+    // Handle dialogue input
     var pressed_next = (keyboard_check_pressed(vk_space) || 
                       keyboard_check_pressed(vk_enter) || 
                       mouse_check_button_pressed(mb_left));
@@ -84,7 +55,7 @@ if (dialogue_active) {
         } else {
             // End dialogue
             dialogue_active = false;
-            dialogue_cooldown = 60; // Prevent immediate restart
+            dialogue_cooldown = 60; // Prevent immediate restart - IMPORTANT!
         }
     }
 }
