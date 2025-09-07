@@ -12,6 +12,27 @@ if (instance_exists(o_pause_menu)) {
     exit;
 }
 
+// NEW: Don't process hover/input when any dialogue is active
+if (instance_exists(o_ghost_raven_ow) && o_ghost_raven_ow.dialogue_active) {
+    is_hovered = false;
+    hover_scale = lerp(hover_scale, 1.0, 0.1);
+    exit;
+}
+
+// Also check for other dialogue systems (Baba Yaga, etc.)
+if (instance_exists(o_babayaga) && o_babayaga.dialogue_active) {
+    is_hovered = false;
+    hover_scale = lerp(hover_scale, 1.0, 0.1);
+    exit;
+}
+
+// Also check for ghost raven manager dialogue (intro scene)
+if (instance_exists(o_ghost_raven_manager) && o_ghost_raven_manager.dialogue_active) {
+    is_hovered = false;
+    hover_scale = lerp(hover_scale, 1.0, 0.1);
+    exit;
+}
+
 // SAFETY: Get GUI mouse coordinates for proper detection
 var mouse_gui_x = device_mouse_x_to_gui(0);
 var mouse_gui_y = device_mouse_y_to_gui(0);

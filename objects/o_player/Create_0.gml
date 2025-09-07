@@ -40,10 +40,12 @@ shadow_scale_y = 0.3;     // Very flat shadow
 shadow_alpha = 0.2;       // Semi-transparent
 
 
-
-// Exclamation mark system
+// Exclamation mark system (existing variables)
 show_exclamation = false;
 exclamation_alpha = 0;
 exclamation_bounce_y = 0;
 exclamation_animation_timer = 0;
 exclamation_appeared = false;  // Prevents re-triggering bounce
+
+// NEW: Track what triggered the exclamation mark
+exclamation_source = "none";  // Can be "rock", "npc", or "none"

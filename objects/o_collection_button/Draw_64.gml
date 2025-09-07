@@ -10,6 +10,21 @@ if (instance_exists(o_pause_menu)) {
     exit;
 }
 
+// NEW: Don't draw if any dialogue is active
+if (instance_exists(o_ghost_raven_ow) && o_ghost_raven_ow.dialogue_active) {
+    exit;
+}
+
+// Also check for other dialogue systems (Baba Yaga, etc.)
+if (instance_exists(o_babayaga) && o_babayaga.dialogue_active) {
+    exit;
+}
+
+// Also check for ghost raven manager dialogue (intro scene)
+if (instance_exists(o_ghost_raven_manager) && o_ghost_raven_manager.dialogue_active) {
+    exit;
+}
+
 var gui_width = display_get_gui_width();
 var gui_height = display_get_gui_height();
 

@@ -190,22 +190,27 @@ if (closest_distance <= 28 && closest_rock != noone) {
     }
 }
 
-// Handle exclamation mark display
+
+// Handle exclamation mark display for ROCKS ONLY
 if (can_interact) {
     if (!show_exclamation) {
-        // Just became able to interact - trigger bounce animation
+        // Just became able to interact with rock - trigger bounce animation
         show_exclamation = true;
         exclamation_appeared = false;
         exclamation_animation_timer = 0;
         exclamation_alpha = 0;
         exclamation_bounce_y = 0;
+        exclamation_source = "rock";  // Mark that THIS was triggered by rock interaction
     }
 } else {
-    if (show_exclamation) {
-        // No longer can interact - fade out quickly
+    // ONLY turn off exclamation if WE (rock system) turned it on
+    if (show_exclamation && exclamation_source == "rock") {
+        // No longer can interact with rocks - fade out quickly
         show_exclamation = false;
         exclamation_appeared = false;
+        exclamation_source = "none";
     }
+    // If exclamation_source is NOT "rock", then something else set it and we don't touch it!
 }
 
 // Animate exclamation mark
