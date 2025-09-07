@@ -29,8 +29,6 @@ view_camera[0] = camera_create_view(0, 0, 480, 270, 0, o_player, -1, -1, 480/2, 
 //Movement types
 movement_mode = "overworld"; 
 
-// Add this to the END of o_player Create Event
-
 // Configure player shadow (after all other setup)
 shadow_enabled = true;
 shadow_offset_x = 4;      // Slight offset to the right
@@ -39,13 +37,12 @@ shadow_scale_x = .9;     // Slightly smaller than player
 shadow_scale_y = 0.3;     // Very flat shadow
 shadow_alpha = 0.2;       // Semi-transparent
 
-
-// Exclamation mark system (existing variables)
+// Exclamation mark system
 show_exclamation = false;
 exclamation_alpha = 0;
 exclamation_bounce_y = 0;
 exclamation_animation_timer = 0;
 exclamation_appeared = false;  // Prevents re-triggering bounce
 
-// NEW: Track what triggered the exclamation mark
-exclamation_source = "none";  // Can be "rock", "npc", or "none"
+// Track what triggered the exclamation mark
+exclamation_source = "none";  // Can be "rock", "npc", "door", or "none"

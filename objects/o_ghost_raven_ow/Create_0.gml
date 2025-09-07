@@ -21,4 +21,4 @@ input_cooldown = 0;
 dialogue_cooldown = 0;
 
 // Interaction distance
-interaction_distance = 32;
+interaction_distance = 1;

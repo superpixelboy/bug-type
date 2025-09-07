@@ -137,16 +137,22 @@ if (is_moving) {
 // Use sprite's built-in animation speed
 image_speed = 1;
 
-// Rock interaction (find closest rock - keep existing logic)
+// o_player Step Event
+// ENHANCED: Dual interaction system - facing OR touching for rocks
+
+// ... (all your existing movement and animation code should stay here) ...
+
+
+// ENHANCED ROCK INTERACTION SYSTEM
+// Find closest rocks
 var nearest_rock = instance_nearest(x, y, o_rock_small);
 var nearest_mossy = instance_nearest(x, y, o_rock_small_mossy);
 var nearest_cracked = instance_nearest(x, y, o_rock_small_cracked);
 
 var closest_rock = noone;
 var closest_distance = 999;
-var rock_type = "normal";
+var rock_type = "";
 
-// Find the closest rock (keep existing logic)
 if (nearest_rock != noone) {
     var dist = distance_to_object(nearest_rock);
     if (dist < closest_distance) {
@@ -174,33 +180,41 @@ if (nearest_cracked != noone) {
     }
 }
 
-// Check if we can interact with rocks (keep existing logic)
-var can_interact = false;
+// DUAL INTERACTION CHECK: Facing OR Touching
+var can_interact_facing = false;
+var can_interact_touching = false;
+
 if (closest_distance <= 28 && closest_rock != noone) {
     var dx = closest_rock.x - x;
     var dy = closest_rock.y - y;
     
+    // METHOD 1: Facing the rock (existing system)
     switch(facing_direction) {
         case "up":
-            can_interact = (dy < -4 && abs(dx) < 20);
+            can_interact_facing = (dy < -4 && abs(dx) < 20);
             break;
         case "down":
-            can_interact = (dy > 4 && abs(dx) < 20);
+            can_interact_facing = (dy > 4 && abs(dx) < 20);
             break;
         case "left":
-            can_interact = (dx < -4 && abs(dy) < 20);
+            can_interact_facing = (dx < -4 && abs(dy) < 20);
             break;
         case "right":
-            can_interact = (dx > 4 && abs(dy) < 20);
+            can_interact_facing = (dx > 4 && abs(dy) < 20);
             break;
     }
+    
+    // METHOD 2: Direct touching (NEW - very close contact)
+    can_interact_touching = (closest_distance <= 8); // Almost touching - very close contact
 }
 
-// FIXED: Handle exclamation mark display for rocks (using source tracking)
+// Can interact if EITHER facing OR touching
+var can_interact = can_interact_facing || can_interact_touching;
+
+// Handle exclamation mark display for ROCKS
 if (can_interact) {
-    // Can interact with rock - show exclamation if not already shown by something else
-    if (!show_exclamation) {
-        // Nothing is showing exclamation, so we can show it for rock
+    if (!show_exclamation || exclamation_source != "rock") {
+        // Just became able to interact with rock - trigger bounce animation
         show_exclamation = true;
         exclamation_appeared = false;
         exclamation_animation_timer = 0;
@@ -208,33 +222,32 @@ if (can_interact) {
         exclamation_bounce_y = 0;
         exclamation_source = "rock";
     }
-    // If exclamation is already showing from NPC, don't override it
 } else {
-    // Can't interact with rocks - ONLY hide exclamation if WE (rock system) are showing it
+    // ONLY turn off exclamation if WE (rock system) turned it on
     if (show_exclamation && exclamation_source == "rock") {
+        // No longer can interact with rocks - fade out quickly
         show_exclamation = false;
         exclamation_appeared = false;
         exclamation_source = "none";
     }
-    // If exclamation_source is "npc", leave it alone - the NPC will manage it
 }
 
-// Animate exclamation mark (keep existing animation logic)
+// EXCLAMATION MARK ANIMATION (WORKS FOR ALL INTERACTION TYPES)
 if (show_exclamation) {
     exclamation_animation_timer++;
     
     if (!exclamation_appeared) {
-        // Bounce-in animation (first 10 frames)
+        // Bounce-in animation (first 20 frames) - POP UP from below!
         if (exclamation_animation_timer <= 10) {
             var bounce_progress = exclamation_animation_timer / 10;
             
             // Easing: bounce UP from below with overshoot
             var ease_progress = 1 - power(1 - bounce_progress, 3);
-            exclamation_bounce_y = lerp(12, 0, ease_progress);
+            exclamation_bounce_y = lerp(12, 0, ease_progress);  // Start below, move up!
             
-            // Add a little bounce back
+            // Add a little bounce back (negative bounce for upward motion)
             if (bounce_progress > 0.7) {
-                var bounce_back = sin((bounce_progress - 0.7) * 3.14 * 3) * -2;
+                var bounce_back = sin((bounce_progress - 0.7) * 3.14 * 3) * -2;  // Negative for upward
                 exclamation_bounce_y += bounce_back;
             }
             
@@ -256,7 +269,7 @@ if (show_exclamation) {
     exclamation_alpha = max(exclamation_alpha - 0.1, 0);
 }
 
-// Rock interaction (keep existing spacebar logic)
+// ROCK INTERACTION SPACEBAR
 if (keyboard_check_pressed(vk_space) && can_interact) {
     // Store current position before leaving
     global.return_x = x;
@@ -269,13 +282,8 @@ if (keyboard_check_pressed(vk_space) && can_interact) {
     room_goto(rm_rock_catching);
 }
 
-
 // Update player depth for tree sorting
-depth = -y;  // Player sorts based on feet position
-
-// Add this as the FIRST LINE in Step events of objects that should pause
-// (like o_player_walk, o_bug_parent, etc.)
-
+depth = -y;
 // ===============================================
 // NPC INTERACTION SYSTEM (matches rock system exactly)
 // ===============================================

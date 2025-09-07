@@ -101,3 +101,52 @@ if (exclamation_alpha > 0) {
     draw_set_valign(fa_top);
     draw_set_color(c_white);
 }
+
+// TEMPORARY DEBUG - Add this to END of o_player Draw Event to visualize interaction zones
+// Remove after testing
+
+if (keyboard_check(vk_f3)) { // Hold F3 to see interaction zones
+    // Draw touching range (very close)
+    draw_set_alpha(0.2);
+    draw_set_color(c_green);
+    draw_circle(x, y, 16, false); // Touching range
+    
+    // Draw proximity range (medium distance)
+    draw_set_alpha(0.1);
+    draw_set_color(c_yellow);
+    draw_circle(x, y, 32, false); // Proximity range
+    
+    // Draw facing interaction range for rocks
+    draw_set_alpha(0.15);
+    draw_set_color(c_blue);
+    draw_circle(x, y, 28, false); // Rock facing range
+    
+    // Draw directional facing indicator
+    draw_set_alpha(0.4);
+    draw_set_color(c_red);
+    var dir_x = x;
+    var dir_y = y;
+    switch(facing_direction) {
+        case "up": dir_y -= 25; break;
+        case "down": dir_y += 25; break;
+        case "left": dir_x -= 25; break;
+        case "right": dir_x += 25; break;
+    }
+    draw_line_width(x, y, dir_x, dir_y, 3);
+    
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+    
+    // Legend
+    draw_set_color(c_white);
+    draw_text(10, 150, "F3 - Interaction Zones:");
+    draw_set_color(c_green);
+    draw_text(10, 165, "Green = Direct Touch (8px)");
+    draw_set_color(c_yellow);
+    draw_text(10, 180, "Yellow = Looking At (32px)");
+    draw_set_color(c_blue);
+    draw_text(10, 195, "Blue = Rock Facing (28px)");
+    draw_set_color(c_red);
+    draw_text(10, 210, "Red = Facing Direction");
+    draw_set_color(c_white);
+}
