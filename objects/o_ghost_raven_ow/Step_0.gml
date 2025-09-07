@@ -1,17 +1,21 @@
 // o_ghost_raven_ow Step Event
-// ENHANCED: Dual interaction system - proximity OR very close touching
+// CLEAN SYSTEM: Using exact same pattern as rocks (no extra interaction_distance variables)
 
 // Reduce cooldowns
 if (input_cooldown > 0) input_cooldown--;
 if (dialogue_cooldown > 0) dialogue_cooldown--;
 
-// DUAL INTERACTION CHECK: Proximity OR Direct Touch
+// CLEAN DUAL INTERACTION CHECK: Copy exact rock pattern
 var player_distance = distance_to_object(o_player);
-var can_interact_proximity = (player_distance < interaction_distance && dialogue_cooldown <= 0); // Looking at from distance
-var can_interact_touching = (player_distance < 8); // Direct touch - very close contact
 
-// Can interact if EITHER in proximity OR touching
-var can_interact = (can_interact_proximity || can_interact_touching) && !dialogue_active;
+// Method 1: "Looking at" - same as rock facing range
+var can_interact_looking = (player_distance <= 28 && dialogue_cooldown <= 0);
+
+// Method 2: Direct touch - exact same as rocks
+var can_interact_touching = (player_distance <= 1);
+
+// Can interact if EITHER looking OR touching (same as rocks)
+var can_interact = (can_interact_looking || can_interact_touching) && !dialogue_active;
 
 // FIRST: Handle dialogue interaction
 if (can_interact) {
@@ -102,10 +106,10 @@ if (dialogue_active) {
     }
 }
 
-// LAST: Handle exclamation mark - ONLY when not in dialogue
+// LAST: Handle exclamation mark - ONLY when not in dialogue (exact same as rocks)
 if (!dialogue_active) {
     if (can_interact) {
-        // Player can interact (proximity OR touching) and not in dialogue - show exclamation mark
+        // Player can interact - show exclamation mark (same logic as rocks)
         if (instance_exists(o_player) && (!o_player.show_exclamation || o_player.exclamation_source != "npc")) {
             o_player.show_exclamation = true;
             o_player.exclamation_appeared = false;

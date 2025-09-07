@@ -203,3 +203,4 @@ function get_essence_display_text(base_essence, catch_count) {
 
 // ESC key cooldown protection
 esc_cooldown = 0;  // Frames remaining before ESC can be used again
+global.input_cooldown = 0;

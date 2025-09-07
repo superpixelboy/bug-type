@@ -8,18 +8,13 @@ if (instance_exists(o_pause_menu)) {
     exit;
 }
 
-// UNIVERSAL: Don't draw if ANY NPC dialogue is active
-var npc_list = [o_ghost_raven_ow, o_babayaga, o_ghost_raven_manager];
-for (var i = 0; i < array_length(npc_list); i++) {
-    var npc_type = npc_list[i];
-    if (instance_exists(npc_type)) {
-        var npc_instance = instance_find(npc_type, 0);
-        if (npc_instance != noone && variable_instance_exists(npc_instance, "dialogue_active") && npc_instance.dialogue_active) {
-            exit;
-        }
+
+// NEW: Don't draw if ANY NPC dialogue is active (using parent system)
+with (o_npc_parent) {
+    if (dialogue_active) {
+        exit;
     }
 }
-
 // [Rest of existing Draw GUI code]
 var gui_width = display_get_gui_width();
 var gui_height = display_get_gui_height();

@@ -10,6 +10,21 @@ if (movement_mode == "disabled") {
     exit;
 }
 
+
+// CHECK FOR DIALOGUE PAUSE - Add this at the very beginning
+var any_npc_talking = false;
+with (o_npc_parent) {
+    if (dialogue_active) {
+        any_npc_talking = true;
+        break;
+    }
+}
+
+// STOP MOVEMENT AND INTERACTION when in dialogue
+if (any_npc_talking) {
+    // Don't process movement, animation, or interactions during dialogue
+    exit;
+}
 // ... rest of your existing Step event code continues below ...
 // Exit early if collection UI is open
 if (instance_exists(o_bug_collection_ui) && o_bug_collection_ui.is_open) {
@@ -143,7 +158,7 @@ image_speed = 1;
 // ... (all your existing movement and animation code should stay here) ...
 
 
-// ENHANCED ROCK INTERACTION SYSTEM
+// ROCK INTERACTION SYSTEM (EXISTING - KEEP AS IS)
 // Find closest rocks
 var nearest_rock = instance_nearest(x, y, o_rock_small);
 var nearest_mossy = instance_nearest(x, y, o_rock_small_mossy);
@@ -180,9 +195,9 @@ if (nearest_cracked != noone) {
     }
 }
 
-// DUAL INTERACTION CHECK: Facing OR Touching
-var can_interact_facing = false;
-var can_interact_touching = false;
+// Check if we can interact with rocks
+var can_interact_rock_facing = false;
+var can_interact_rock_touching = false;
 
 if (closest_distance <= 28 && closest_rock != noone) {
     var dx = closest_rock.x - x;
@@ -191,30 +206,70 @@ if (closest_distance <= 28 && closest_rock != noone) {
     // METHOD 1: Facing the rock (existing system)
     switch(facing_direction) {
         case "up":
-            can_interact_facing = (dy < -4 && abs(dx) < 20);
+            can_interact_rock_facing = (dy < -4 && abs(dx) < 20);
             break;
         case "down":
-            can_interact_facing = (dy > 4 && abs(dx) < 20);
+            can_interact_rock_facing = (dy > 4 && abs(dx) < 20);
             break;
         case "left":
-            can_interact_facing = (dx < -4 && abs(dy) < 20);
+            can_interact_rock_facing = (dx < -4 && abs(dy) < 20);
             break;
         case "right":
-            can_interact_facing = (dx > 4 && abs(dy) < 20);
+            can_interact_rock_facing = (dx > 4 && abs(dy) < 20);
             break;
     }
     
-    // METHOD 2: Direct touching (NEW - very close contact)
-    can_interact_touching = (closest_distance <= 8); // Almost touching - very close contact
+    // METHOD 2: Direct touching
+    can_interact_rock_touching = (closest_distance <= 8);
 }
 
-// Can interact if EITHER facing OR touching
-var can_interact = can_interact_facing || can_interact_touching;
+var can_interact_rock = can_interact_rock_facing || can_interact_rock_touching;
 
-// Handle exclamation mark display for ROCKS
-if (can_interact) {
+// NPC INTERACTION SYSTEM (NEW - EXACT SAME PATTERN AS ROCKS)
+// Find closest NPC
+var nearest_npc = instance_nearest(x, y, o_npc_parent);
+var closest_npc = noone;
+var closest_npc_distance = 999;
+
+if (nearest_npc != noone) {
+    closest_npc_distance = distance_to_object(nearest_npc);
+    closest_npc = nearest_npc;
+}
+
+// Check if we can interact with NPCs (EXACT SAME LOGIC AS ROCKS)
+var can_interact_npc_facing = false;
+var can_interact_npc_touching = false;
+
+if (closest_npc_distance <= 28 && closest_npc != noone && !closest_npc.dialogue_active) {
+    var dx = closest_npc.x - x;
+    var dy = closest_npc.y - y;
+    
+    // METHOD 1: Facing the NPC (same as rocks)
+    switch(facing_direction) {
+        case "up":
+            can_interact_npc_facing = (dy < -4 && abs(dx) < 20);
+            break;
+        case "down":
+            can_interact_npc_facing = (dy > 4 && abs(dx) < 20);
+            break;
+        case "left":
+            can_interact_npc_facing = (dx < -4 && abs(dy) < 20);
+            break;
+        case "right":
+            can_interact_npc_facing = (dx > 4 && abs(dy) < 20);
+            break;
+    }
+    
+    // METHOD 2: Direct touching (same as rocks)
+    can_interact_npc_touching = (closest_npc_distance <= 8);
+}
+
+var can_interact_npc = can_interact_npc_facing || can_interact_npc_touching;
+
+// EXCLAMATION MARK CONTROL (PRIORITY: rocks > npcs > doors)
+if (can_interact_rock) {
+    // Rocks have highest priority
     if (!show_exclamation || exclamation_source != "rock") {
-        // Just became able to interact with rock - trigger bounce animation
         show_exclamation = true;
         exclamation_appeared = false;
         exclamation_animation_timer = 0;
@@ -222,10 +277,19 @@ if (can_interact) {
         exclamation_bounce_y = 0;
         exclamation_source = "rock";
     }
+} else if (can_interact_npc) {
+    // NPCs have second priority
+    if (!show_exclamation || exclamation_source != "npc") {
+        show_exclamation = true;
+        exclamation_appeared = false;
+        exclamation_animation_timer = 0;
+        exclamation_alpha = 0;
+        exclamation_bounce_y = 0;
+        exclamation_source = "npc";
+    }
 } else {
-    // ONLY turn off exclamation if WE (rock system) turned it on
-    if (show_exclamation && exclamation_source == "rock") {
-        // No longer can interact with rocks - fade out quickly
+    // Turn off exclamation if nothing can be interacted with
+    if (show_exclamation && (exclamation_source == "rock" || exclamation_source == "npc")) {
         show_exclamation = false;
         exclamation_appeared = false;
         exclamation_source = "none";
@@ -269,124 +333,29 @@ if (show_exclamation) {
     exclamation_alpha = max(exclamation_alpha - 0.1, 0);
 }
 
-// ROCK INTERACTION SPACEBAR
-if (keyboard_check_pressed(vk_space) && can_interact) {
-    // Store current position before leaving
-    global.return_x = x;
-    global.return_y = y;
-    global.return_room = room;
+// INTERACTION INPUT
+if (keyboard_check_pressed(vk_space)) {
+    // Check global input cooldown
+    var input_blocked = (variable_global_exists("input_cooldown") && global.input_cooldown > 0);
     
-    global.current_rock_id = closest_rock.rock_unique_id;
-    global.current_rock_type = rock_type;
-    audio_play_sound(sn_rock_click, 1, false);
-    room_goto(rm_rock_catching);
+    if (!input_blocked) {
+        if (can_interact_rock) {
+            // Rock interaction
+            global.return_x = x;
+            global.return_y = y;
+            global.return_room = room;
+            global.current_rock_id = closest_rock.rock_unique_id;
+            global.current_rock_type = rock_type;
+            audio_play_sound(sn_rock_click, 1, false);
+            room_goto(rm_rock_catching);
+        } else if (can_interact_npc) {
+            // NPC interaction - call the function properly
+            with (closest_npc) {
+                npc_start_dialogue();
+            }
+        }
+    }
 }
 
 // Update player depth for tree sorting
 depth = -y;
-// ===============================================
-// NPC INTERACTION SYSTEM (matches rock system exactly)
-// ===============================================
-
-// Find nearest interactable NPC (any object with dialogue_active variable)
-var npc_list = [o_ghost_raven_ow, o_babayaga];  // Add any new NPCs here
-var nearest_npc = noone;
-var npc_distance = 999;
-var can_interact_npc = false;
-
-// Find the closest NPC from our list
-for (var i = 0; i < array_length(npc_list); i++) {
-    var npc_type = npc_list[i];
-    var closest_of_type = instance_nearest(x, y, npc_type);
-    
-    if (closest_of_type != noone) {
-        var dist = distance_to_object(closest_of_type);
-        if (dist < npc_distance) {
-            npc_distance = dist;
-            nearest_npc = closest_of_type;
-        }
-    }
-}
-
-// Check if we can interact with the nearest NPC (same logic as rocks)
-if (nearest_npc != noone && npc_distance <= 28) {
-    var dx = nearest_npc.x - x;
-    var dy = nearest_npc.y - y;
-    
-    // EXACT same switch case logic as rocks
-    switch(facing_direction) {
-        case "up":
-            can_interact_npc = (dy < -4 && abs(dx) < 20);
-            break;
-        case "down":
-            can_interact_npc = (dy > 4 && abs(dx) < 20);
-            break;
-        case "left":
-            can_interact_npc = (dx < -4 && abs(dy) < 20);
-            break;
-        case "right":
-            can_interact_npc = (dx > 4 && abs(dy) < 20);
-            break;
-    }
-}
-
-// Handle NPC exclamation mark (same pattern as rocks)
-if (can_interact_npc && nearest_npc != noone && !nearest_npc.dialogue_active) {
-    // Can interact with NPC AND dialogue is not active - show exclamation if not already shown
-    if (!show_exclamation) {
-        show_exclamation = true;
-        exclamation_appeared = false;
-        exclamation_animation_timer = 0;
-        exclamation_alpha = 0;
-        exclamation_bounce_y = 0;
-        exclamation_source = "npc";
-    }
-} else {
-    // Can't interact with NPC OR dialogue is active - ONLY hide if WE are showing it
-    if (show_exclamation && exclamation_source == "npc") {
-        show_exclamation = false;
-        exclamation_appeared = false;
-        exclamation_source = "none";
-    }
-}
-
-// Handle NPC dialogue interaction (same spacebar logic as rocks)
-if (keyboard_check_pressed(vk_space) && can_interact_npc && nearest_npc.dialogue_cooldown <= 0) {
-    // Hide exclamation during dialogue
-    show_exclamation = false;
-    exclamation_appeared = false;
-    exclamation_source = "none";
-    
-    // Trigger dialogue based on NPC type
-    if (nearest_npc.object_index == o_ghost_raven_ow) {
-        // Ghost Raven dialogue (typewriter system)
-        nearest_npc.dialogue_active = true;
-        nearest_npc.dialogue_index = 0;
-        nearest_npc.input_cooldown = 10;
-        
-        // Initialize typewriter for first message
-        var current_message = nearest_npc.dialogue_messages[nearest_npc.dialogue_index];
-        nearest_npc.typewriter_text = "";
-        nearest_npc.typewriter_char_index = 0;
-        nearest_npc.typewriter_complete = false;
-        nearest_npc.typewriter_timer = 0;
-        
-    } else if (nearest_npc.object_index == o_babayaga) {
-        // Baba Yaga dialogue (simple system)
-        nearest_npc.dialogue_active = true;
-        nearest_npc.dialogue_index = 0;
-        
-        // Set dialogue state based on progress
-        if (global.bugs_caught == 0) {
-            nearest_npc.dialogue_state = "greeting";
-        } else if (global.bugs_caught < 5) {
-            nearest_npc.dialogue_state = "progress";
-        } else {
-            nearest_npc.dialogue_state = "encouragement";
-        }
-    }
-    
-    // Play interaction sound (same as rocks)
-    var snd = asset_get_index("sn_bugtap1");
-    if (snd != -1) audio_play_sound(snd, 1, false);
-}
