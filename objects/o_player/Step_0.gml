@@ -33,7 +33,7 @@ if (instance_exists(o_bug_collection_ui) && o_bug_collection_ui.is_open) {
 
 
 // NEW: Exit early if ANY NPC dialogue is active (blocks all movement and interaction)
-var npc_list = [o_ghost_raven_ow, o_babayaga, o_ghost_raven_manager];
+var npc_list = [o_ghost_raven_ow, o_babayaga_old, o_ghost_raven_manager];
 for (var i = 0; i < array_length(npc_list); i++) {
     var npc_type = npc_list[i];
     if (instance_exists(npc_type)) {

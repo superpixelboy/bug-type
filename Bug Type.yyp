@@ -66,6 +66,7 @@
     {"id":{"name":"fnt_silkscreen","path":"fonts/fnt_silkscreen/fnt_silkscreen.yy",},},
     {"id":{"name":"o_ancient_shell_back","path":"objects/o_ancient_shell_back/o_ancient_shell_back.yy",},},
     {"id":{"name":"o_babayaga_hut","path":"objects/o_babayaga_hut/o_babayaga_hut.yy",},},
+    {"id":{"name":"o_babayaga_old","path":"objects/o_babayaga_old/o_babayaga_old.yy",},},
     {"id":{"name":"o_babayaga","path":"objects/o_babayaga/o_babayaga.yy",},},
     {"id":{"name":"o_bark_crawler","path":"objects/o_bark_crawler/o_bark_crawler.yy",},},
     {"id":{"name":"o_barrier","path":"objects/o_barrier/o_barrier.yy",},},
