@@ -1,5 +1,3 @@
-// o_ghost_raven_ow Draw GUI Event
-// Beautiful parchment dialogue system (exact copy from o_ghost_raven_manager)
 
 if (dialogue_active) {
     var gui_w = display_get_gui_width();
@@ -7,8 +5,9 @@ if (dialogue_active) {
     var box_w = sprite_get_width(s_dialogue_back);
     var box_h = sprite_get_height(s_dialogue_back);
     
+    // CHANGED: Position dialogue at TOP instead of center/bottom
     var box_x = gui_w/2;
-    var box_y = gui_h/2 + box_h;
+    var box_y = box_h/2 + 20; // Small margin from top edge
     
     // Draw the parchment background
     draw_sprite(s_dialogue_back, 0, box_x, box_y);
@@ -23,8 +22,9 @@ if (dialogue_active) {
     // Use typewriter text for animated display
     var display_text = typewriter_text;
     
+    // CHANGED: Adjust text position to match new top placement
     var text_x = box_x/5;
-    var text_y = gui_h/1.45;
+    var text_y = 40; // Fixed position near top of screen
     var text_width = box_w - 60;
     
     draw_set_halign(fa_left);
@@ -39,11 +39,12 @@ if (dialogue_active) {
     draw_text_ext(text_x, text_y, display_text, 26, text_width);
     
     // Show continue prompt when typewriter is complete
+    // CHANGED: Position continue prompt in top-right corner
     if (typewriter_complete) {
         draw_set_halign(fa_right);
-        draw_set_valign(fa_bottom);
+        draw_set_valign(fa_top);
         draw_set_color(c_ltgray);
-        draw_text(gui_w-110, gui_h-10, "Continue");
+        draw_text(gui_w-70, text_y + 130, "Continue"); // Positioned below dialogue box
     }
     
     // Reset draw settings
