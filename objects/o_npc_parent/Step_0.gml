@@ -1,4 +1,4 @@
-// o_npc_parent Step Event  
+// o_npc_parent Step Event - Enhanced with Unified Input Support
 // PASSIVE SYSTEM: Let player handle interaction detection (like rocks)
 
 // Reduce cooldowns
@@ -6,10 +6,7 @@ if (input_cooldown > 0) input_cooldown--;
 if (dialogue_cooldown > 0) dialogue_cooldown--;
 
 // ONLY handle dialogue progression (no interaction detection)
-// === REPLACE your current dialogue progression section with this ===
-
-// === ADD DEBUG MESSAGES TO SEE WHAT'S HAPPENING ===
-
+// === ENHANCED DIALOGUE PROGRESSION WITH UNIFIED INPUT ===
 if (dialogue_active) {
     // Force hide exclamation during dialogue
     if (instance_exists(o_player)) {
@@ -37,13 +34,21 @@ if (dialogue_active) {
         }
     }
     
-    // Handle dialogue input
-    var pressed_next = (keyboard_check_pressed(vk_space) || 
-                      keyboard_check_pressed(vk_enter) || 
-                      mouse_check_button_pressed(mb_left));
+    // ENHANCED: Handle dialogue input with unified input system
+    // REPLACED: var pressed_next = (keyboard_check_pressed(vk_space) || 
+    //                             keyboard_check_pressed(vk_enter) || 
+    //                             mouse_check_button_pressed(mb_left));
+    
+    // NEW: Use unified input system (supports Space, Enter, mouse click, controller A)
+    var pressed_next = input_get_interact_pressed() || keyboard_check_pressed(vk_enter);
+    
+    // OPTIONAL: Add mouse click support separately if needed
+    if (mouse_check_button_pressed(mb_left)) {
+        pressed_next = true;
+    }
     
     if (pressed_next && input_cooldown <= 0) {
-        show_debug_message("SPACE PRESSED - dialogue_index: " + string(dialogue_index) + " / " + string(array_length(dialogue_messages)));
+        show_debug_message("INTERACTION PRESSED - dialogue_index: " + string(dialogue_index) + " / " + string(array_length(dialogue_messages)));
         
         if (typewriter_complete) {
             dialogue_index++;

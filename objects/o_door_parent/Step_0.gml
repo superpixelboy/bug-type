@@ -1,4 +1,4 @@
-// o_door_parent Step Event
+// o_door_parent Step Event - Enhanced with Unified Input Support
 // SAFETY: Adding exclamation mark system while preserving existing door functionality
 
 // Check if player is overlapping the door
@@ -24,11 +24,19 @@ if (player_on_door && global.door_cooldown <= 0) {
     }
 }
 
-// UPDATED DOOR INTERACTION - Space/Click only for consistency
+// ENHANCED DOOR INTERACTION - Unified Input Support
 if (player_on_door && global.door_cooldown <= 0) {
-    // Only Space/Click for consistent interaction across all game elements
-    var door_pressed = (keyboard_check_pressed(vk_space) ||
-                       mouse_check_button_pressed(mb_left));
+    // ENHANCED: Use unified input system instead of direct keyboard/mouse checks
+    // REPLACED: var door_pressed = (keyboard_check_pressed(vk_space) ||
+    //                              mouse_check_button_pressed(mb_left));
+    
+    // NEW: Use unified input system (supports Space, mouse click, controller A)
+    var door_pressed = input_get_interact_pressed();
+    
+    // OPTIONAL: Add mouse click support separately if needed for backwards compatibility
+    if (mouse_check_button_pressed(mb_left)) {
+        door_pressed = true;
+    }
     
     if (door_pressed) {
         // Hide exclamation mark when entering

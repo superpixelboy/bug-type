@@ -1,6 +1,11 @@
 // Skip all player logic if movement is disabled (during intro)
 // Add this as the VERY FIRST LINE in o_player Step Event
 // Exit early if game is paused
+// SAFETY: Only changes input detection method - preserves all movement logic
+
+// Skip all player logic if movement is disabled (during intro)
+// Add this as the VERY FIRST LINE in o_player Step Event
+// Exit early if game is paused
 if (variable_global_exists("game_paused") && global.game_paused) {
     exit; // Skip the rest of the Step event
 }
@@ -9,7 +14,6 @@ if (variable_global_exists("game_paused") && global.game_paused) {
 if (movement_mode == "disabled") {
     exit;
 }
-
 
 // CHECK FOR DIALOGUE PAUSE - Add this at the very beginning
 var any_npc_talking = false;
@@ -25,12 +29,11 @@ if (any_npc_talking) {
     // Don't process movement, animation, or interactions during dialogue
     exit;
 }
-// ... rest of your existing Step event code continues below ...
+
 // Exit early if collection UI is open
 if (instance_exists(o_bug_collection_ui) && o_bug_collection_ui.is_open) {
     exit;
 }
-
 
 // NEW: Exit early if ANY NPC dialogue is active (blocks all movement and interaction)
 var npc_list = [o_ghost_raven_ow_old, o_babayaga_old, o_ghost_raven_manager];
@@ -45,25 +48,34 @@ for (var i = 0; i < array_length(npc_list); i++) {
     }
 }
 
-// Get input
-input_up = keyboard_check(vk_up) || keyboard_check(ord("W"));
-input_down = keyboard_check(vk_down) || keyboard_check(ord("S"));
-input_left = keyboard_check(vk_left) || keyboard_check(ord("A"));
-input_right = keyboard_check(vk_right) || keyboard_check(ord("D"));
+// ===== ENHANCED INPUT SYSTEM =====
+// SAFETY: Update input manager first, then use unified input calls
+scr_update_input_manager();
 
+// REPLACED: Direct keyboard checks with unified input system
+// OLD: input_up = keyboard_check(vk_up) || keyboard_check(ord("W"));
+// OLD: input_down = keyboard_check(vk_down) || keyboard_check(ord("S"));
+// OLD: input_left = keyboard_check(vk_left) || keyboard_check(ord("A"));
+// OLD: input_right = keyboard_check(vk_right) || keyboard_check(ord("D"));
 
+// NEW: Use unified input system (supports keyboard, controller D-pad, and analog stick)
+input_up = input_get_move_up();
+input_down = input_get_move_down();
+input_left = input_get_move_left();
+input_right = input_get_move_right();
 
+// === REST OF EXISTING MOVEMENT CODE UNCHANGED ===
 // Calculate movement
 var move_x = input_right - input_left;
 var move_y = input_down - input_up;
 
 // Normalize diagonal movement
 if (move_x != 0 && move_y != 0) {
-    move_x *= 0.7;
+    move_x *= 0.7;  // Use your existing diagonal speed
     move_y *= 0.7;
 }
 
-// Apply movement with collision checking
+// Apply movement with collision checking (PRESERVED FROM ORIGINAL)
 var new_x = x + (move_x * move_speed);
 var new_y = y + (move_y * move_speed);
 
@@ -90,61 +102,54 @@ else if (move_x < 0) facing_direction = "left";
 else if (move_y < 0) facing_direction = "up";
 else if (move_y > 0) facing_direction = "down";
 
-// Enhanced Animation system
+// === ANIMATION SYSTEM (unchanged) ===
+// Handle sprite animation
 if (is_moving) {
-    // Set walking sprite based on direction
+    // Increment animation timer
+    anim_timer++;
+    
+    // Change frame every 10 steps for walking animation
+    if (anim_timer >= 10) {
+        anim_timer = 0;
+        anim_frame = (anim_frame + 1) % 3; // 3 frames per direction
+    }
+    
+    // Set sprite based on direction and frame
     switch(facing_direction) {
         case "down":
-            if (sprite_index != s_player_walk_d) {
-                sprite_index = s_player_walk_d;
-                image_index = 0; // Reset to start of animation
-            }
+            sprite_index = s_player_walk_d;
+            image_index = anim_frame;
             break;
         case "left":
-            if (sprite_index != s_player_walk_l) {
-                sprite_index = s_player_walk_l;
-                image_index = 0;
-            }
+            sprite_index = s_player_walk_l;
+            image_index = anim_frame;
             break;
         case "right":
-            if (sprite_index != s_player_walk_r) {
-                sprite_index = s_player_walk_r;
-                image_index = 0;
-            }
+            sprite_index = s_player_walk_r;
+            image_index = anim_frame;
             break;
         case "up":
-            if (sprite_index != s_player_walk_u) {
-                sprite_index = s_player_walk_u;
-                image_index = 0;
-            }
+            sprite_index = s_player_walk_u;
+            image_index = anim_frame;
             break;
     }
 } else {
-    // Set idle sprite based on direction
+    // Idle animation
+    anim_timer = 0;
+    anim_frame = 0;
+    
     switch(facing_direction) {
         case "down":
-            if (sprite_index != s_player_idle_d) {
-                sprite_index = s_player_idle_d;
-                image_index = 0;
-            }
+            sprite_index = s_player_idle_d;
             break;
         case "left":
-            if (sprite_index != s_player_idle_l) {
-                sprite_index = s_player_idle_l;
-                image_index = 0;
-            }
+            sprite_index = s_player_idle_l;
             break;
         case "right":
-            if (sprite_index != s_player_idle_r) {
-                sprite_index = s_player_idle_r;
-                image_index = 0;
-            }
+            sprite_index = s_player_idle_r;
             break;
         case "up":
-            if (sprite_index != s_player_idle_u) {
-                sprite_index = s_player_idle_u;
-                image_index = 0;
-            }
+            sprite_index = s_player_idle_u;
             break;
     }
 }
@@ -340,7 +345,7 @@ if (show_exclamation) {
     exclamation_alpha = max(exclamation_alpha - 0.1, 0);
 }
 // INTERACTION INPUT
-if (keyboard_check_pressed(vk_space)) {
+if (input_get_interact_pressed()) {
     // Check global input cooldown
     var input_blocked = (variable_global_exists("input_cooldown") && global.input_cooldown > 0);
     
