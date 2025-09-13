@@ -36,7 +36,8 @@ if (nearest_cracked != noone) {
 }
 
 // Check if we can interact
-var can_interact = false;
+var can_interact = global.player_can_interact_rock;
+/*
 if (closest_distance <= 28 && closest_rock != noone) {
     var dx = closest_rock.x - x;
     var dy = closest_rock.y - y;
@@ -55,7 +56,7 @@ if (closest_distance <= 28 && closest_rock != noone) {
             can_interact = (dx > 4 && abs(dy) < 20);
             break;
     }
-}
+}*/
 
 // Draw outline FIRST (behind everything)
 if (can_interact) {

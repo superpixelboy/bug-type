@@ -59,4 +59,31 @@ if (dialogue_active) {
     }
 }
 
+// Handle dialogue progression  
+if (dialogue_active) {
+    if (keyboard_check_pressed(vk_space) || mouse_check_button_pressed(mb_left)) {
+        dialogue_index++;
+        
+        // Check if dialogue is complete
+        if (dialogue_index >= array_length(dialogue_messages)) {
+            // SPECIAL: Complete tutorial when finishing Baba Yaga's first dialogue
+            if (object_index == o_babayaga && !global.met_baba_yaga) {
+                global.met_baba_yaga = true;
+                show_debug_message("✅ TUTORIAL COMPLETED! Bug catching unlocked!");
+                
+                // Optional: Play special completion sound
+                audio_play_sound(sn_bug_catch1, 1, false);
+                
+                // Optional: Save immediately to preserve tutorial completion
+                if (script_exists(asset_get_index("scr_auto_save"))) {
+                    scr_auto_save();
+                }
+            }
+            
+            // End dialogue
+            dialogue_active = false;
+            dialogue_cooldown = 30;
+        }
+    }
+}
 // NOTE: Interaction detection is now handled by o_player Step event (like rocks)

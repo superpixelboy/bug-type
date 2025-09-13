@@ -204,3 +204,13 @@ function get_essence_display_text(base_essence, catch_count) {
 // ESC key cooldown protection
 esc_cooldown = 0;  // Frames remaining before ESC can be used again
 global.input_cooldown = 0;
+
+// Add this to o_UI_Manager Create Event (after existing global variable initialization)
+
+// === QUEST/TUTORIAL SYSTEM ===
+if (!variable_global_exists("met_baba_yaga")) {
+    global.met_baba_yaga = false;
+    show_debug_message("Initialized global.met_baba_yaga to false");
+} else {
+    show_debug_message("global.met_baba_yaga already exists: " + string(global.met_baba_yaga));
+}

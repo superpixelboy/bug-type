@@ -46,6 +46,21 @@ function scr_save_game() {
         ds_map_add(save_data, "spawned_rocks", spawned_rocks_string);
         show_debug_message("Saved spawned rocks: " + string(ds_map_size(global.spawned_rocks)) + " entries");
     }
+	
+	
+	// Add this line in the "CORE PROGRESS DATA" section:
+	ds_map_add(save_data, "met_baba_yaga", global.met_baba_yaga);
+
+	// === ADD TO scr_load_game.gml ===  
+	// Add this in the "LOAD CORE PROGRESS" section:
+	if (ds_map_exists(save_data, "met_baba_yaga")) {
+	    global.met_baba_yaga = ds_map_find_value(save_data, "met_baba_yaga");
+	    show_debug_message("Loaded met_baba_yaga: " + string(global.met_baba_yaga));
+	}
+
+	// === ADD TO scr_initialize_new_game.gml ===
+	// Add this in the "CORE PROGRESS" section:
+	global.met_baba_yaga = false;
     
     // === SAVE VERSION (for future compatibility) ===
     ds_map_add(save_data, "save_version", "1.0");

@@ -195,7 +195,7 @@ if (nearest_cracked != noone) {
     }
 }
 
-// Check if we can interact with rocks
+// Check if we can iteract with rocks
 var can_interact_rock_facing = false;
 var can_interact_rock_touching = false;
 
@@ -223,7 +223,14 @@ if (closest_distance <= 28 && closest_rock != noone) {
     can_interact_rock_touching = (closest_distance <= 8);
 }
 
-var can_interact_rock = can_interact_rock_facing || can_interact_rock_touching;
+// REPLACE it with these lines:
+var can_interact_rock_base = can_interact_rock_facing || can_interact_rock_touching;
+
+// TUTORIAL GATE: Only allow rock interaction after meeting Baba Yaga
+var can_interact_rock = can_interact_rock_base && global.met_baba_yaga;
+
+// BACKUP: Store this for Draw event to use
+global.player_can_interact_rock = can_interact_rock;
 
 // NPC INTERACTION SYSTEM (NEW - EXACT SAME PATTERN AS ROCKS)
 // Find closest NPC
