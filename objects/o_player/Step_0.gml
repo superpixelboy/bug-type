@@ -319,10 +319,24 @@ if (!input_cooldown_active) {
     // Combined collection toggle check
     var collection_toggle = tab_pressed || c_pressed || unified_menu_pressed;
 
+    // DEBUG: Show what's happening
+    if (collection_toggle) {
+        show_debug_message("=== PLAYER COLLECTION TOGGLE ===");
+        show_debug_message("Tab: " + string(tab_pressed));
+        show_debug_message("C: " + string(c_pressed));
+        show_debug_message("Unified: " + string(unified_menu_pressed));
+        show_debug_message("Cooldown: " + string(global.input_cooldown));
+    }
+
     if (collection_toggle) {
         var collection_ui = instance_find(o_bug_collection_ui, 0);
         if (collection_ui != noone) {
+            var was_open = collection_ui.is_open;
             collection_ui.is_open = !collection_ui.is_open;
+            
+            // DEBUG: Show what happened
+            show_debug_message("PLAYER: Collection was: " + string(was_open) + ", now: " + string(collection_ui.is_open));
+            
             if (collection_ui.is_open) {
                 collection_ui.page = 0;
             }
@@ -334,8 +348,16 @@ if (!input_cooldown_active) {
             audio_play_sound(sn_bugtap1, 1, false);
             
             // Set input cooldown to prevent double-triggering
-            global.input_cooldown = 10;
+            global.input_cooldown = 15; // Slightly longer cooldown
+            show_debug_message("PLAYER: Set cooldown to 15");
+        } else {
+            show_debug_message("PLAYER: Collection UI not found!");
         }
+    }
+} else {
+    // DEBUG: Show when cooldown is blocking
+    if (keyboard_check_pressed(ord("C")) || (variable_global_exists("input_manager") && input_get_menu_toggle_pressed())) {
+        show_debug_message("INPUT BLOCKED BY COOLDOWN: " + string(global.input_cooldown));
     }
 }
 

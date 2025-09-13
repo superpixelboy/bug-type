@@ -47,20 +47,33 @@ var nav_confirm = orig_enter || orig_space || interact_pressed;
 var nav_cancel = orig_escape || cancel_pressed;
 
 // ===== CLOSE COLLECTION UI =====
-// SAFETY: Simplified close methods - let o_player handle C/X
+// SAFETY: ONLY handle Tab and Escape - let o_player handle C/X completely
 
 // Original close methods (PRESERVED) - Tab and Escape only
 var tab_close = keyboard_check_pressed(vk_tab);
-// REMOVED: C key close - let o_player handle this to prevent conflicts
+var orig_escape = keyboard_check_pressed(vk_escape);
 
-// NEW: Unified cancel input (Escape/Controller B)
+// Controller B button for cancel
 var unified_cancel = false;
 if (variable_global_exists("input_manager")) {
     unified_cancel = input_get_cancel_pressed();
 }
 
-// Close with cancel input or Tab only
-if (nav_cancel || tab_close || unified_cancel) {
+// REMOVED: C key and unified menu toggle - o_player handles these exclusively
+// Only Tab, Escape, and Controller B can close from here
+
+var any_close_input = nav_cancel || tab_close || orig_escape || unified_cancel;
+
+// DEBUG: Show what's trying to close the collection
+if (any_close_input) {
+    show_debug_message("=== COLLECTION UI CLOSING (Tab/Esc/B only) ===");
+    show_debug_message("nav_cancel: " + string(nav_cancel));
+    show_debug_message("tab_close: " + string(tab_close));
+    show_debug_message("orig_escape: " + string(orig_escape));
+    show_debug_message("unified_cancel: " + string(unified_cancel));
+}
+
+if (any_close_input) {
     is_open = false;
     detail_view_open = false;
     detail_bug_key = "";
@@ -68,6 +81,7 @@ if (nav_cancel || tab_close || unified_cancel) {
     hovered_card = -1;
     hover_timer = 0;
     audio_play_sound(sn_bugtap1, 1, false);
+    show_debug_message("Collection UI closed successfully");
     exit;
 }
 

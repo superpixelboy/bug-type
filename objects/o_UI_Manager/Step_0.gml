@@ -34,6 +34,7 @@ if (room == rm_main_menu) {
 // === GAME SYSTEMS (Only runs outside main menu) ===
 
 // TAB key toggle
+/*
 if (keyboard_check_pressed(vk_tab)) {
     var collection_ui = instance_find(o_bug_collection_ui, 0);
     if (collection_ui != noone) {
@@ -50,7 +51,7 @@ if (keyboard_check_pressed(vk_tab)) {
             }
         }
     }
-}
+}*/
 
 // Door cooldown
 if (global.door_cooldown > 0) {
