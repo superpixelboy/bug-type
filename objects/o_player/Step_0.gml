@@ -366,3 +366,18 @@ if (keyboard_check_pressed(vk_space)) {
 
 // Update player depth for tree sorting
 depth = -y;
+
+
+// TEMPORARY: Manual tutorial completion for testing
+if (keyboard_check_pressed(ord("T"))) {
+    global.met_baba_yaga = !global.met_baba_yaga; // Toggle it
+    show_debug_message("Tutorial toggled! Now: " + string(global.met_baba_yaga));
+    
+    // Play sound feedback
+    audio_play_sound(sn_bug_catch1, 1, false);
+}
+
+// Debug output every few seconds
+if (current_time % 3000 < 16) { // Every 3 seconds roughly
+    show_debug_message("Current tutorial state: " + string(global.met_baba_yaga));
+}

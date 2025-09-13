@@ -59,6 +59,7 @@ if (dialogue_active) {
     }
 }
 
+/*
 // Handle dialogue progression  
 if (dialogue_active) {
     if (keyboard_check_pressed(vk_space) || mouse_check_button_pressed(mb_left)) {
@@ -85,5 +86,20 @@ if (dialogue_active) {
             dialogue_cooldown = 30;
         }
     }
+}
+*/
+
+
+// KEEP ONLY the first dialogue progression block that has the typewriter effect
+// The tutorial completion logic should be in the FIRST block, not the second
+
+// Add this line to the END of the first dialogue progression block:
+// (Where it says "End dialogue" and sets dialogue_active = false)
+
+// SPECIAL: Complete tutorial when finishing Baba Yaga's first dialogue
+if (object_index == o_babayaga && !global.met_baba_yaga) {
+    global.met_baba_yaga = true;
+    show_debug_message("✅ TUTORIAL COMPLETED! Bug catching unlocked!");
+    audio_play_sound(sn_bug_catch1, 1, false);
 }
 // NOTE: Interaction detection is now handled by o_player Step event (like rocks)

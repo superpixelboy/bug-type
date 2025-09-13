@@ -38,3 +38,20 @@ if (!global.met_baba_yaga) {
         ];
     }
 }
+
+
+show_debug_message("=== BABA YAGA CREATE EVENT ===");
+show_debug_message("Current met_baba_yaga: " + string(global.met_baba_yaga));
+show_debug_message("Current room: " + string(room_get_name(room)));
+
+// ADD this to help track when tutorial gets set incorrectly
+if (global.met_baba_yaga == true) {
+    show_debug_message("⚠️ WARNING: Tutorial already completed when Baba Yaga created!");
+}
+
+// === TEMPORARY: Add this to room entry/exit events ===
+// Add to rm_wichhouse Room Start event:
+show_debug_message("Entering witch house. Tutorial state: " + string(global.met_baba_yaga));
+
+// Add to rm_wichhouse Room End event:
+show_debug_message("Leaving witch house. Tutorial state: " + string(global.met_baba_yaga));

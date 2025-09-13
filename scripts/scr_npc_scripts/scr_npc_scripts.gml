@@ -40,24 +40,30 @@ function npc_start_dialogue() {
 
 // SCRIPT: npc_end_dialogue()
 // Ends dialogue and triggers story events
-function npc_end_dialogue() {
-    dialogue_active = false;
-    dialogue_cooldown = 60;  // Prevent immediate re-interaction
-    
-    // ADD: Global input cooldown to prevent collection button opening
-    global.input_cooldown = 30;
-    
-    // Call custom end event
-    if (on_dialogue_end != -1 && script_exists(on_dialogue_end)) {
-        script_execute(on_dialogue_end);
-    }
-    
-    // Call story progression event
-    if (on_story_event != -1 && script_exists(on_story_event)) {
-        script_execute(on_story_event);
-    }
-}
 
+function npc_end_dialogue() {
+    // SPECIAL: Complete tutorial when finishing Baba Yaga's first dialogue
+    if (object_index == o_babayaga && !global.met_baba_yaga) {
+        global.met_baba_yaga = true;
+        show_debug_message("✅ TUTORIAL COMPLETED! Bug catching unlocked!");
+        audio_play_sound(sn_bug_catch1, 1, false);
+        
+        // Auto-save to preserve tutorial completion
+        if (script_exists(asset_get_index("scr_auto_save"))) {
+            scr_auto_save();
+        }
+    }
+    
+    // Original end dialogue code
+    dialogue_active = false;
+    dialogue_cooldown = 30;
+    input_cooldown = 10;
+    
+    // Reset typewriter
+    typewriter_text = "";
+    typewriter_char_index = 0;
+    typewriter_complete = false;
+}
 // SCRIPT: npc_continue_dialogue()
 // Moves to next dialogue message
 function npc_continue_dialogue() {

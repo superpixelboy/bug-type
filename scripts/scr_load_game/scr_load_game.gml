@@ -117,6 +117,20 @@ function scr_load_game() {
         show_debug_message("Loaded spawned rocks: " + string(ds_map_size(global.spawned_rocks)) + " entries");
     }
     
+	//Quest Progression
+	if (ds_map_exists(save_data, "met_baba_yaga")) {
+	    global.met_baba_yaga = ds_map_find_value(save_data, "met_baba_yaga");
+	    show_debug_message("Loaded met_baba_yaga: " + string(global.met_baba_yaga));
+	} else {
+	    // Fallback for old save files without tutorial flag
+	    global.met_baba_yaga = false;
+	    show_debug_message("Old save file - defaulting met_baba_yaga to false");
+	}
+
+	// === FIX scr_initialize_new_game.gml ===
+	// Add this in the "CORE PROGRESS" section:
+
+	global.met_baba_yaga = false;
     // Clean up
     ds_map_destroy(save_data);
     
