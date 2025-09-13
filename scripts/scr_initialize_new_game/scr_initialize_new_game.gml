@@ -1,11 +1,14 @@
 /// @description scr_initialize_new_game - Reset all game data for new game
 function scr_initialize_new_game() {
     show_debug_message("=== INITIALIZING NEW GAME ===");
-    
+    show_debug_message("🆕 INITIALIZE NEW GAME CALLED - THIS RESETS TUTORIAL!");
+	show_debug_message("  Call stack: " + string(debug_get_callstack()));
+
     // === CORE PROGRESS ===
     global.bugs_caught = 0;
     global.essence = 0;
     global.showing_card = false;
+	global.met_baba_yaga = false;
     
     // === PLAYER POSITION ===
     global.return_x = 626;
@@ -26,6 +29,9 @@ function scr_initialize_new_game() {
     global.last_rock_used = false;
     global.current_rock_id = "";
     global.next_forced_bug = -1;
+	
+
+
     
     // === SLEEP SYSTEM ===
     if (variable_global_exists("is_sleeping")) {

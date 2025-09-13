@@ -153,24 +153,36 @@ if (keyboard_check(vk_f3)) { // Hold F3 to see interaction zones
 }
 
 
+
 draw_set_color(c_white);
 draw_set_font(-1);
-draw_text(10, 10, "Tutorial Debug:");
+draw_text(10, 10, "=== TUTORIAL DEBUG ===");
 draw_text(10, 25, "met_baba_yaga: " + string(global.met_baba_yaga));
 
-// Use the global variable we set in Step event
+// Safe check for the global variable
 if (variable_global_exists("player_can_interact_rock")) {
-    draw_text(10, 40, "can_interact_rock: " + string(global.player_can_interact_rock));
+    draw_text(10, 40, "can_interact_rocks: " + string(global.player_can_interact_rock));
 } else {
-    draw_text(10, 40, "can_interact_rock: not set");
+    draw_text(10, 40, "can_interact_rocks: not set yet");
 }
 
-// Check which Baba Yaga object exists
+draw_text(10, 55, "Room: " + string(room_get_name(room)));
+
+// Show which NPCs exist
+var npc_count = instance_number(o_npc_parent);
+draw_text(10, 70, "NPCs in room: " + string(npc_count));
+
 if (instance_exists(o_babayaga)) {
-    draw_text(10, 55, "o_babayaga exists");
+    draw_text(10, 85, "o_babayaga: EXISTS");
+    if (o_babayaga.dialogue_active) {
+        draw_text(10, 100, "  Dialogue: ACTIVE");
+    } else {
+        draw_text(10, 100, "  Dialogue: inactive");
+    }
 }
+
 if (instance_exists(o_babayaga_old)) {
-    draw_text(10, 70, "o_babayaga_old exists");
+    draw_text(10, 115, "o_babayaga_old: EXISTS");
 }
 
 draw_set_color(c_white);

@@ -368,16 +368,28 @@ if (keyboard_check_pressed(vk_space)) {
 depth = -y;
 
 
-// TEMPORARY: Manual tutorial completion for testing
+// RESET tutorial (set to false)
+if (keyboard_check_pressed(ord("R"))) {
+    show_debug_message("🔄 MANUALLY RESETTING TUTORIAL");
+    global.met_baba_yaga = false;
+    audio_play_sound(sn_rock_click, 1, false);
+}
+
+// COMPLETE tutorial (set to true) 
 if (keyboard_check_pressed(ord("T"))) {
-    global.met_baba_yaga = !global.met_baba_yaga; // Toggle it
-    show_debug_message("Tutorial toggled! Now: " + string(global.met_baba_yaga));
-    
-    // Play sound feedback
+    show_debug_message("✅ MANUALLY COMPLETING TUTORIAL");
+    global.met_baba_yaga = true;
     audio_play_sound(sn_bug_catch1, 1, false);
 }
 
-// Debug output every few seconds
-if (current_time % 3000 < 16) { // Every 3 seconds roughly
-    show_debug_message("Current tutorial state: " + string(global.met_baba_yaga));
+// FORCE SAVE
+if (keyboard_check_pressed(ord("1"))) {
+    show_debug_message("💾 MANUAL SAVE");
+    scr_save_game();
+}
+
+// FORCE LOAD
+if (keyboard_check_pressed(ord("2"))) {
+    show_debug_message("📂 MANUAL LOAD");
+    scr_load_game();
 }

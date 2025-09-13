@@ -213,4 +213,47 @@ if (!variable_global_exists("met_baba_yaga")) {
     show_debug_message("Initialized global.met_baba_yaga to false");
 } else {
     show_debug_message("global.met_baba_yaga already exists: " + string(global.met_baba_yaga));
+    // DON'T change the value here!
+}
+
+// Track tutorial changes
+global.tutorial_debug_last_value = global.met_baba_yaga;
+global.tutorial_debug_frame_count = 0;
+
+// === ADD TO o_UI_Manager Step Event (create if doesn't exist) ===
+
+global.tutorial_debug_frame_count++;
+
+// Check if tutorial flag changed unexpectedly
+if (global.met_baba_yaga != global.tutorial_debug_last_value) {
+    show_debug_message("🚨 TUTORIAL FLAG CHANGED!");
+    show_debug_message("  From: " + string(global.tutorial_debug_last_value));
+    show_debug_message("  To: " + string(global.met_baba_yaga));
+    show_debug_message("  Frame: " + string(global.tutorial_debug_frame_count));
+    show_debug_message("  Room: " + string(room_get_name(room)));
+    
+    // Print call stack to see what caused the change
+    show_debug_message("  Call stack: " + string(debug_get_callstack()));
+    
+    global.tutorial_debug_last_value = global.met_baba_yaga;
+}
+
+// === ADD TO o_player Draw GUI Event ===
+// Enhanced debug display
+
+// Show which NPCs exist
+var npc_count = instance_number(o_npc_parent);
+draw_text(10, 70, "NPCs in room: " + string(npc_count));
+
+if (instance_exists(o_babayaga)) {
+    draw_text(10, 85, "o_babayaga: EXISTS");
+    if (o_babayaga.dialogue_active) {
+        draw_text(10, 100, "  Dialogue: ACTIVE");
+    } else {
+        draw_text(10, 100, "  Dialogue: inactive");
+    }
+}
+
+if (instance_exists(o_babayaga_old)) {
+    draw_text(10, 115, "o_babayaga_old: EXISTS");
 }

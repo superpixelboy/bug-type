@@ -1,7 +1,7 @@
 /// @description scr_load_game - Load all game progress from file
 function scr_load_game() {
     show_debug_message("=== STARTING LOAD GAME ===");
-    
+    show_debug_message("📂 LOAD GAME CALLED");
     // Check if save file exists
     if (!file_exists("witchbug_save.dat")) {
         show_debug_message("ERROR: Save file does not exist!");

@@ -1,7 +1,9 @@
 /// @description scr_save_game - Save all game progress to file
 function scr_save_game() {
     show_debug_message("=== STARTING SAVE GAME ===");
-    
+    show_debug_message("💾 SAVE GAME CALLED");
+	show_debug_message("  Saving tutorial state: " + string(global.met_baba_yaga));
+
     // Create save data map
     var save_data = ds_map_create();
     
@@ -58,9 +60,7 @@ function scr_save_game() {
 	    show_debug_message("Loaded met_baba_yaga: " + string(global.met_baba_yaga));
 	}
 
-	// === ADD TO scr_initialize_new_game.gml ===
-	// Add this in the "CORE PROGRESS" section:
-	global.met_baba_yaga = false;
+
     
     // === SAVE VERSION (for future compatibility) ===
     ds_map_add(save_data, "save_version", "1.0");

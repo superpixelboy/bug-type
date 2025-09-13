@@ -10,6 +10,10 @@ function scr_auto_save() {
     
     if (save_successful) {
         show_debug_message("Auto-save successful");
+			
+			// 1. ADD TO scr_auto_save.gml:
+		show_debug_message("🔄 AUTO-SAVE CALLED");
+		show_debug_message("  Tutorial state before save: " + string(global.met_baba_yaga));	
         // Could show a brief "Game Saved" message
     } else {
         show_debug_message("Auto-save failed!");
@@ -17,4 +21,6 @@ function scr_auto_save() {
     }
     
     return save_successful;
+
+
 }

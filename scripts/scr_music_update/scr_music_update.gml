@@ -20,9 +20,9 @@ function scr_music_update() {
     
     // Handle music transitions - FIXED: Compare assets, not instances
     if (global.target_music != global.current_music_asset) {
-        show_debug_message("=== MUSIC TRANSITION NEEDED ===");
-        show_debug_message("Current asset: " + (global.current_music_asset == noone ? "none" : audio_get_name(global.current_music_asset)));
-        show_debug_message("Target asset: " + (global.target_music == noone ? "none" : audio_get_name(global.target_music)));
+     //   show_debug_message("=== MUSIC TRANSITION NEEDED ===");
+       // show_debug_message("Current asset: " + (global.current_music_asset == noone ? "none" : audio_get_name(global.current_music_asset)));
+     //   show_debug_message("Target asset: " + (global.target_music == noone ? "none" : audio_get_name(global.target_music)));
         
         // Fade out current music
         if (global.current_music != noone && audio_is_playing(global.current_music)) {

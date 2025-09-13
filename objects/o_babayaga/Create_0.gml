@@ -46,7 +46,25 @@ show_debug_message("Current room: " + string(room_get_name(room)));
 
 // ADD this to help track when tutorial gets set incorrectly
 if (global.met_baba_yaga == true) {
-    show_debug_message("⚠️ WARNING: Tutorial already completed when Baba Yaga created!");
+
+// WITH:
+show_debug_message("🎯 SETTING TUTORIAL COMPLETE!");
+show_debug_message("  Location: [describe where this code is]");
+show_debug_message("  Object: " + string(object_get_name(object_index)));
+show_debug_message("  Room: " + string(room_get_name(room)));
+global.met_baba_yaga = true;
+
+// === ALSO ADD TRACKING TO SAVE/LOAD ===
+
+// In scr_save_game.gml, ADD before saving:
+show_debug_message("💾 SAVING tutorial state: " + string(global.met_baba_yaga));
+
+// In scr_load_game.gml, ADD after loading:
+show_debug_message("📂 LOADED tutorial state: " + string(global.met_baba_yaga));
+
+// === ADD TO scr_initialize_new_game.gml ===
+show_debug_message("🆕 NEW GAME - Resetting tutorial to false");
+global.met_baba_yaga = false;
 }
 
 // === TEMPORARY: Add this to room entry/exit events ===
