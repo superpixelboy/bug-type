@@ -1,7 +1,6 @@
-// o_player Step Event - FIXED VERSION for your specific rock system
-// SAFETY: All existing functionality preserved, new input system added alongside
-
 // Skip all player logic if movement is disabled (during intro)
+// Add this as the VERY FIRST LINE in o_player Step Event
+// Exit early if game is paused
 if (variable_global_exists("game_paused") && global.game_paused) {
     exit; // Skip the rest of the Step event
 }
@@ -10,6 +9,7 @@ if (variable_global_exists("game_paused") && global.game_paused) {
 if (movement_mode == "disabled") {
     exit;
 }
+
 
 // CHECK FOR DIALOGUE PAUSE - Add this at the very beginning
 var any_npc_talking = false;
@@ -25,11 +25,12 @@ if (any_npc_talking) {
     // Don't process movement, animation, or interactions during dialogue
     exit;
 }
-
+// ... rest of your existing Step event code continues below ...
 // Exit early if collection UI is open
 if (instance_exists(o_bug_collection_ui) && o_bug_collection_ui.is_open) {
     exit;
 }
+
 
 // NEW: Exit early if ANY NPC dialogue is active (blocks all movement and interaction)
 var npc_list = [o_ghost_raven_ow_old, o_babayaga_old, o_ghost_raven_manager];
@@ -44,57 +45,24 @@ for (var i = 0; i < array_length(npc_list); i++) {
     }
 }
 
-// ===== MULTI-INPUT MOVEMENT SYSTEM =====
-// SAFETY: Preserves original input logic, adds new input sources alongside
+// Get input
+input_up = keyboard_check(vk_up) || keyboard_check(ord("W"));
+input_down = keyboard_check(vk_down) || keyboard_check(ord("S"));
+input_left = keyboard_check(vk_left) || keyboard_check(ord("A"));
+input_right = keyboard_check(vk_right) || keyboard_check(ord("D"));
 
-// Original keyboard input (PRESERVED for compatibility)
-var original_input_up = keyboard_check(vk_up) || keyboard_check(ord("W"));
-var original_input_down = keyboard_check(vk_down) || keyboard_check(ord("S"));
-var original_input_left = keyboard_check(vk_left) || keyboard_check(ord("A"));
-var original_input_right = keyboard_check(vk_right) || keyboard_check(ord("D"));
 
-// NEW: Get unified input from input manager (if available)
-var unified_input_up = false;
-var unified_input_down = false;
-var unified_input_left = false;
-var unified_input_right = false;
 
-if (variable_global_exists("input_manager")) {
-    unified_input_up = input_get_move_up();
-    unified_input_down = input_get_move_down();
-    unified_input_left = input_get_move_left();
-    unified_input_right = input_get_move_right();
-}
-
-// Combine both input systems (original + new)
-input_up = original_input_up || unified_input_up;
-input_down = original_input_down || unified_input_down;
-input_left = original_input_left || unified_input_left;
-input_right = original_input_right || unified_input_right;
-
-// Calculate movement (EXISTING LOGIC PRESERVED)
+// Calculate movement
 var move_x = input_right - input_left;
 var move_y = input_down - input_up;
 
-// Normalize diagonal movement (EXISTING LOGIC)
+// Normalize diagonal movement
 if (move_x != 0 && move_y != 0) {
-    move_x *= 0.707; // sqrt(2)/2 ≈ 0.707
-    move_y *= 0.707;
+    move_x *= 0.7;
+    move_y *= 0.7;
 }
 
-// Update movement state (EXISTING LOGIC)
-is_moving = (abs(move_x) > 0 || abs(move_y) > 0);
-
-// Update facing direction (EXISTING LOGIC)
-if (is_moving) {
-    if (abs(move_x) > abs(move_y)) {
-        facing_direction = (move_x > 0) ? "right" : "left";
-    } else {
-        facing_direction = (move_y > 0) ? "down" : "up";
-    }
-}
-
-// Collision detection and movement (YOUR EXISTING LOGIC PRESERVED)
 // Apply movement with collision checking
 var new_x = x + (move_x * move_speed);
 var new_y = y + (move_y * move_speed);
@@ -113,40 +81,46 @@ if (!place_meeting(x, new_y, o_barrier)) {
 x = clamp(x, 16, room_width - 16);
 y = clamp(y, 16, room_height - 16);
 
-// ===== ANIMATION SYSTEM (YOUR EXISTING LOGIC PRESERVED) =====
+// Update facing direction and movement state
+var previous_facing = facing_direction;
+is_moving = (move_x != 0 || move_y != 0);
+
+if (move_x > 0) facing_direction = "right";
+else if (move_x < 0) facing_direction = "left";
+else if (move_y < 0) facing_direction = "up";
+else if (move_y > 0) facing_direction = "down";
+
+// Enhanced Animation system
 if (is_moving) {
-    // Animate
-    anim_timer++;
-    if (anim_timer >= 10) { // Animation speed
-        anim_timer = 0;
-        anim_frame = (anim_frame + 1) % 3;
-    }
-    
-    // Set walking sprites based on direction
+    // Set walking sprite based on direction
     switch(facing_direction) {
         case "down":
-            sprite_index = s_player_walk_d;
-            image_index = anim_down_start + anim_frame;
+            if (sprite_index != s_player_walk_d) {
+                sprite_index = s_player_walk_d;
+                image_index = 0; // Reset to start of animation
+            }
             break;
         case "left":
-            sprite_index = s_player_walk_l;
-            image_index = anim_left_start + anim_frame;
+            if (sprite_index != s_player_walk_l) {
+                sprite_index = s_player_walk_l;
+                image_index = 0;
+            }
             break;
         case "right":
-            sprite_index = s_player_walk_r;
-            image_index = anim_right_start + anim_frame;
+            if (sprite_index != s_player_walk_r) {
+                sprite_index = s_player_walk_r;
+                image_index = 0;
+            }
             break;
         case "up":
-            sprite_index = s_player_walk_u;
-            image_index = anim_up_start + anim_frame;
+            if (sprite_index != s_player_walk_u) {
+                sprite_index = s_player_walk_u;
+                image_index = 0;
+            }
             break;
     }
 } else {
-    // Idle animation
-    anim_timer = 0;
-    anim_frame = 0;
-    
-    // Set idle sprites based on facing direction
+    // Set idle sprite based on direction
     switch(facing_direction) {
         case "down":
             if (sprite_index != s_player_idle_d) {
@@ -175,10 +149,16 @@ if (is_moving) {
     }
 }
 
-// Use sprite's built-in animation speed (YOUR EXISTING CODE)
+// Use sprite's built-in animation speed
 image_speed = 1;
 
-// ===== YOUR EXISTING ROCK INTERACTION SYSTEM (PRESERVED EXACTLY) =====
+// o_player Step Event
+// ENHANCED: Dual interaction system - facing OR touching for rocks
+
+// ... (all your existing movement and animation code should stay here) ...
+
+
+// ROCK INTERACTION SYSTEM (EXISTING - KEEP AS IS)
 // Find closest rocks
 var nearest_rock = instance_nearest(x, y, o_rock_small);
 var nearest_mossy = instance_nearest(x, y, o_rock_small_mossy);
@@ -215,102 +195,184 @@ if (nearest_cracked != noone) {
     }
 }
 
-// ===== ENHANCED INTERACTION SYSTEM =====
-// SAFETY: Your existing interaction logic + new input methods
+// Check if we can iteract with rocks
+var can_interact_rock_facing = false;
+var can_interact_rock_touching = false;
 
-// Original interaction logic (PRESERVED)
-var space_pressed = keyboard_check_pressed(vk_space);
-var mouse_clicked = mouse_check_button_pressed(mb_left);
-
-// NEW: Unified interaction input
-var unified_interact_pressed = false;
-if (variable_global_exists("input_manager")) {
-    unified_interact_pressed = input_get_interact_pressed();
+if (closest_distance <= 28 && closest_rock != noone) {
+    var dx = closest_rock.x - x;
+    var dy = closest_rock.y - y;
+    
+    // METHOD 1: Facing the rock (existing system)
+    switch(facing_direction) {
+        case "up":
+            can_interact_rock_facing = (dy < -4 && abs(dx) < 20);
+            break;
+        case "down":
+            can_interact_rock_facing = (dy > 4 && abs(dx) < 20);
+            break;
+        case "left":
+            can_interact_rock_facing = (dx < -4 && abs(dy) < 20);
+            break;
+        case "right":
+            can_interact_rock_facing = (dx > 4 && abs(dy) < 20);
+            break;
+    }
+    
+    // METHOD 2: Direct touching
+    can_interact_rock_touching = (closest_distance <= 8);
 }
 
-// Combined interaction check
-var interact_pressed = space_pressed || mouse_clicked || unified_interact_pressed;
+// REPLACE it with these lines:
+var can_interact_rock_base = can_interact_rock_facing || can_interact_rock_touching;
 
-// ===== EXCLAMATION MARK SYSTEM (ENHANCED FOR YOUR ROCKS) =====
-show_exclamation = false;
-exclamation_source = "none";
+// TUTORIAL GATE: Only allow rock interaction after meeting Baba Yaga
+var can_interact_rock = can_interact_rock_base && global.met_baba_yaga;
 
-// Check for your specific rock types within interaction range
-if (closest_rock != noone && closest_distance <= 28) {
-    show_exclamation = true;
-    exclamation_source = "rock";
+// BACKUP: Store this for Draw event to use
+global.player_can_interact_rock = can_interact_rock;
+
+// NPC INTERACTION SYSTEM (NEW - EXACT SAME PATTERN AS ROCKS)
+// Find closest NPC
+var nearest_npc = instance_nearest(x, y, o_npc_parent);
+var closest_npc = noone;
+var closest_npc_distance = 999;
+
+if (nearest_npc != noone) {
+    closest_npc_distance = distance_to_object(nearest_npc);
+    closest_npc = nearest_npc;
+}
+
+// Check if we can interact with NPCs (EXACT SAME LOGIC AS ROCKS)
+var can_interact_npc_facing = false;
+var can_interact_npc_touching = false;
+
+if (closest_npc_distance <= 28 && closest_npc != noone && !closest_npc.dialogue_active) {
+    var dx = closest_npc.x - x;
+    var dy = closest_npc.y - y;
     
-    // Enhanced rock interaction with all input methods
-    if (interact_pressed) {
-        // Your existing rock interaction logic should go here
-        // This preserves whatever rock-flipping code you currently have
-        with(closest_rock) {
-            // Trigger your existing rock flip logic
-            if (variable_instance_exists(id, "state") && state != "shaking" && state != "flipped") {
-                state = "shaking";
-                shake_timer = 1;
+    // METHOD 1: Facing the NPC (same as rocks)
+    switch(facing_direction) {
+        case "up":
+            can_interact_npc_facing = (dy < -4 && abs(dx) < 20);
+            break;
+        case "down":
+            can_interact_npc_facing = (dy > 4 && abs(dx) < 20);
+            break;
+        case "left":
+            can_interact_npc_facing = (dx < -4 && abs(dy) < 20);
+            break;
+        case "right":
+            can_interact_npc_facing = (dx > 4 && abs(dy) < 20);
+            break;
+    }
+    
+    // METHOD 2: Direct touching (same as rocks)
+    can_interact_npc_touching = (closest_npc_distance <= 8);
+}
+
+var can_interact_npc = can_interact_npc_facing || can_interact_npc_touching;
+
+// EXCLAMATION MARK CONTROL (PRIORITY: rocks > npcs > doors)
+if (can_interact_rock) {
+    // Rocks have highest priority
+    if (!show_exclamation || exclamation_source != "rock") {
+        show_exclamation = true;
+        exclamation_appeared = false;
+        exclamation_animation_timer = 0;
+        exclamation_alpha = 0;
+        exclamation_bounce_y = 0;
+        exclamation_source = "rock";
+    }
+} else if (can_interact_npc) {
+    // NPCs have second priority
+    if (!show_exclamation || exclamation_source != "npc") {
+        show_exclamation = true;
+        exclamation_appeared = false;
+        exclamation_animation_timer = 0;
+        exclamation_alpha = 0;
+        exclamation_bounce_y = 0;
+        exclamation_source = "npc";
+    }
+} else {
+    // Turn off exclamation if nothing can be interacted with
+    if (show_exclamation && (exclamation_source == "rock" || exclamation_source == "npc")) {
+        show_exclamation = false;
+        exclamation_appeared = false;
+        exclamation_source = "none";
+    }
+}
+
+// EXCLAMATION MARK ANIMATION (WORKS FOR ALL INTERACTION TYPES)
+if (show_exclamation) {
+    exclamation_animation_timer++;
+    
+    if (!exclamation_appeared) {
+        // Bounce-in animation (first 20 frames) - POP UP from below!
+        if (exclamation_animation_timer <= 10) {
+            var bounce_progress = exclamation_animation_timer / 10;
+            
+            // Easing: bounce UP from below with overshoot
+            var ease_progress = 1 - power(1 - bounce_progress, 3);
+            exclamation_bounce_y = lerp(12, 0, ease_progress);  // Start below, move up!
+            
+            // Add a little bounce back (negative bounce for upward motion)
+            if (bounce_progress > 0.7) {
+                var bounce_back = sin((bounce_progress - 0.7) * 3.14 * 3) * -2;  // Negative for upward
+                exclamation_bounce_y += bounce_back;
+            }
+            
+            exclamation_alpha = lerp(0, 1, bounce_progress);
+        } else {
+            // Finished appearing
+            exclamation_appeared = true;
+            exclamation_bounce_y = 0;
+            exclamation_alpha = 1;
+        }
+    } else {
+        // Gentle idle float animation
+        var float_offset = sin(exclamation_animation_timer * 0.1) * 1;
+        exclamation_bounce_y = float_offset;
+        exclamation_alpha = 1;
+    }
+} else {
+    // Fade out when not interacting
+    exclamation_alpha = max(exclamation_alpha - 0.1, 0);
+}
+// INTERACTION INPUT
+if (keyboard_check_pressed(vk_space)) {
+    // Check global input cooldown
+    var input_blocked = (variable_global_exists("input_cooldown") && global.input_cooldown > 0);
+    
+    // NEW: Also check if any NPC has dialogue cooldown active
+    var npc_dialogue_blocked = false;
+    with (o_npc_parent) {
+        if (dialogue_cooldown > 0) {
+            npc_dialogue_blocked = true;
+            break;
+        }
+    }
+    
+    if (!input_blocked && !npc_dialogue_blocked) {
+        if (can_interact_rock) {
+            // Rock interaction
+            global.return_x = x;
+            global.return_y = y;
+            global.return_room = room;
+            global.current_rock_id = closest_rock.rock_unique_id;
+            global.current_rock_type = rock_type;
+            audio_play_sound(sn_rock_click, 1, false);
+            room_goto(rm_rock_catching);
+        } else if (can_interact_npc) {
+            // NPC interaction - only if no dialogue cooldown
+            with (closest_npc) {
+                if (dialogue_cooldown <= 0 && !dialogue_active) {
+                    npc_start_dialogue();
+                }
             }
         }
     }
 }
 
-// Check for NPCs within interaction range (YOUR EXISTING LOGIC)
-var npc_objects = [o_ghost_raven_ow_old, o_babayaga_old];
-for (var i = 0; i < array_length(npc_objects); i++) {
-    var npc_type = npc_objects[i];
-    if (instance_exists(npc_type)) {
-        var npc = instance_find(npc_type, 0);
-        if (npc != noone && distance_to_object(npc) <= 28) {
-            show_exclamation = true;
-            exclamation_source = "npc";
-            break;
-        }
-    }
-}
-
-// Check for doors (YOUR EXISTING LOGIC)
-var nearby_door = collision_rectangle(x-16, y-16, x+16, y+16, o_door_parent, false, true);
-if (nearby_door != noone) {
-    show_exclamation = true;
-    exclamation_source = "door";
-}
-
-// Exclamation animation (YOUR EXISTING LOGIC PRESERVED)
-if (show_exclamation && !exclamation_appeared) {
-    exclamation_animation_timer = 0;
-    exclamation_appeared = true;
-}
-
-if (show_exclamation) {
-    exclamation_animation_timer++;
-    
-    // Bounce animation
-    if (exclamation_animation_timer < 20) {
-        exclamation_bounce_y = -abs(sin(exclamation_animation_timer * 0.4)) * 8;
-    } else {
-        exclamation_bounce_y = lerp(exclamation_bounce_y, -4, 0.1);
-    }
-    
-    exclamation_alpha = lerp(exclamation_alpha, 1, 0.2);
-} else {
-    exclamation_alpha = lerp(exclamation_alpha, 0, 0.1);
-    exclamation_appeared = false;
-    exclamation_bounce_y = 0;
-}
-
-// ===== COLLECTION UI TOGGLE REMOVED =====
-// SAFETY: o_UI_Manager now handles ALL collection input (Tab, C, Controller X)
-// This eliminates conflicts and restores the working system
-
-// ===== SET GLOBAL VARIABLES FOR DRAW EVENT =====
-// SAFETY: Set the global variable that your Draw event expects
-if (!variable_global_exists("player_can_interact_rock")) {
-    global.player_can_interact_rock = false;
-}
-
-// Update the global based on current interaction state
-global.player_can_interact_rock = (closest_rock != noone && closest_distance <= 28);
-
-// ===== DEPTH SORTING SYSTEM (ESSENTIAL FOR LAYERING) =====
-// SAFETY: This is crucial for walking behind/in front of objects!
+// Update player depth for tree sorting
 depth = -y;
