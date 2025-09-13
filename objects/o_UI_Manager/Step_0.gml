@@ -54,30 +54,26 @@ if (keyboard_check_pressed(vk_tab)) {
 }*/
 
 
-// === COLLECTION TOGGLE (Enhanced with C/X support) ===
-var tab_pressed = keyboard_check_pressed(vk_tab);
-var c_pressed = keyboard_check_pressed(ord("C"));
+// COLLECTION TOGGLE - Tab, C, and Controller X
+var collection_input = keyboard_check_pressed(vk_tab) || 
+                      keyboard_check_pressed(ord("C"));
 
-// NEW: Controller X button
-var controller_x_pressed = false;
+// Add controller X if available
 if (variable_global_exists("input_manager") && global.input_manager.controller_connected) {
     var gp = global.input_manager.controller_slot;
-    controller_x_pressed = gamepad_button_check_pressed(gp, gp_face3); // X button
+    collection_input = collection_input || gamepad_button_check_pressed(gp, gp_face3);
 }
 
-// Any collection toggle input
-if (tab_pressed || c_pressed || controller_x_pressed) {
+if (collection_input) {
     var collection_ui = instance_find(o_bug_collection_ui, 0);
     if (collection_ui != noone) {
         if (collection_ui.is_open && collection_ui.detail_view_open) {
-            // If detail view is open, close it first
             collection_ui.detail_view_open = false;
             collection_ui.detail_bug_key = "";
             collection_ui.detail_bug_data = {};
             collection_ui.hovered_card = -1;
             collection_ui.hover_timer = 0;
         } else {
-            // Toggle main collection
             collection_ui.is_open = !collection_ui.is_open;
             if (collection_ui.is_open) {
                 collection_ui.page = 0;
@@ -91,6 +87,21 @@ if (tab_pressed || c_pressed || controller_x_pressed) {
         audio_play_sound(sn_bugtap1, 1, false);
     }
 }
+
+// ===== STEP 2: REMOVE COLLECTION LOGIC FROM o_player Step Event =====
+// Delete/comment out the ENTIRE "COLLECTION UI TOGGLE" section in o_player
+
+// ===== STEP 3: REMOVE COMPLEX COOLDOWN FROM o_game_manager =====
+// Replace the complex cooldown section with just this:
+
+// Simple cooldown system (REMOVE the complex logic)
+if (!variable_global_exists("input_cooldown")) {
+    global.input_cooldown = 0;
+}
+if (global.input_cooldown > 0) {
+    global.input_cooldown--;
+}
+scr_update_input_manager();
 
 // Door cooldown
 if (global.door_cooldown > 0) {

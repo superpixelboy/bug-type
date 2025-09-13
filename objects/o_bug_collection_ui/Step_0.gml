@@ -1,259 +1,194 @@
-// o_bug_collection_ui Step Event - Enhanced with Multi-Input Navigation
-// SAFETY: All existing mouse functionality preserved, keyboard/controller added
+// o_bug_collection_ui Step Event - ORIGINAL CODE with just repositioned buttons
 
-if (!is_open) {
-    exit; // Don't process anything if closed
-}
-
-// ===== INPUT HANDLING =====
-// SAFETY: Preserve all existing mouse input, add keyboard/controller
-
-// Original mouse input (PRESERVED)
 var mouse_gui_x = device_mouse_x_to_gui(0);
 var mouse_gui_y = device_mouse_y_to_gui(0);
 
-// NEW: Get unified input from input manager
-var menu_up_pressed = false;
-var menu_down_pressed = false;
-var menu_left_pressed = false;
-var menu_right_pressed = false;
-var interact_pressed = false;
-var cancel_pressed = false;
-
-if (variable_global_exists("input_manager")) {
-    menu_up_pressed = input_get_menu_up_pressed();
-    menu_down_pressed = input_get_menu_down_pressed();
-    menu_left_pressed = input_get_menu_left_pressed();
-    menu_right_pressed = input_get_menu_right_pressed();
-    interact_pressed = input_get_interact_pressed();
-    cancel_pressed = input_get_cancel_pressed();
-}
-
-// Original keyboard navigation (PRESERVED for compatibility)
-var orig_up = keyboard_check_pressed(vk_up);
-var orig_down = keyboard_check_pressed(vk_down);
-var orig_left = keyboard_check_pressed(vk_left);
-var orig_right = keyboard_check_pressed(vk_right);
-var orig_enter = keyboard_check_pressed(vk_enter);
-var orig_space = keyboard_check_pressed(vk_space);
-var orig_escape = keyboard_check_pressed(vk_escape);
-
-// Combine all navigation inputs
-var nav_up = orig_up || menu_up_pressed;
-var nav_down = orig_down || menu_down_pressed;
-var nav_left = orig_left || menu_left_pressed;
-var nav_right = orig_right || menu_right_pressed;
-var nav_confirm = orig_enter || orig_space || interact_pressed;
-var nav_cancel = orig_escape || cancel_pressed;
-
-// ===== CLOSE COLLECTION UI =====
-// SAFETY: Back to simple original system - only Escape closes from here
-
-// Only handle Escape key for closing (Tab handled by o_UI_Manager)
-var orig_escape = keyboard_check_pressed(vk_escape);
-
-// Controller B button for cancel
-var unified_cancel = false;
-if (variable_global_exists("input_manager")) {
-    unified_cancel = input_get_cancel_pressed();
-}
-
-// Close with Escape or Controller B only
-if (nav_cancel || orig_escape || unified_cancel) {
-    is_open = false;
-    detail_view_open = false;
-    detail_bug_key = "";
-    detail_bug_data = {};
-    hovered_card = -1;
-    hover_timer = 0;
-    audio_play_sound(sn_bugtap1, 1, false);
-    exit;
-}
-
-// ===== DETAIL VIEW HANDLING =====
-if (detail_view_open) {
-    // Close detail view with cancel or interact
-    if (nav_cancel || nav_confirm) {
+// Handle ESCAPE key for closing only (Tab handled by UI Manager)
+if (keyboard_check_pressed(vk_escape)) {
+    if (is_open && detail_view_open) {
+        // Close detail view first
         detail_view_open = false;
         detail_bug_key = "";
         detail_bug_data = {};
-        audio_play_sound(sn_bugtap1, 1, false);
-    }
-    exit; // Don't process main collection navigation while in detail view
-}
-
-// ===== PAGE NAVIGATION =====
-// SAFETY: Enhanced to support keyboard/controller page switching
-
-// Calculate total pages (EXISTING LOGIC)
-var bugs_per_page = 12;
-var total_bugs = array_length(global.discovered_bugs);
-var total_pages = ceil(total_bugs / bugs_per_page);
-
-// Original page navigation with mouse wheel (PRESERVED)
-if (mouse_wheel_up()) {
-    page = max(0, page - 1);
-    hovered_card = -1;
-    hover_timer = 0;
-    audio_play_sound(sn_bugtap1, 1, false);
-}
-
-if (mouse_wheel_down()) {
-    page = min(total_pages - 1, page + 1);
-    hovered_card = -1;
-    hover_timer = 0;
-    audio_play_sound(sn_bugtap1, 1, false);
-}
-
-// NEW: Keyboard/Controller page navigation
-// Use shoulder buttons or specific keys for page navigation
-var page_left = false;
-var page_right = false;
-
-if (variable_global_exists("input_manager")) {
-    // Check for shoulder buttons on controller
-    if (global.input_manager.controller_connected) {
-        var gp = global.input_manager.controller_slot;
-        page_left = gamepad_button_check_pressed(gp, gp_shoulderl);
-        page_right = gamepad_button_check_pressed(gp, gp_shoulderr);
+        hovered_card = -1;
+        hover_timer = 0;
+    } else if (is_open) {
+        // Close collection
+        is_open = false;
+        hovered_card = -1;
+        hover_timer = 0;
     }
 }
 
-// Also allow Q/E keys for page navigation (when not in debug mode)
-if (!instance_exists(o_bug_selector) || !o_bug_selector.menu_active) {
-    page_left = page_left || keyboard_check_pressed(ord("Q"));
-    page_right = page_right || keyboard_check_pressed(ord("E"));
-}
-
-if (page_left && page > 0) {
-    page--;
+// Only handle hover/navigation when collection is open
+if (!is_open) {
     hovered_card = -1;
     hover_timer = 0;
-    audio_play_sound(sn_bugtap1, 1, false);
+    // Reset button states when closed
+    button_hover_states.left_arrow = false;
+    button_hover_states.right_arrow = false;
+    button_hover_states.close_button = false;
+    exit;
 }
 
-if (page_right && page < total_pages - 1) {
-    page++;
-    hovered_card = -1;
-    hover_timer = 0;
-    audio_play_sound(sn_bugtap1, 1, false);
+// Update arrow animation timer
+arrow_animation_timer += 0.05; // Slow, gentle oscillation
+arrow_hover_offset = sin(arrow_animation_timer) * 2; // 2 pixel movement back and forth
+
+// Calculate grid positioning (MATCH the Draw event exactly)
+var left_page_center = ui_width * 0.31;   // Same as draw event
+var right_page_center = ui_width * 0.69;  // Same as draw event
+var grid_start_y = ui_height * 0.30;      // Same as draw event
+var card_spacing_y = ui_height * 0.36;    // Same as draw event
+var horizontal_spread = ui_width * 0.15;  // Same as draw event
+
+// Calculate screen center for button positioning_
+var screen_center_x = (480 / 2) * gui_scale;
+var screen_center_y = (270 / 2) * gui_scale;
+var book_scale = gui_scale * .5;
+
+// Calculate adjusted button positions to match where sprites are ACTUALLY drawn
+// Move left arrow down and left, right arrow down and right
+var left_arrow_x = (60 - 20) * gui_scale + arrow_hover_offset; // Move LEFT by 20 pixels
+var left_arrow_y = screen_center_y - (20 - 15) * gui_scale; // Move DOWN by 15 pixels (was -20, now -5)
+var right_arrow_x = (ui_width - 60 + 20) * gui_scale - arrow_hover_offset; // Move RIGHT by 20 pixels  
+var right_arrow_y = screen_center_y - (20 - 15) * gui_scale; // Move DOWN by 15 pixels (was -20, now -5)
+var close_x = (ui_width - 64) * gui_scale; // Match Draw Event exactly
+var close_y = 12 * gui_scale; // Match Draw Event exactly
+
+var arrow_size = 20 * gui_scale; // Hit area for arrows
+var close_size = 30 * gui_scale; // Larger hit area for close button (was 20, now 30)
+
+// Check button hover states
+button_hover_states.left_arrow = (total_pages > 1 && page > 0 && 
+    point_distance(mouse_gui_x, mouse_gui_y, left_arrow_x, left_arrow_y) < arrow_size);
+    
+button_hover_states.right_arrow = (total_pages > 1 && page < total_pages - 1 && 
+    point_distance(mouse_gui_x, mouse_gui_y, right_arrow_x, right_arrow_y) < arrow_size);
+    
+button_hover_states.close_button = (mouse_gui_x >= close_x && mouse_gui_x <= close_x + close_size &&
+    mouse_gui_y >= close_y && mouse_gui_y <= close_y + close_size);
+
+// If a collection card is showing, only allow ESC to close collection
+if (instance_exists(o_bug_card_collection)) {
+    // Still allow ESC to close the entire collection
+    if (keyboard_check_pressed(vk_escape)) {
+        // Close both the card and collection
+        with(o_bug_card_collection) instance_destroy();
+        is_open = false;
+        hovered_card = -1;
+        hover_timer = 0;
+    }
+    exit;
 }
 
-// ===== CARD NAVIGATION SYSTEM =====
-// SAFETY: New keyboard/controller card selection without breaking mouse
-
-// Initialize card selection if not set
-if (!variable_instance_exists(id, "selected_card")) {
-    selected_card = -1; // -1 means no card selected
+// Don't handle hover/navigation when detail view is open
+if (detail_view_open) {
+    // Handle clicks to close detail view
+    if (mouse_check_button_pressed(mb_left)) {
+        detail_view_open = false;
+        detail_bug_key = "";
+        detail_bug_data = {};
+        hovered_card = -1;
+        hover_timer = 0;
+    }
+    exit;
 }
 
-// Calculate cards on current page
-var start_index = page * bugs_per_page;
-var end_index = min(start_index + bugs_per_page, total_bugs);
-var cards_on_page = end_index - start_index;
-
-// NEW: Keyboard/Controller card navigation
-if (nav_up || nav_down || nav_left || nav_right) {
-    // If no card selected, select the first one
-    if (selected_card == -1 && cards_on_page > 0) {
-        selected_card = 0;
-        audio_play_sound(sn_bugtap1, 1, false);
-    } else if (selected_card != -1) {
-        var cards_per_row = 4; // Assuming 4 cards per row
-        var current_row = selected_card div cards_per_row;
-        var current_col = selected_card mod cards_per_row;
+// Check for mouse hover over cards using ORIGINAL positioning
+if (variable_global_exists("bug_data")) {
+    var all_bug_keys = variable_struct_get_names(global.bug_data);
+    var total_bugs = array_length(all_bug_keys);
+    var cards_per_page_grid = 8; // 4x2 grid
+    var start_bug = page * cards_per_page_grid;
+    
+    var old_hovered_card = hovered_card;
+    hovered_card = -1; // Reset hover state
+    
+    for (var i = 0; i < cards_per_page_grid && start_bug + i < total_bugs; i++) {
+        var bug_index = start_bug + i;
+        var row = floor(i / 4);
+        var col = i % 4;
         
-        var new_row = current_row;
-        var new_col = current_col;
+        // Use ORIGINAL positioning logic (matching draw event exactly)
+        var card_x, card_y_pos;
+        if (col < 2) {
+            // Left page (columns 0 and 1)
+            var local_col = col; // 0 or 1
+            card_x = (left_page_center + ((local_col - 0.5) * horizontal_spread)) * gui_scale;
+        } else {
+            // Right page (columns 2 and 3)
+            var local_col = col - 2; // 0 or 1 (relative to right page)
+            card_x = (right_page_center + ((local_col - 0.5) * horizontal_spread)) * gui_scale;
+        }
+        card_y_pos = (grid_start_y + (row * card_spacing_y)) * gui_scale;
         
-        if (nav_up) new_row--;
-        if (nav_down) new_row++;
-        if (nav_left) new_col--;
-        if (nav_right) new_col++;
+        var card_w = sprite_get_width(s_card_template) * 0.4 * gui_scale;
+        var card_h = sprite_get_height(s_card_template) * 0.4 * gui_scale;
         
-        // Clamp to valid ranges
-        new_row = clamp(new_row, 0, ceil(cards_on_page / cards_per_row) - 1);
-        new_col = clamp(new_col, 0, cards_per_row - 1);
-        
-        var new_selection = new_row * cards_per_row + new_col;
-        
-        // Make sure the new selection is valid
-        if (new_selection >= 0 && new_selection < cards_on_page) {
-            selected_card = new_selection;
-            audio_play_sound(sn_bugtap1, 1, false);
+        if (mouse_gui_x >= card_x - card_w/2 && mouse_gui_x <= card_x + card_w/2 &&
+            mouse_gui_y >= card_y_pos - card_h/2 && mouse_gui_y <= card_y_pos + card_h/2) {
+            hovered_card = i;
+            break;
         }
     }
-}
-
-// NEW: Confirm selection with keyboard/controller
-if (nav_confirm && selected_card != -1 && selected_card < cards_on_page) {
-    var bug_index = start_index + selected_card;
-    if (bug_index >= 0 && bug_index < array_length(global.discovered_bugs)) {
-        var bug_key = global.discovered_bugs[bug_index];
-        var bug_data = global.bug_data[? bug_key];
-        
-        if (bug_data != undefined) {
-            detail_view_open = true;
-            detail_bug_key = bug_key;
-            detail_bug_data = bug_data;
-            audio_play_sound(sn_bugtap1, 1, false);
+    
+    // Update hover timer for smooth scaling
+    if (hovered_card != -1) {
+        if (old_hovered_card == hovered_card) {
+            hover_timer = min(20, hover_timer + 1);
+        } else {
+            hover_timer = 0;
         }
+    } else {
+        hover_timer = max(0, hover_timer - 2);
     }
 }
 
-// ===== MOUSE HOVER SYSTEM (EXISTING LOGIC PRESERVED) =====
-// Calculate card positions and check for mouse hover
-var gui_width = display_get_gui_width();
-var gui_height = display_get_gui_height();
-
-var collection_width = 400;
-var collection_height = 300;
-var collection_x = (gui_width - collection_width) / 2;
-var collection_y = (gui_height - collection_height) / 2;
-
-var card_size = 80;
-var card_padding = 10;
-var cards_per_row = 4;
-
-hovered_card = -1;
-
-for (var i = 0; i < cards_on_page; i++) {
-    var card_row = i div cards_per_row;
-    var card_col = i mod cards_per_row;
+// Handle mouse clicks
+if (mouse_check_button_pressed(mb_left)) {
+    var mouse_handled = false;
     
-    var card_x = collection_x + 20 + (card_col * (card_size + card_padding));
-    var card_y = collection_y + 40 + (card_row * (card_size + card_padding));
-    
-    // Check mouse hover (EXISTING LOGIC)
-    if (mouse_gui_x >= card_x && mouse_gui_x <= card_x + card_size &&
-        mouse_gui_y >= card_y && mouse_gui_y <= card_y + card_size) {
-        hovered_card = i;
+    // Card clicks
+    if (hovered_card != -1 && variable_global_exists("bug_data")) {
+        var all_bug_keys = variable_struct_get_names(global.bug_data);
+        var cards_per_page_grid = 8;
+        var start_bug = page * cards_per_page_grid;
+        var bug_index = start_bug + hovered_card;
         
-        // Mouse hover overrides keyboard selection
-        selected_card = i;
-        
-        // Handle mouse click (EXISTING LOGIC)
-        if (mouse_check_button_pressed(mb_left)) {
-            var bug_index = start_index + i;
-            if (bug_index >= 0 && bug_index < array_length(global.discovered_bugs)) {
-                var bug_key = global.discovered_bugs[bug_index];
-                var bug_data = global.bug_data[? bug_key];
-                
-                if (bug_data != undefined) {
-                    detail_view_open = true;
-                    detail_bug_key = bug_key;
-                    detail_bug_data = bug_data;
-                    audio_play_sound(sn_bugtap1, 1, false);
+        if (bug_index < array_length(all_bug_keys)) {
+            var bug_key = all_bug_keys[bug_index];
+            if (ds_map_exists(global.discovered_bugs, bug_key)) {
+                if (scr_collection_show_card(bug_key,id)) {
+                    hovered_card = -1;
+                    hover_timer = 0;
                 }
+                mouse_handled = true;
             }
         }
-        break;
     }
-}
-
-// Update hover timer (EXISTING LOGIC)
-if (hovered_card != -1) {
-    hover_timer++;
-} else {
-    hover_timer = 0;
+    
+    // Left arrow click - using NEW position
+    if (!mouse_handled && button_hover_states.left_arrow) {
+        page--;
+        hovered_card = -1;
+        hover_timer = 0;
+        mouse_handled = true;
+    }
+    
+    // Right arrow click - using NEW position
+    if (!mouse_handled && button_hover_states.right_arrow) {
+        page++;
+        hovered_card = -1;
+        hover_timer = 0;
+        mouse_handled = true;
+    }
+    
+    // Close button click - using NEW position
+    if (!mouse_handled && button_hover_states.close_button) {
+        is_open = false;
+        hovered_card = -1;
+        hover_timer = 0;
+        mouse_handled = true;
+    }
 }
