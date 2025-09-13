@@ -53,6 +53,45 @@ if (keyboard_check_pressed(vk_tab)) {
     }
 }*/
 
+
+// === COLLECTION TOGGLE (Enhanced with C/X support) ===
+var tab_pressed = keyboard_check_pressed(vk_tab);
+var c_pressed = keyboard_check_pressed(ord("C"));
+
+// NEW: Controller X button
+var controller_x_pressed = false;
+if (variable_global_exists("input_manager") && global.input_manager.controller_connected) {
+    var gp = global.input_manager.controller_slot;
+    controller_x_pressed = gamepad_button_check_pressed(gp, gp_face3); // X button
+}
+
+// Any collection toggle input
+if (tab_pressed || c_pressed || controller_x_pressed) {
+    var collection_ui = instance_find(o_bug_collection_ui, 0);
+    if (collection_ui != noone) {
+        if (collection_ui.is_open && collection_ui.detail_view_open) {
+            // If detail view is open, close it first
+            collection_ui.detail_view_open = false;
+            collection_ui.detail_bug_key = "";
+            collection_ui.detail_bug_data = {};
+            collection_ui.hovered_card = -1;
+            collection_ui.hover_timer = 0;
+        } else {
+            // Toggle main collection
+            collection_ui.is_open = !collection_ui.is_open;
+            if (collection_ui.is_open) {
+                collection_ui.page = 0;
+            }
+            collection_ui.detail_view_open = false;
+            collection_ui.detail_bug_key = "";
+            collection_ui.detail_bug_data = {};
+            collection_ui.hovered_card = -1;
+            collection_ui.hover_timer = 0;
+        }
+        audio_play_sound(sn_bugtap1, 1, false);
+    }
+}
+
 // Door cooldown
 if (global.door_cooldown > 0) {
     global.door_cooldown--;

@@ -47,10 +47,9 @@ var nav_confirm = orig_enter || orig_space || interact_pressed;
 var nav_cancel = orig_escape || cancel_pressed;
 
 // ===== CLOSE COLLECTION UI =====
-// SAFETY: ONLY handle Tab and Escape - let o_player handle C/X completely
+// SAFETY: Back to simple original system - only Escape closes from here
 
-// Original close methods (PRESERVED) - Tab and Escape only
-var tab_close = keyboard_check_pressed(vk_tab);
+// Only handle Escape key for closing (Tab handled by o_UI_Manager)
 var orig_escape = keyboard_check_pressed(vk_escape);
 
 // Controller B button for cancel
@@ -59,21 +58,8 @@ if (variable_global_exists("input_manager")) {
     unified_cancel = input_get_cancel_pressed();
 }
 
-// REMOVED: C key and unified menu toggle - o_player handles these exclusively
-// Only Tab, Escape, and Controller B can close from here
-
-var any_close_input = nav_cancel || tab_close || orig_escape || unified_cancel;
-
-// DEBUG: Show what's trying to close the collection
-if (any_close_input) {
-    show_debug_message("=== COLLECTION UI CLOSING (Tab/Esc/B only) ===");
-    show_debug_message("nav_cancel: " + string(nav_cancel));
-    show_debug_message("tab_close: " + string(tab_close));
-    show_debug_message("orig_escape: " + string(orig_escape));
-    show_debug_message("unified_cancel: " + string(unified_cancel));
-}
-
-if (any_close_input) {
+// Close with Escape or Controller B only
+if (nav_cancel || orig_escape || unified_cancel) {
     is_open = false;
     detail_view_open = false;
     detail_bug_key = "";
@@ -81,7 +67,6 @@ if (any_close_input) {
     hovered_card = -1;
     hover_timer = 0;
     audio_play_sound(sn_bugtap1, 1, false);
-    show_debug_message("Collection UI closed successfully");
     exit;
 }
 
