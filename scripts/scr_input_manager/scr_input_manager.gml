@@ -1,9 +1,5 @@
-// scr_input_manager.gml
-// SAFETY: This script creates a unified input system without breaking existing code
-// All existing input checks remain intact - this adds new functionality alongside
-
-// ===== GLOBAL INPUT MANAGER =====
-// Call this once per frame in o_game_manager Step event or similar persistent object
+// scr_input_manager.gml - Enhanced for Main Menu
+// SAFETY: This adds WASD and Enter to existing menu navigation without breaking anything
 
 function scr_update_input_manager() {
     
@@ -24,7 +20,7 @@ function scr_update_input_manager() {
             menu_toggle: false,        // Tab, C, Controller X
             menu_toggle_pressed: false,
             
-            // Menu navigation
+            // Menu navigation - NOW WITH WASD SUPPORT
             menu_up: false,
             menu_down: false,
             menu_left: false,
@@ -33,6 +29,10 @@ function scr_update_input_manager() {
             menu_down_pressed: false,
             menu_left_pressed: false,
             menu_right_pressed: false,
+            
+            // Menu selection - MULTIPLE KEYS SUPPORTED
+            menu_select: false,         // Space, Enter, Controller A, Mouse Click
+            menu_select_pressed: false,
             
             // Cancel/Back
             cancel: false,
@@ -137,6 +137,126 @@ function scr_update_input_manager() {
     
     inp.interact_pressed = kb_interact_pressed || mouse_interact_pressed || gp_interact_pressed;
     
+    // ===== MENU NAVIGATION - ENHANCED WITH WASD + ANALOG STICK =====
+    // Arrow keys + WASD + Controller D-pad + Analog stick for menu navigation
+    
+    var menu_kb_up = keyboard_check(vk_up) || keyboard_check(ord("W"));
+    var menu_kb_down = keyboard_check(vk_down) || keyboard_check(ord("S"));
+    var menu_kb_left = keyboard_check(vk_left) || keyboard_check(ord("A"));
+    var menu_kb_right = keyboard_check(vk_right) || keyboard_check(ord("D"));
+    
+    var menu_kb_up_pressed = keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W"));
+    var menu_kb_down_pressed = keyboard_check_pressed(vk_down) || keyboard_check_pressed(ord("S"));
+    var menu_kb_left_pressed = keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A"));
+    var menu_kb_right_pressed = keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D"));
+    
+    // Controller menu navigation - D-pad + Analog stick
+    var menu_gp_up = false;
+    var menu_gp_down = false;
+    var menu_gp_left = false;
+    var menu_gp_right = false;
+    var menu_gp_up_pressed = false;
+    var menu_gp_down_pressed = false;
+    var menu_gp_left_pressed = false;
+    var menu_gp_right_pressed = false;
+    
+    if (inp.controller_connected) {
+        var gp = inp.controller_slot;
+        
+        // D-pad (existing)
+        menu_gp_up = gamepad_button_check(gp, gp_padu);
+        menu_gp_down = gamepad_button_check(gp, gp_padd);
+        menu_gp_left = gamepad_button_check(gp, gp_padl);
+        menu_gp_right = gamepad_button_check(gp, gp_padr);
+        
+        menu_gp_up_pressed = gamepad_button_check_pressed(gp, gp_padu);
+        menu_gp_down_pressed = gamepad_button_check_pressed(gp, gp_padd);
+        menu_gp_left_pressed = gamepad_button_check_pressed(gp, gp_padl);
+        menu_gp_right_pressed = gamepad_button_check_pressed(gp, gp_padr);
+        
+        // NEW: Analog stick for menu navigation with timing
+        var stick_h = gamepad_axis_value(gp, gp_axislh);
+        var stick_v = gamepad_axis_value(gp, gp_axislv);
+        var stick_deadzone = 0.2; // Higher deadzone for menu (less sensitive)
+        
+        // Initialize stick timing variables if they don't exist
+        if (!variable_global_exists("stick_menu_timer_v")) global.stick_menu_timer_v = 0;
+        if (!variable_global_exists("stick_menu_timer_h")) global.stick_menu_timer_h = 0;
+        if (!variable_global_exists("stick_menu_repeat_delay")) global.stick_menu_repeat_delay = 15; // frames
+        
+        // Vertical stick navigation (up/down)
+        if (abs(stick_v) > stick_deadzone) {
+            global.stick_menu_timer_v++;
+            // Trigger on first press or after repeat delay
+            if (global.stick_menu_timer_v == 1 || global.stick_menu_timer_v >= global.stick_menu_repeat_delay) {
+                if (stick_v < -stick_deadzone) menu_gp_up_pressed = true;
+                if (stick_v > stick_deadzone) menu_gp_down_pressed = true;
+                
+                // Reset timer for repeat
+                if (global.stick_menu_timer_v >= global.stick_menu_repeat_delay) {
+                    global.stick_menu_timer_v = 10; // Shorter delay for repeat
+                }
+            }
+        } else {
+            global.stick_menu_timer_v = 0; // Reset when stick is neutral
+        }
+        
+        // Horizontal stick navigation (left/right) 
+        if (abs(stick_h) > stick_deadzone) {
+            global.stick_menu_timer_h++;
+            // Trigger on first press or after repeat delay
+            if (global.stick_menu_timer_h == 1 || global.stick_menu_timer_h >= global.stick_menu_repeat_delay) {
+                if (stick_h < -stick_deadzone) menu_gp_left_pressed = true;
+                if (stick_h > stick_deadzone) menu_gp_right_pressed = true;
+                
+                // Reset timer for repeat
+                if (global.stick_menu_timer_h >= global.stick_menu_repeat_delay) {
+                    global.stick_menu_timer_h = 10; // Shorter delay for repeat
+                }
+            }
+        } else {
+            global.stick_menu_timer_h = 0; // Reset when stick is neutral
+        }
+        
+        // Add stick input to continuous input (for compatibility)
+        if (abs(stick_v) > stick_deadzone) {
+            if (stick_v < -stick_deadzone) menu_gp_up = true;
+            if (stick_v > stick_deadzone) menu_gp_down = true;
+        }
+        if (abs(stick_h) > stick_deadzone) {
+            if (stick_h < -stick_deadzone) menu_gp_left = true;
+            if (stick_h > stick_deadzone) menu_gp_right = true;
+        }
+    }
+    
+    inp.menu_up = menu_kb_up || menu_gp_up;
+    inp.menu_down = menu_kb_down || menu_gp_down;
+    inp.menu_left = menu_kb_left || menu_gp_left;
+    inp.menu_right = menu_kb_right || menu_gp_right;
+    
+    inp.menu_up_pressed = menu_kb_up_pressed || menu_gp_up_pressed;
+    inp.menu_down_pressed = menu_kb_down_pressed || menu_gp_down_pressed;
+    inp.menu_left_pressed = menu_kb_left_pressed || menu_gp_left_pressed;
+    inp.menu_right_pressed = menu_kb_right_pressed || menu_gp_right_pressed;
+    
+    // ===== MENU SELECTION - MULTIPLE INPUT SUPPORT =====
+    // Space, Enter, Controller A, Mouse Click
+    
+    var kb_select = keyboard_check(vk_space) || keyboard_check(vk_enter);
+    var kb_select_pressed = keyboard_check_pressed(vk_space) || keyboard_check_pressed(vk_enter);
+    var mouse_select = mouse_check_button(mb_left);
+    var mouse_select_pressed = mouse_check_button_pressed(mb_left);
+    var gp_select_button = false;
+    var gp_select_button_pressed = false;
+    
+    if (inp.controller_connected) {
+        gp_select_button = gamepad_button_check(inp.controller_slot, gp_face1); // A button
+        gp_select_button_pressed = gamepad_button_check_pressed(inp.controller_slot, gp_face1);
+    }
+    
+    inp.menu_select = kb_select || mouse_select || gp_select_button;
+    inp.menu_select_pressed = kb_select_pressed || mouse_select_pressed || gp_select_button_pressed;
+    
     // ===== MENU TOGGLE INPUT =====
     // Tab, C key, or Controller X button
     
@@ -152,52 +272,6 @@ function scr_update_input_manager() {
     
     inp.menu_toggle = kb_menu || gp_menu;
     inp.menu_toggle_pressed = kb_menu_pressed || gp_menu_pressed;
-    
-    // ===== MENU NAVIGATION =====
-    // Arrow keys + Controller D-pad for menu navigation
-    
-    var menu_kb_up = keyboard_check(vk_up);
-    var menu_kb_down = keyboard_check(vk_down);
-    var menu_kb_left = keyboard_check(vk_left);
-    var menu_kb_right = keyboard_check(vk_right);
-    
-    var menu_kb_up_pressed = keyboard_check_pressed(vk_up);
-    var menu_kb_down_pressed = keyboard_check_pressed(vk_down);
-    var menu_kb_left_pressed = keyboard_check_pressed(vk_left);
-    var menu_kb_right_pressed = keyboard_check_pressed(vk_right);
-    
-    // Controller menu navigation
-    var menu_gp_up = false;
-    var menu_gp_down = false;
-    var menu_gp_left = false;
-    var menu_gp_right = false;
-    var menu_gp_up_pressed = false;
-    var menu_gp_down_pressed = false;
-    var menu_gp_left_pressed = false;
-    var menu_gp_right_pressed = false;
-    
-    if (inp.controller_connected) {
-        var gp = inp.controller_slot;
-        menu_gp_up = gamepad_button_check(gp, gp_padu);
-        menu_gp_down = gamepad_button_check(gp, gp_padd);
-        menu_gp_left = gamepad_button_check(gp, gp_padl);
-        menu_gp_right = gamepad_button_check(gp, gp_padr);
-        
-        menu_gp_up_pressed = gamepad_button_check_pressed(gp, gp_padu);
-        menu_gp_down_pressed = gamepad_button_check_pressed(gp, gp_padd);
-        menu_gp_left_pressed = gamepad_button_check_pressed(gp, gp_padl);
-        menu_gp_right_pressed = gamepad_button_check_pressed(gp, gp_padr);
-    }
-    
-    inp.menu_up = menu_kb_up || menu_gp_up;
-    inp.menu_down = menu_kb_down || menu_gp_down;
-    inp.menu_left = menu_kb_left || menu_gp_left;
-    inp.menu_right = menu_kb_right || menu_gp_right;
-    
-    inp.menu_up_pressed = menu_kb_up_pressed || menu_gp_up_pressed;
-    inp.menu_down_pressed = menu_kb_down_pressed || menu_gp_down_pressed;
-    inp.menu_left_pressed = menu_kb_left_pressed || menu_gp_left_pressed;
-    inp.menu_right_pressed = menu_kb_right_pressed || menu_gp_right_pressed;
     
     // ===== CANCEL/BACK INPUT =====
     // Escape key or Controller B button
@@ -229,7 +303,8 @@ function scr_update_input_manager() {
                keyboard_check(ord("W")) || keyboard_check(ord("A")) || 
                keyboard_check(ord("S")) || keyboard_check(ord("D")) ||
                keyboard_check(vk_space) || keyboard_check(vk_tab) ||
-               keyboard_check(ord("C")) || keyboard_check(vk_escape)) {
+               keyboard_check(ord("C")) || keyboard_check(vk_escape) ||
+               keyboard_check(vk_enter)) {
         inp.last_input_method = "keyboard";
     } else if (inp.controller_connected) {
         var gp = inp.controller_slot;
@@ -298,6 +373,11 @@ function input_get_menu_left_pressed() {
 
 function input_get_menu_right_pressed() {
     return global.input_manager.menu_right_pressed;
+}
+
+// NEW: Menu selection helpers
+function input_get_menu_select_pressed() {
+    return global.input_manager.menu_select_pressed;
 }
 
 function input_controller_connected() {

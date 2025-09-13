@@ -1,4 +1,5 @@
-// o_ghost_raven_manager Step Event (Updated for Enhanced Fade)
+// o_ghost_raven_manager Step Event - Enhanced with Controller Support
+// SAFETY: Only adds controller input to existing dialogue system
 
 if (input_cooldown > 0) input_cooldown--;
 
@@ -71,10 +72,37 @@ switch (cutscene_state) {
             }
         }
         
-        // Handle dialogue input
+        // ENHANCED: Handle dialogue input with controller support
         var pressed_next = (keyboard_check_pressed(vk_space) || 
                           keyboard_check_pressed(vk_enter) || 
                           mouse_check_button_pressed(mb_left));
+        
+        // NEW: Add controller input support
+        if (variable_global_exists("input_manager")) {
+            // Make sure input manager is updated
+            scr_update_input_manager();
+            
+            // Add controller face buttons for advancing dialogue
+            if (global.input_manager.controller_connected) {
+                var gp = global.input_manager.controller_slot;
+                
+                // A button or X button to advance dialogue (like Space/Enter)
+                if (gamepad_button_check_pressed(gp, gp_face1) || gamepad_button_check_pressed(gp, gp_face3)) {
+                    pressed_next = true;
+                }
+            }
+        } else {
+            // Fallback: Direct controller check if input manager not available
+            for (var i = 0; i < 12; i++) {
+                if (gamepad_is_connected(i)) {
+                    // A button or X button to advance dialogue
+                    if (gamepad_button_check_pressed(i, gp_face1) || gamepad_button_check_pressed(i, gp_face3)) {
+                        pressed_next = true;
+                    }
+                    break; // Use first connected controller
+                }
+            }
+        }
         
         if (pressed_next && input_cooldown <= 0) {
             input_cooldown = 10;
