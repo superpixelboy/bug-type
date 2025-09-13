@@ -195,6 +195,7 @@
     {"id":{"name":"scr_has_save_data","path":"scripts/scr_has_save_data/scr_has_save_data.yy",},},
     {"id":{"name":"scr_initialize_bug_data","path":"scripts/scr_initialize_bug_data/scr_initialize_bug_data.yy",},},
     {"id":{"name":"scr_initialize_new_game","path":"scripts/scr_initialize_new_game/scr_initialize_new_game.yy",},},
+    {"id":{"name":"scr_input_manager","path":"scripts/scr_input_manager/scr_input_manager.yy",},},
     {"id":{"name":"scr_load_game","path":"scripts/scr_load_game/scr_load_game.yy",},},
     {"id":{"name":"scr_music_cleanup","path":"scripts/scr_music_cleanup/scr_music_cleanup.yy",},},
     {"id":{"name":"scr_music_get_current_track","path":"scripts/scr_music_get_current_track/scr_music_get_current_track.yy",},},
