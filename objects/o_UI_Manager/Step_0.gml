@@ -134,3 +134,22 @@ if (keyboard_check_pressed(vk_escape)) {
         show_debug_message("Pause menu already exists");
     }
 }
+
+
+// === ADD TO o_UI_Manager Step Event (create if doesn't exist) ===
+
+global.tutorial_debug_frame_count++;
+
+// Check if tutorial flag changed unexpectedly
+if (global.met_baba_yaga != global.tutorial_debug_last_value) {
+    show_debug_message("🚨 TUTORIAL FLAG CHANGED!");
+    show_debug_message("  From: " + string(global.tutorial_debug_last_value));
+    show_debug_message("  To: " + string(global.met_baba_yaga));
+    show_debug_message("  Frame: " + string(global.tutorial_debug_frame_count));
+    show_debug_message("  Room: " + string(room_get_name(room)));
+    
+    // Print call stack to see what caused the change
+    show_debug_message("  Call stack: " + string(debug_get_callstack()));
+    
+    global.tutorial_debug_last_value = global.met_baba_yaga;
+}

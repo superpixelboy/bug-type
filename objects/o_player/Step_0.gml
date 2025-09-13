@@ -339,13 +339,21 @@ if (show_exclamation) {
     // Fade out when not interacting
     exclamation_alpha = max(exclamation_alpha - 0.1, 0);
 }
-
 // INTERACTION INPUT
 if (keyboard_check_pressed(vk_space)) {
     // Check global input cooldown
     var input_blocked = (variable_global_exists("input_cooldown") && global.input_cooldown > 0);
     
-    if (!input_blocked) {
+    // NEW: Also check if any NPC has dialogue cooldown active
+    var npc_dialogue_blocked = false;
+    with (o_npc_parent) {
+        if (dialogue_cooldown > 0) {
+            npc_dialogue_blocked = true;
+            break;
+        }
+    }
+    
+    if (!input_blocked && !npc_dialogue_blocked) {
         if (can_interact_rock) {
             // Rock interaction
             global.return_x = x;
@@ -356,9 +364,11 @@ if (keyboard_check_pressed(vk_space)) {
             audio_play_sound(sn_rock_click, 1, false);
             room_goto(rm_rock_catching);
         } else if (can_interact_npc) {
-            // NPC interaction - call the function properly
+            // NPC interaction - only if no dialogue cooldown
             with (closest_npc) {
-                npc_start_dialogue();
+                if (dialogue_cooldown <= 0 && !dialogue_active) {
+                    npc_start_dialogue();
+                }
             }
         }
     }
@@ -366,30 +376,3 @@ if (keyboard_check_pressed(vk_space)) {
 
 // Update player depth for tree sorting
 depth = -y;
-
-
-// RESET tutorial (set to false)
-if (keyboard_check_pressed(ord("R"))) {
-    show_debug_message("🔄 MANUALLY RESETTING TUTORIAL");
-    global.met_baba_yaga = false;
-    audio_play_sound(sn_rock_click, 1, false);
-}
-
-// COMPLETE tutorial (set to true) 
-if (keyboard_check_pressed(ord("T"))) {
-    show_debug_message("✅ MANUALLY COMPLETING TUTORIAL");
-    global.met_baba_yaga = true;
-    audio_play_sound(sn_bug_catch1, 1, false);
-}
-
-// FORCE SAVE
-if (keyboard_check_pressed(ord("1"))) {
-    show_debug_message("💾 MANUAL SAVE");
-    scr_save_game();
-}
-
-// FORCE LOAD
-if (keyboard_check_pressed(ord("2"))) {
-    show_debug_message("📂 MANUAL LOAD");
-    scr_load_game();
-}

@@ -42,10 +42,10 @@ function npc_start_dialogue() {
 // Ends dialogue and triggers story events
 
 function npc_end_dialogue() {
-	show_debug_message("🗣️ NPC_END_DIALOGUE CALLED");
-	show_debug_message("  Object: " + string(object_get_name(object_index)));
-	show_debug_message("  Tutorial state: " + string(global.met_baba_yaga));
-	show_debug_message("  Call stack: " + string(debug_get_callstack()));	
+    show_debug_message("🗣️ NPC_END_DIALOGUE CALLED");
+    show_debug_message("  Object: " + string(object_get_name(object_index)));
+    show_debug_message("  Tutorial state: " + string(global.met_baba_yaga));
+    
     // SPECIAL: Complete tutorial when finishing Baba Yaga's first dialogue
     if (object_index == o_babayaga && !global.met_baba_yaga) {
         global.met_baba_yaga = true;
@@ -58,7 +58,7 @@ function npc_end_dialogue() {
         }
     }
     
-    // Original end dialogue code
+    // ESSENTIAL: Actually end the dialogue
     dialogue_active = false;
     dialogue_cooldown = 30;
     input_cooldown = 10;

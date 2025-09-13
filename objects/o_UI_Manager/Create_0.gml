@@ -209,7 +209,7 @@ global.input_cooldown = 0;
 
 // === QUEST/TUTORIAL SYSTEM ===
 if (!variable_global_exists("met_baba_yaga")) {
-    global.met_baba_yaga = false;
+   global.met_baba_yaga = false;
     show_debug_message("Initialized global.met_baba_yaga to false");
 } else {
     show_debug_message("global.met_baba_yaga already exists: " + string(global.met_baba_yaga));
@@ -220,23 +220,6 @@ if (!variable_global_exists("met_baba_yaga")) {
 global.tutorial_debug_last_value = global.met_baba_yaga;
 global.tutorial_debug_frame_count = 0;
 
-// === ADD TO o_UI_Manager Step Event (create if doesn't exist) ===
-
-global.tutorial_debug_frame_count++;
-
-// Check if tutorial flag changed unexpectedly
-if (global.met_baba_yaga != global.tutorial_debug_last_value) {
-    show_debug_message("🚨 TUTORIAL FLAG CHANGED!");
-    show_debug_message("  From: " + string(global.tutorial_debug_last_value));
-    show_debug_message("  To: " + string(global.met_baba_yaga));
-    show_debug_message("  Frame: " + string(global.tutorial_debug_frame_count));
-    show_debug_message("  Room: " + string(room_get_name(room)));
-    
-    // Print call stack to see what caused the change
-    show_debug_message("  Call stack: " + string(debug_get_callstack()));
-    
-    global.tutorial_debug_last_value = global.met_baba_yaga;
-}
 
 // === ADD TO o_player Draw GUI Event ===
 // Enhanced debug display

@@ -130,7 +130,6 @@ function scr_load_game() {
 	// === FIX scr_initialize_new_game.gml ===
 	// Add this in the "CORE PROGRESS" section:
 
-	global.met_baba_yaga = false;
     // Clean up
     ds_map_destroy(save_data);
     
