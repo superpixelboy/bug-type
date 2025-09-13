@@ -93,31 +93,16 @@ if (is_hovered) {
     hover_scale = lerp(hover_scale, 1.0, 0.1);
 }
 
-// ===== MULTI-INPUT CLICK HANDLING =====
-// SAFETY: Preserves existing mouse click, adds keyboard/controller support
+// ===== MULTI-INPUT CLICK HANDLING WITH COOLDOWN =====
+// SAFETY: Mouse only for collection button, let o_player handle C/X
 
-// Original mouse click (PRESERVED)
+// Original mouse click (PRESERVED) - This is the ONLY input this object should handle
 var mouse_clicked = mouse_check_button_pressed(mb_left) && mouse_hovering;
 
-// NEW: Keyboard/Controller collection toggle
-var keyboard_toggle = false;
-var controller_toggle = false;
+// REMOVED: Keyboard/Controller inputs - let o_player handle these
+// This prevents double-triggering between objects
 
-if (variable_global_exists("input_manager")) {
-    // Tab, C key, or Controller X button to toggle collection
-    var unified_menu_pressed = input_get_menu_toggle_pressed();
-    var last_input = input_get_last_method();
-    
-    if (unified_menu_pressed) {
-        if (last_input == "keyboard") keyboard_toggle = true;
-        if (last_input == "controller") controller_toggle = true;
-    }
-}
-
-// Combine all input methods
-var any_input_pressed = mouse_clicked || keyboard_toggle || controller_toggle;
-
-if (any_input_pressed) {
+if (mouse_clicked) {
     // Toggle collection menu (EXISTING LOGIC PRESERVED)
     var collection_ui = instance_find(o_bug_collection_ui, 0);
     if (collection_ui != noone) {

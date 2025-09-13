@@ -298,36 +298,44 @@ if (show_exclamation) {
     exclamation_bounce_y = 0;
 }
 
-// ===== COLLECTION UI TOGGLE (ENHANCED) =====
-// SAFETY: Enhanced to support multiple input methods
+// ===== COLLECTION UI TOGGLE (ENHANCED WITH COOLDOWN) =====
+// SAFETY: Enhanced to support multiple input methods with cooldown protection
 
-// Original collection toggle (Tab key - PRESERVED)
-var tab_pressed = keyboard_check_pressed(vk_tab);
+// Check global input cooldown first
+var input_cooldown_active = (variable_global_exists("input_cooldown") && global.input_cooldown > 0);
 
-// NEW: Additional collection toggle inputs (C key, Controller X)
-var c_pressed = keyboard_check_pressed(ord("C"));
-var unified_menu_pressed = false;
+if (!input_cooldown_active) {
+    // Original collection toggle (Tab key - PRESERVED)
+    var tab_pressed = keyboard_check_pressed(vk_tab);
 
-if (variable_global_exists("input_manager")) {
-    unified_menu_pressed = input_get_menu_toggle_pressed();
-}
+    // NEW: Additional collection toggle inputs (C key, Controller X)
+    var c_pressed = keyboard_check_pressed(ord("C"));
+    var unified_menu_pressed = false;
 
-// Combined collection toggle check
-var collection_toggle = tab_pressed || c_pressed || unified_menu_pressed;
+    if (variable_global_exists("input_manager")) {
+        unified_menu_pressed = input_get_menu_toggle_pressed();
+    }
 
-if (collection_toggle) {
-    var collection_ui = instance_find(o_bug_collection_ui, 0);
-    if (collection_ui != noone) {
-        collection_ui.is_open = !collection_ui.is_open;
-        if (collection_ui.is_open) {
-            collection_ui.page = 0;
+    // Combined collection toggle check
+    var collection_toggle = tab_pressed || c_pressed || unified_menu_pressed;
+
+    if (collection_toggle) {
+        var collection_ui = instance_find(o_bug_collection_ui, 0);
+        if (collection_ui != noone) {
+            collection_ui.is_open = !collection_ui.is_open;
+            if (collection_ui.is_open) {
+                collection_ui.page = 0;
+            }
+            collection_ui.detail_view_open = false;
+            collection_ui.detail_bug_key = "";
+            collection_ui.detail_bug_data = {};
+            collection_ui.hovered_card = -1;
+            collection_ui.hover_timer = 0;
+            audio_play_sound(sn_bugtap1, 1, false);
+            
+            // Set input cooldown to prevent double-triggering
+            global.input_cooldown = 10;
         }
-        collection_ui.detail_view_open = false;
-        collection_ui.detail_bug_key = "";
-        collection_ui.detail_bug_data = {};
-        collection_ui.hovered_card = -1;
-        collection_ui.hover_timer = 0;
-        audio_play_sound(sn_bugtap1, 1, false);
     }
 }
 

@@ -47,20 +47,20 @@ var nav_confirm = orig_enter || orig_space || interact_pressed;
 var nav_cancel = orig_escape || cancel_pressed;
 
 // ===== CLOSE COLLECTION UI =====
-// SAFETY: Enhanced to support multiple close methods
+// SAFETY: Simplified close methods - let o_player handle C/X
 
-// Original close methods (PRESERVED)
+// Original close methods (PRESERVED) - Tab and Escape only
 var tab_close = keyboard_check_pressed(vk_tab);
-var c_close = keyboard_check_pressed(ord("C"));
+// REMOVED: C key close - let o_player handle this to prevent conflicts
 
-// NEW: Unified menu toggle
-var unified_menu_close = false;
+// NEW: Unified cancel input (Escape/Controller B)
+var unified_cancel = false;
 if (variable_global_exists("input_manager")) {
-    unified_menu_close = input_get_menu_toggle_pressed();
+    unified_cancel = input_get_cancel_pressed();
 }
 
-// Close with cancel input or menu toggle
-if (nav_cancel || tab_close || c_close || unified_menu_close) {
+// Close with cancel input or Tab only
+if (nav_cancel || tab_close || unified_cancel) {
     is_open = false;
     detail_view_open = false;
     detail_bug_key = "";

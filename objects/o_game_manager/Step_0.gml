@@ -157,3 +157,45 @@ if (variable_global_exists("input_manager")) {
     
     global.controller_was_connected = controller_now_connected;
 }
+
+// Add this to the TOP of your o_game_manager Step Event
+// BEFORE the scr_update_input_manager(); call
+
+// ===== GLOBAL INPUT COOLDOWN SYSTEM =====
+// SAFETY: Prevents double-triggering of menu inputs
+
+// Initialize global input cooldown if not exists
+if (!variable_global_exists("input_cooldown")) {
+    global.input_cooldown = 0;
+}
+
+// Reduce cooldown each frame
+if (global.input_cooldown > 0) {
+    global.input_cooldown--;
+}
+
+// UPDATE INPUT MANAGER EVERY FRAME
+scr_update_input_manager();
+
+// ===== ENHANCED INPUT MANAGER WITH COOLDOWN =====
+// Add cooldown check to menu toggle detection
+
+if (variable_global_exists("input_manager")) {
+    // Store previous frame's menu toggle state to detect new presses
+    if (!variable_global_exists("prev_menu_toggle")) {
+        global.prev_menu_toggle = false;
+    }
+    
+    var current_menu_toggle = global.input_manager.menu_toggle;
+    var menu_just_pressed = (current_menu_toggle && !global.prev_menu_toggle);
+    
+    // Update our enhanced press detection with cooldown
+    global.input_manager.menu_toggle_pressed = (menu_just_pressed && global.input_cooldown <= 0);
+    
+    // If menu was just pressed, set cooldown
+    if (menu_just_pressed && global.input_cooldown <= 0) {
+        global.input_cooldown = 10; // 10 frame cooldown
+    }
+    
+    global.prev_menu_toggle = current_menu_toggle;
+}
