@@ -317,6 +317,42 @@ function scr_update_input_manager() {
             inp.last_input_method = "controller";
         }
     }
+
+		// === ENHANCED CANCEL/EXIT INPUT ===
+		// SAFETY: This enhances existing cancel system with R key for bug catching exit
+		// Your existing cancel detection handles Escape + B button
+		// We're just adding R key as an additional cancel option
+
+		// Check for R key press (specific to bug catching exit)
+		var kb_r_cancel = keyboard_check_pressed(ord("R"));
+
+		// Combine with existing cancel inputs
+		inp.cancel_enhanced = inp.cancel || kb_r_cancel;
+		inp.cancel_enhanced_pressed = inp.cancel_pressed || kb_r_cancel;
+		
+		// ===== PAUSE/START INPUT =====
+		// ESC key + Controller Start button for pause menu
+		var kb_pause = keyboard_check(vk_escape);
+		var kb_pause_pressed = keyboard_check_pressed(vk_escape);
+		var gp_pause = false;
+		var gp_pause_pressed = false;
+
+		if (inp.controller_connected) {
+		    // Start button (gp_start) for pause menu
+		    gp_pause = gamepad_button_check(inp.controller_slot, gp_start);
+		    gp_pause_pressed = gamepad_button_check_pressed(inp.controller_slot, gp_start);
+		}
+
+		inp.pause = kb_pause || gp_pause;
+		inp.pause_pressed = kb_pause_pressed || gp_pause_pressed;
+}
+
+
+
+
+// Enhanced cancel detection (includes R key)
+function input_get_cancel_enhanced_pressed() {
+    return global.input_manager.cancel_enhanced_pressed;
 }
 
 // ===== HELPER FUNCTIONS FOR EASY ACCESS =====
@@ -382,4 +418,13 @@ function input_get_menu_select_pressed() {
 
 function input_controller_connected() {
     return global.input_manager.controller_connected;
+}
+
+// Pause menu helpers
+function input_get_pause_pressed() {
+    return global.input_manager.pause_pressed;
+}
+
+function input_get_pause() {
+    return global.input_manager.pause;
 }

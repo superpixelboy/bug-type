@@ -1,3 +1,6 @@
+// o_escape_button Step Event - Enhanced with R key + B gamepad support
+// SAFETY: Adds R key + B button while preserving all existing functionality
+
 // Stay inactive during collection menu AND bug card display
 if (instance_exists(o_bug_collection_ui) && o_bug_collection_ui.is_open) {
     is_hovered = false; // Reset hover state
@@ -57,14 +60,35 @@ if (is_hovered) {
     hover_scale = lerp(hover_scale, 1.0, 0.1);  // Scale back to normal
 }
 
-// Handle mouse clicks in GUI space (since Mouse events use world coordinates)
-if (mouse_check_button_pressed(mb_left) && is_hovered) {
-    audio_play_sound(sn_rock_click, 1, false);  // Feedback sound
-    room_goto(global.return_room);
+// === ENHANCED EXIT INPUT DETECTION ===
+// SAFETY: Combines all exit methods while preserving existing logic
+
+var exit_pressed = false;
+
+// Original ESC key (PRESERVED)
+if (keyboard_check_pressed(vk_escape)) {
+    exit_pressed = true;
 }
 
-// Handle ESC key press (keeping original functionality)
-if (keyboard_check_pressed(vk_escape)) {
+// Original mouse click on button (PRESERVED)
+if (mouse_check_button_pressed(mb_left) && is_hovered) {
+    exit_pressed = true;
+}
+
+// NEW: R key for easy keyboard exit during bug catching
+if (keyboard_check_pressed(ord("R"))) {
+    exit_pressed = true;
+}
+
+// NEW: B button on gamepad for easy controller exit during bug catching
+// SAFETY: Update input manager first, then check unified input
+scr_update_input_manager();
+if (input_get_cancel_pressed()) {
+    exit_pressed = true;
+}
+
+// Execute exit if any input method was used
+if (exit_pressed) {
     audio_play_sound(sn_rock_click, 1, false);  // Feedback sound
     room_goto(global.return_room);
 }

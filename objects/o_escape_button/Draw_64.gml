@@ -39,3 +39,7 @@ if (is_hovered) {
 // Draw the main button sprite in GUI space
 draw_sprite_ext(sprite_index, image_index, gui_x, gui_y, 
                final_scale, final_scale, 0, c_white, 1);
+			   
+			   
+			   
+			   

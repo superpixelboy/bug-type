@@ -1,4 +1,4 @@
-// o_pause_menu Draw GUI Event - WITH BEAUTIFUL s_menu_page BACKGROUND
+// o_pause_menu Draw GUI Event - ENHANCED WITH INPUT METHOD DETECTION
 // Exit early if menu not active (EXACTLY like collection UI)
 if (!menu_active) {
     exit;
@@ -8,7 +8,7 @@ if (!menu_active) {
 var screen_center_x = (480 / 2) * 2; // gui_scale is 2
 var screen_center_y = (270 / 2) * 2; 
 
-// Dark overlay at 15% opacity over EVERYTHING
+// Dark overlay at 40% opacity over EVERYTHING
 var gui_w = display_get_gui_width();
 var gui_h = display_get_gui_height();
 draw_set_alpha(0.4);
@@ -27,11 +27,16 @@ if (menu_scale > 0.01) {
     if (menu_scale > 0.3) {
         // Calculate text positioning relative to the sprite
         var title_y = screen_center_y - 100 * menu_scale;
-        var essence_y = screen_center_y - 70 * menu_scale;
         var items_start_y = screen_center_y + 0 * menu_scale;
         var item_spacing = 35 * menu_scale;
         var instructions_y = screen_center_y + 110 * menu_scale;
 
+        // Draw "PAUSED" title
+        if (menu_scale > 0.7) {
+            draw_set_halign(fa_center);
+            draw_set_color(make_color_rgb(64, 32, 96)); // Dark purple
+            draw_text_transformed(screen_center_x, title_y, "PAUSED", menu_scale, menu_scale, 0);
+        }
         
         // Menu items (only show if animation is far enough along)
         if (menu_scale > 0.7) {
@@ -70,12 +75,38 @@ if (menu_scale > 0.01) {
             }
         }
         
-      
+        // ===== UNIVERSAL INPUT INSTRUCTIONS (like main menu) =====
+        if (menu_scale > 0.9 && animation_timer >= entrance_duration) {
+            // Get current input method for appropriate instructions
+            var last_input = input_get_last_method();
+            var instruction_text = "";
+            
+            // Display appropriate controls based on last input method used
+            switch(last_input) {
+                case "keyboard":
+                    instruction_text = "WASD/ARROWS: Navigate • SPACE/ENTER: Select • ESC: Close";
+                    break;
+                case "controller":
+                    instruction_text = "D-PAD/STICK: Navigate • A: Select • START/B: Close";
+                    break;
+                case "mouse":
+                    instruction_text = "MOUSE: Navigate & Click • ESC/START: Close";
+                    break;
+                default:
+                    instruction_text = "WASD/ARROWS: Navigate • SPACE/ENTER: Select • ESC: Close";
+                    break;
+            }
+            
+            // Draw instructions at bottom of menu page
+            draw_set_halign(fa_center);
+            draw_set_font(fnt_flavor_text); // Smaller font for instructions
+            draw_set_color(make_color_rgb(100, 80, 120)); // Lighter purple for instructions
+            draw_text_transformed(screen_center_x, instructions_y, instruction_text, menu_scale * 0.8, menu_scale * 0.8, 0);
+        }
     }
 }
 
-// Reset draw settings at the VERY END (exactly like collection UI)
+// Reset drawing properties
 draw_set_halign(fa_left);
-draw_set_valign(fa_top);
 draw_set_color(c_white);
 draw_set_alpha(1);

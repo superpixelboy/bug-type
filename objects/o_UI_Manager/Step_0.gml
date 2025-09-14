@@ -151,10 +151,11 @@ if (current_milestone > previous_milestone && global.essence > 0) {
 
 // Update tracking (last line)
 last_essence_amount = global.essence;
+// Use universal input system that supports Controller B button too
+var pause_cancel_input = input_get_cancel_pressed();
 
-// ESC key for pause menu (only if no other menus are open)
-if (keyboard_check_pressed(vk_escape)) {
-    show_debug_message("ESC pressed - checking conditions...");
+if (pause_cancel_input) {
+    show_debug_message("ESC/Cancel pressed - checking conditions...");
     
     // Don't open pause menu if debug console is active
     if (instance_exists(o_bug_selector) && o_bug_selector.menu_active) {
@@ -182,10 +183,15 @@ if (keyboard_check_pressed(vk_escape)) {
         show_debug_message("Pause menu instance ID: " + string(pause_menu));
         audio_play_sound(sn_bugtap1, 1, false);
     } else {
-        show_debug_message("Pause menu already exists");
+        // ESC/Start to close pause menu (resume game)
+        show_debug_message("Closing pause menu with ESC/Start...");
+        with(o_pause_menu) {
+            global.game_paused = false;
+            instance_destroy();
+        }
+        audio_play_sound(sn_bugtap1, 1, false);
     }
 }
-
 
 // === ADD TO o_UI_Manager Step Event (create if doesn't exist) ===
 
