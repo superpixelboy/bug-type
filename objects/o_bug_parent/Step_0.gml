@@ -2,23 +2,32 @@
 if (variable_global_exists("game_paused") && global.game_paused) {
     exit; // Skip the rest of the Step event - pause bug animation/logic
 }
-
 // === NEW: UNIFIED INPUT SUPPORT ===
 // Add spacebar and controller support for bug interactions
-if (input_get_interact_pressed()) {
+// SAFETY: Exclude mouse input to prevent double-triggering with Mouse_4 event
+
+// Check for keyboard/gamepad input ONLY (exclude mouse to prevent double-trigger)
+var kb_interact_pressed = keyboard_check_pressed(vk_space);
+var gp_interact_pressed = false;
+
+if (variable_global_exists("input_manager") && global.input_manager.controller_connected) {
+    gp_interact_pressed = gamepad_button_check_pressed(global.input_manager.controller_slot, gp_face1);
+}
+
+// Only trigger on keyboard/gamepad input (Mouse_4 event handles mouse clicks)
+if (kb_interact_pressed || gp_interact_pressed) {
     if (state == "caught") {
         // Any interaction returns to overworld (same as mouse click)
         room_goto(global.return_room);
     } else {
-        // Normal bug clicking behavior (same as mouse click)
-        scr_bug_handle_click();
+        // Keyboard/controller interaction - pass false to use bug center for particles
+        scr_bug_handle_click(false);
     }
     
     if (state == "ready_to_catch") {
         scr_bug_handle_catch();
     }
 }
-
 // Simplified state machine
 switch(state) {
  
