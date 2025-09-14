@@ -1,4 +1,5 @@
-// o_bug_card Step Event - FIXED: Add missing coin refresh logic
+// o_bug_card Step Event - Enhanced with Unified Input Support
+// SAFETY: Adds controller/spacebar support while preserving existing mouse functionality
 
 // Handle state transitions and animation timing
 switch(card_state) {
@@ -106,8 +107,27 @@ switch(card_state) {
             gem_pop_scale = 1.0;
         }
         
-        // Click to continue
-        if (mouse_check_button_pressed(mb_left) || keyboard_check_pressed(vk_space)) {
+        // === ENHANCED INPUT HANDLING ===
+        // REPLACED: if (mouse_check_button_pressed(mb_left) || keyboard_check_pressed(vk_space)) {
+        // NEW: Support mouse, spacebar, AND controller A button
+        var continue_pressed = false;
+        
+        // Mouse click (original)
+        if (mouse_check_button_pressed(mb_left)) {
+            continue_pressed = true;
+        }
+        
+        // Spacebar (original) 
+        if (keyboard_check_pressed(vk_space)) {
+            continue_pressed = true;
+        }
+        
+        // NEW: Controller A button
+        if (input_get_interact_pressed()) {
+            continue_pressed = true;
+        }
+        
+        if (continue_pressed) {
             card_state = "flipping_out";
             animation_timer = 0;
         }

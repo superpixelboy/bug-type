@@ -3,6 +3,21 @@ if (variable_global_exists("game_paused") && global.game_paused) {
     exit; // Skip the rest of the Step event - pause bug animation/logic
 }
 
+// === NEW: UNIFIED INPUT SUPPORT ===
+// Add spacebar and controller support for bug interactions
+if (input_get_interact_pressed()) {
+    if (state == "caught") {
+        // Any interaction returns to overworld (same as mouse click)
+        room_goto(global.return_room);
+    } else {
+        // Normal bug clicking behavior (same as mouse click)
+        scr_bug_handle_click();
+    }
+    
+    if (state == "ready_to_catch") {
+        scr_bug_handle_catch();
+    }
+}
 
 // Simplified state machine
 switch(state) {

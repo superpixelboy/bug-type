@@ -2,23 +2,33 @@
 // UPDATED: Everything appears together with eased entrance, proper opacity control
 // SAFETY: Removed leftover bug_box_text references that caused crashes
 
-// Handle mouse clicks to close the card
+
+// === ENHANCED INPUT HANDLING ===
+// Handle multiple input types to close the card
+var close_card_input = false;
+
+// Mouse click (original)
 if (mouse_check_button_pressed(mb_left)) {
-    if (card_state == "displayed") {
-        show_debug_message("Collection card clicked - returning to collection");
-        card_state = "exiting";
-        animation_timer = 0;
-    }
+    close_card_input = true;
 }
 
-// Handle ESC key to close
+// ESC key (original)
 if (keyboard_check_pressed(vk_escape)) {
-    if (card_state == "displayed") {
-        show_debug_message("ESC pressed - returning to collection");
-        card_state = "exiting";
-        animation_timer = 0;
-    }
+    close_card_input = true;
 }
+
+// NEW: Add unified input support (Space + Controller A)
+if (input_get_interact_pressed()) {
+    close_card_input = true;
+}
+
+// Process the close input
+if (close_card_input && card_state == "displayed") {
+    show_debug_message("Card input detected - returning to collection/overworld");
+    card_state = "exiting";
+    animation_timer = 0;
+}
+
 
 // Handle card animations and state transitions
 switch(card_state) {

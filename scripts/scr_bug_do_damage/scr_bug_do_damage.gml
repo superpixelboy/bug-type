@@ -1,4 +1,7 @@
-function scr_bug_do_damage(damage) {
+// Enhanced scr_bug_do_damage with input source parameter
+function scr_bug_do_damage(damage, use_mouse_pos) {
+    // If use_mouse_pos not provided, default to true (preserve existing behavior)
+    if (argument_count < 2) use_mouse_pos = true;
     
 	//Magic wand
 	var damage_multiplier = global.has_oak_wand ? 2 : 1;
@@ -11,24 +14,35 @@ function scr_bug_do_damage(damage) {
     flash_timer = 8;
     scale_bounce_x = -0.4;
     scale_bounce_y = -0.4;
-
-    // Get mouse position for particle origin
-    var mouse_x_pos = mouse_x;
-    var mouse_y_pos = mouse_y;
+    
+	// === PARAMETER-BASED PARTICLE POSITIONING ===
+	var particle_x_pos, particle_y_pos;
+	
+	if (use_mouse_pos) {
+	    // Mouse click - use mouse position
+	    particle_x_pos = mouse_x;
+	    particle_y_pos = mouse_y;
+	    show_debug_message("Using MOUSE position for particles");
+	} else {
+	    // Keyboard or controller - use bug center
+	    particle_x_pos = x;
+	    particle_y_pos = y;
+	    show_debug_message("Using BUG CENTER for particles");
+	}
     
     // COMBO-BASED PARTICLES (escalating feedback!)
     switch(combo_count) {
         case 0:
         case 1:
-            scr_spawn_dirt_particles(mouse_x_pos, mouse_y_pos, 5);
+            scr_spawn_dirt_particles(particle_x_pos, particle_y_pos, 5);
             break;
         case 2:
         case 3:
-            scr_spawn_gold_particles(mouse_x_pos, mouse_y_pos, 8);
+            scr_spawn_gold_particles(particle_x_pos, particle_y_pos, 8);
             break;
         case 4:
         case 5:
-            scr_spawn_magic_particles(mouse_x_pos, mouse_y_pos, 12);
+            scr_spawn_magic_particles(particle_x_pos, particle_y_pos, 12);
             break;
     }
     
