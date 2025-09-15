@@ -59,4 +59,10 @@ button_hover_states = {
     left_arrow: false,
     right_arrow: false,
     close_button: false
-};
+}
+
+
+// ===== NEW: KEYBOARD/GAMEPAD CARD SELECTION =====
+keyboard_selected_card = -1; // Which card is selected via keyboard (-1 = none)
+last_input_method = "mouse"; // Track if user is using "mouse" or "keyboard"
+keyboard_navigation_active = false; // Is keyboard navigation currently active?

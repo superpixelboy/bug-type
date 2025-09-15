@@ -31,12 +31,7 @@ if (menu_scale > 0.01) {
         var item_spacing = 35 * menu_scale;
         var instructions_y = screen_center_y + 110 * menu_scale;
 
-        // Draw "PAUSED" title
-        if (menu_scale > 0.7) {
-            draw_set_halign(fa_center);
-            draw_set_color(make_color_rgb(64, 32, 96)); // Dark purple
-            draw_text_transformed(screen_center_x, title_y, "PAUSED", menu_scale, menu_scale, 0);
-        }
+      
         
         // Menu items (only show if animation is far enough along)
         if (menu_scale > 0.7) {
@@ -81,21 +76,7 @@ if (menu_scale > 0.01) {
             var last_input = input_get_last_method();
             var instruction_text = "";
             
-            // Display appropriate controls based on last input method used
-            switch(last_input) {
-                case "keyboard":
-                    instruction_text = "WASD/ARROWS: Navigate • SPACE/ENTER: Select • ESC: Close";
-                    break;
-                case "controller":
-                    instruction_text = "D-PAD/STICK: Navigate • A: Select • START/B: Close";
-                    break;
-                case "mouse":
-                    instruction_text = "MOUSE: Navigate & Click • ESC/START: Close";
-                    break;
-                default:
-                    instruction_text = "WASD/ARROWS: Navigate • SPACE/ENTER: Select • ESC: Close";
-                    break;
-            }
+     
             
             // Draw instructions at bottom of menu page
             draw_set_halign(fa_center);

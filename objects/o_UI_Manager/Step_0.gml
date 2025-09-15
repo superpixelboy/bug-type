@@ -152,27 +152,41 @@ if (current_milestone > previous_milestone && global.essence > 0) {
 // Update tracking (last line)
 last_essence_amount = global.essence;
 // Use universal input system that supports Controller B button too
-var pause_cancel_input = input_get_cancel_pressed();
+// Use the dedicated pause input (ESC + Controller Start) for pause menu
 
-if (pause_cancel_input) {
-    show_debug_message("ESC/Cancel pressed - checking conditions...");
+// ===== SIMPLE PAUSE MENU - ESC OR START BUTTON =====
+/*
+var pause_pressed = keyboard_check_pressed(vk_escape);
+
+// Add Start button if controller connected
+for (var i = 0; i < 12; i++) {
+    if (gamepad_is_connected(i)) {
+        if (gamepad_button_check_pressed(i, gp_start)) {
+            pause_pressed = true;
+            break;
+        }
+    }
+}
+
+if (pause_pressed) {
+    show_debug_message("Pause pressed - checking conditions...");
     
     // Don't open pause menu if debug console is active
     if (instance_exists(o_bug_selector) && o_bug_selector.menu_active) {
-        show_debug_message("Bug selector active - ignoring ESC");
+        show_debug_message("Bug selector active - ignoring pause");
         exit; // Let bug selector handle ESC
     }
     
-    // Don't open pause menu if collection is open (let collection handle ESC)
+    // Don't open pause menu if collection is open
     var collection_ui = instance_find(o_bug_collection_ui, 0);
     if (collection_ui != noone && collection_ui.is_open) {
-        show_debug_message("Collection open - ignoring ESC");
+        show_debug_message("Collection open - ignoring pause");
         exit; // Let collection handle ESC
     }
     
     // Don't open during bug catching/card display
     if (instance_exists(o_bug_card) || instance_exists(o_bug_card_collection)) {
-        show_debug_message("Bug card active - ignoring ESC");
+        show_debug_message("Bug card active - ignoring pause");
         exit; // Let cards handle their own closing
     }
     
@@ -183,16 +197,15 @@ if (pause_cancel_input) {
         show_debug_message("Pause menu instance ID: " + string(pause_menu));
         audio_play_sound(sn_bugtap1, 1, false);
     } else {
-        // ESC/Start to close pause menu (resume game)
-        show_debug_message("Closing pause menu with ESC/Start...");
+        // Close pause menu (resume game)
+        show_debug_message("Closing pause menu...");
         with(o_pause_menu) {
             global.game_paused = false;
             instance_destroy();
         }
         audio_play_sound(sn_bugtap1, 1, false);
     }
-}
-
+}*/
 // === ADD TO o_UI_Manager Step Event (create if doesn't exist) ===
 
 global.tutorial_debug_frame_count++;

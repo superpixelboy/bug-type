@@ -103,8 +103,9 @@ if (variable_global_exists("bug_data")) {
     var start_bug = page * cards_per_page_grid;
     
     var old_hovered_card = hovered_card;
-    hovered_card = -1; // Reset hover state
+    var mouse_hovered_card = -1; // Track mouse hover separately
     
+    // ORIGINAL MOUSE HOVER DETECTION (unchanged)
     for (var i = 0; i < cards_per_page_grid && start_bug + i < total_bugs; i++) {
         var bug_index = start_bug + i;
         var row = floor(i / 4);
@@ -128,11 +129,28 @@ if (variable_global_exists("bug_data")) {
         
         if (mouse_gui_x >= card_x - card_w/2 && mouse_gui_x <= card_x + card_w/2 &&
             mouse_gui_y >= card_y_pos - card_h/2 && mouse_gui_y <= card_y_pos + card_h/2) {
-            hovered_card = i;
+            mouse_hovered_card = i;
             break;
         }
     }
     
+    // NEW: COMBINED HOVER STATE LOGIC
+    // Seamlessly switch between mouse and keyboard selection
+    if (last_input_method == "mouse") {
+        // Mouse mode: use mouse hover, disable keyboard selection
+        hovered_card = mouse_hovered_card;
+        if (mouse_hovered_card == -1) {
+            keyboard_selected_card = -1; // Clear keyboard selection when mouse isn't hovering
+        }
+    } else if (last_input_method == "keyboard" && keyboard_navigation_active) {
+        // Keyboard mode: use keyboard selection, ignore mouse hover
+        hovered_card = keyboard_selected_card;
+    } else {
+        // Fallback: no selection
+        hovered_card = -1;
+    }
+    
+    // ORIGINAL HOVER TIMER LOGIC (unchanged)
     // Update hover timer for smooth scaling
     if (hovered_card != -1) {
         if (old_hovered_card == hovered_card) {
@@ -169,20 +187,22 @@ if (mouse_check_button_pressed(mb_left)) {
     }
     
     // Left arrow click - using NEW position
-    if (!mouse_handled && button_hover_states.left_arrow) {
-        page--;
-        hovered_card = -1;
-        hover_timer = 0;
-        mouse_handled = true;
-    }
-    
-    // Right arrow click - using NEW position
-    if (!mouse_handled && button_hover_states.right_arrow) {
-        page++;
-        hovered_card = -1;
-        hover_timer = 0;
-        mouse_handled = true;
-    }
+   if (!mouse_handled && button_hover_states.left_arrow) {
+    page--;
+    hovered_card = -1;
+    hover_timer = 0;
+    keyboard_selected_card = -1; // NEW: Reset keyboard selection
+    mouse_handled = true;
+}
+
+// In your EXISTING right arrow click handler, ADD this line:
+if (!mouse_handled && button_hover_states.right_arrow) {
+    page++;
+    hovered_card = -1;
+    hover_timer = 0;
+    keyboard_selected_card = -1; // NEW: Reset keyboard selection
+    mouse_handled = true;
+}
     
     // Close button click - using NEW position
     if (!mouse_handled && button_hover_states.close_button) {
@@ -190,5 +210,123 @@ if (mouse_check_button_pressed(mb_left)) {
         hovered_card = -1;
         hover_timer = 0;
         mouse_handled = true;
+    }
+}
+
+// Handle keyboard/gamepad page navigation (NEW - minimal addition)
+if (total_pages > 1) {
+    // Page Left: Left Arrow or Left Bumper
+    if (input_get_page_left_pressed() && page > 0) {
+        page--;
+        hovered_card = -1;
+        hover_timer = 0;
+        // Optional: Add sound feedback
+        // audio_play_sound(sn_bugtap1, 1, false);
+    }
+    
+    // Page Right: Right Arrow or Right Bumper  
+    if (input_get_page_right_pressed() && page < total_pages - 1) {
+        page++;
+        hovered_card = -1;
+        hover_timer = 0;
+        // Optional: Add sound feedback
+        // audio_play_sound(sn_bugtap1, 1, false);
+    }
+}
+
+
+// ===== NEW: KEYBOARD/GAMEPAD CARD NAVIGATION =====
+// SAFETY: This runs before mouse hover detection to set up keyboard selection
+
+// Detect input method for seamless switching
+var mouse_moved = (mouse_gui_x != xprevious || mouse_gui_y != yprevious);
+if (mouse_moved) {
+    last_input_method = "mouse";
+    keyboard_navigation_active = false;
+}
+
+// Get WASD/D-pad input for card navigation
+var nav_up = input_get_menu_up_pressed();
+var nav_down = input_get_menu_down_pressed(); 
+var nav_left = input_get_menu_left_pressed();
+var nav_right = input_get_menu_right_pressed();
+
+// If any navigation input was pressed, switch to keyboard mode
+if (nav_up || nav_down || nav_left || nav_right) {
+    last_input_method = "keyboard";
+    keyboard_navigation_active = true;
+    
+    // Initialize keyboard selection if not set
+    if (keyboard_selected_card == -1) {
+        keyboard_selected_card = 0; // Start at first card
+    }
+    
+    // Calculate current row/col from keyboard_selected_card (0-7)
+    var current_row = floor(keyboard_selected_card / 4); // 0 or 1
+    var current_col = keyboard_selected_card % 4;         // 0-3
+    
+    // Handle navigation with grid wrapping
+    if (nav_up && current_row > 0) {
+        current_row--;
+    } else if (nav_down && current_row < 1) {
+        current_row++;
+    } else if (nav_left && current_col > 0) {
+        current_col--;
+    } else if (nav_right && current_col < 3) {
+        current_col++;
+    }
+    
+    // Convert back to card index (0-7)
+    var new_selected = current_row * 4 + current_col;
+    
+    // Make sure we don't select a card that doesn't exist on this page
+    if (variable_global_exists("bug_data")) {
+        var all_bug_keys = variable_struct_get_names(global.bug_data);
+        var total_bugs = array_length(all_bug_keys);
+        var cards_per_page_grid = 8;
+        var start_bug = page * cards_per_page_grid;
+        var max_card_on_page = min(cards_per_page_grid, total_bugs - start_bug) - 1;
+        
+        if (new_selected <= max_card_on_page) {
+            keyboard_selected_card = new_selected;
+        }
+    }
+
+	if (input_get_page_left_pressed() && page > 0) {
+	    page--;
+	    hovered_card = -1;
+	    hover_timer = 0;
+	    keyboard_selected_card = -1; // NEW: Reset keyboard selection
+	}
+
+	// Page Right: Right Arrow or Right Bumper  
+	if (input_get_page_right_pressed() && page < total_pages - 1) {
+	    page++;
+	    hovered_card = -1;
+	    hover_timer = 0;
+	    keyboard_selected_card = -1; // NEW: Reset keyboard selection
+	}
+}
+
+// Handle Space/A button selection for keyboard users
+var select_pressed = input_get_menu_select_pressed();
+if (select_pressed && keyboard_navigation_active && keyboard_selected_card != -1) {
+    // Use the same card selection logic as mouse clicks
+    if (variable_global_exists("bug_data")) {
+        var all_bug_keys = variable_struct_get_names(global.bug_data);
+        var cards_per_page_grid = 8;
+        var start_bug = page * cards_per_page_grid;
+        var bug_index = start_bug + keyboard_selected_card;
+        
+        if (bug_index < array_length(all_bug_keys)) {
+            var bug_key = all_bug_keys[bug_index];
+            if (ds_map_exists(global.discovered_bugs, bug_key)) {
+                if (scr_collection_show_card(bug_key, id)) {
+                    keyboard_selected_card = -1;
+                    hovered_card = -1;
+                    hover_timer = 0;
+                }
+            }
+        }
     }
 }

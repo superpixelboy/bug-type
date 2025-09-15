@@ -5,52 +5,56 @@ function scr_update_input_manager() {
     
     // Initialize input state if not exists
     if (!variable_global_exists("input_manager")) {
-        global.input_manager = {
-            // Movement inputs (combined from all sources)
-            move_up: false,
-            move_down: false,
-            move_left: false,
-            move_right: false,
-            
-            // Action inputs
-            interact: false,           // Space, Mouse Click, Controller A
-            interact_pressed: false,   // One-frame press detection
-            
-            // UI inputs
-            menu_toggle: false,        // Tab, C, Controller X
-            menu_toggle_pressed: false,
-            
-            // Menu navigation - NOW WITH WASD SUPPORT
-            menu_up: false,
-            menu_down: false,
-            menu_left: false,
-            menu_right: false,
-            menu_up_pressed: false,
-            menu_down_pressed: false,
-            menu_left_pressed: false,
-            menu_right_pressed: false,
-            
-            // Menu selection - MULTIPLE KEYS SUPPORTED
-            menu_select: false,         // Space, Enter, Controller A, Mouse Click
-            menu_select_pressed: false,
-            
-            // Cancel/Back
-            cancel: false,
-            cancel_pressed: false,     // Escape, Controller B
-            
-            // Debug - for existing bug selector system
-            debug_mode_switch_left: false,    // Q key
-            debug_mode_switch_right: false,   // E key
-            debug_enter: false,               // Enter key
-            
-            // Current input method detection
-            last_input_method: "keyboard",    // "keyboard", "mouse", "controller"
-            
-            // Controller state
-            controller_connected: false,
-            controller_slot: -1
-        };
-    }
+    global.input_manager = {
+        // Movement inputs (combined from all sources)
+        move_up: false,
+        move_down: false,
+        move_left: false,
+        move_right: false,
+        
+        // Action inputs
+        interact: false,           // Space, Mouse Click, Controller A
+        interact_pressed: false,   // One-frame press detection
+        
+        // UI inputs
+        menu_toggle: false,        // Tab, C, Controller X
+        menu_toggle_pressed: false,
+        
+        // Menu navigation - NOW WITH WASD SUPPORT
+        menu_up: false,
+        menu_down: false,
+        menu_left: false,
+        menu_right: false,
+        menu_up_pressed: false,
+        menu_down_pressed: false,
+        menu_left_pressed: false,
+        menu_right_pressed: false,
+        
+        // Menu selection - MULTIPLE KEYS SUPPORTED
+        menu_select: false,         // Space, Enter, Controller A, Mouse Click
+        menu_select_pressed: false,
+        
+        // Cancel/Back
+        cancel: false,
+        cancel_pressed: false,     // Escape, Controller B
+        
+        // ADD THESE TWO LINES HERE:
+        pause: false,              // ESC, Controller Start
+        pause_pressed: false,      // One-frame press detection
+        
+        // Debug - for existing bug selector system
+        debug_mode_switch_left: false,    // Q key
+        debug_mode_switch_right: false,   // E key
+        debug_enter: false,               // Enter key
+        
+        // Current input method detection
+        last_input_method: "keyboard",    // "keyboard", "mouse", "controller"
+        
+        // Controller state
+        controller_connected: false,
+        controller_slot: -1
+    };
+}
     
     var inp = global.input_manager;
     
@@ -318,33 +322,38 @@ function scr_update_input_manager() {
         }
     }
 
-		// === ENHANCED CANCEL/EXIT INPUT ===
-		// SAFETY: This enhances existing cancel system with R key for bug catching exit
-		// Your existing cancel detection handles Escape + B button
-		// We're just adding R key as an additional cancel option
+	// ===== CANCEL/BACK INPUT =====
+// Escape key or Controller B button - BUT NOT FOR PAUSE MENU
+var kb_cancel = keyboard_check(vk_escape);
+var kb_cancel_pressed = keyboard_check_pressed(vk_escape);
+var gp_cancel = false;
+var gp_cancel_pressed = false;
 
-		// Check for R key press (specific to bug catching exit)
-		var kb_r_cancel = keyboard_check_pressed(ord("R"));
+if (inp.controller_connected) {
+    gp_cancel = gamepad_button_check(inp.controller_slot, gp_face2); // B button
+    gp_cancel_pressed = gamepad_button_check_pressed(inp.controller_slot, gp_face2);
+}
 
-		// Combine with existing cancel inputs
-		inp.cancel_enhanced = inp.cancel || kb_r_cancel;
-		inp.cancel_enhanced_pressed = inp.cancel_pressed || kb_r_cancel;
+inp.cancel = kb_cancel || gp_cancel;
+inp.cancel_pressed = kb_cancel_pressed || gp_cancel_pressed;
+
+// ===== PAUSE INPUT - ONLY START BUTTON =====
+// CRITICAL: Only use Start button for pause, NOT ESC
+// ESC will be handled by individual UI elements like before
+var gp_pause = false;
+var gp_pause_pressed = false;
+
+if (inp.controller_connected) {
+    // Start button (gp_start) for pause menu
+    gp_pause = gamepad_button_check(inp.controller_slot, gp_start);
+    gp_pause_pressed = gamepad_button_check_pressed(inp.controller_slot, gp_start);
+}
+
+// IMPORTANT: NO ESC KEY IN PAUSE INPUT!
+inp.pause = gp_pause;
+inp.pause_pressed = gp_pause_pressed;
 		
-		// ===== PAUSE/START INPUT =====
-		// ESC key + Controller Start button for pause menu
-		var kb_pause = keyboard_check(vk_escape);
-		var kb_pause_pressed = keyboard_check_pressed(vk_escape);
-		var gp_pause = false;
-		var gp_pause_pressed = false;
-
-		if (inp.controller_connected) {
-		    // Start button (gp_start) for pause menu
-		    gp_pause = gamepad_button_check(inp.controller_slot, gp_start);
-		    gp_pause_pressed = gamepad_button_check_pressed(inp.controller_slot, gp_start);
-		}
-
-		inp.pause = kb_pause || gp_pause;
-		inp.pause_pressed = kb_pause_pressed || gp_pause_pressed;
+		
 }
 
 
@@ -353,6 +362,44 @@ function scr_update_input_manager() {
 // Enhanced cancel detection (includes R key)
 function input_get_cancel_enhanced_pressed() {
     return global.input_manager.cancel_enhanced_pressed;
+}
+
+
+// ===== PAGE NAVIGATION INPUT (NEW) =====
+// Left Arrow + Left Bumper (LB/L1) for page left
+function input_get_page_left_pressed() {
+    if (!variable_global_exists("input_manager")) return false;
+    
+    var inp = global.input_manager;
+    
+    // Keyboard: Left Arrow key
+    var kb_page_left = keyboard_check_pressed(vk_left);
+    
+    // Controller: Left Bumper (Shoulder button)
+    var gp_page_left = false;
+    if (inp.controller_connected) {
+        gp_page_left = gamepad_button_check_pressed(inp.controller_slot, gp_shoulderl);
+    }
+    
+    return kb_page_left || gp_page_left;
+}
+
+// Right Arrow + Right Bumper (RB/R1) for page right  
+function input_get_page_right_pressed() {
+    if (!variable_global_exists("input_manager")) return false;
+    
+    var inp = global.input_manager;
+    
+    // Keyboard: Right Arrow key
+    var kb_page_right = keyboard_check_pressed(vk_right);
+    
+    // Controller: Right Bumper (Shoulder button)
+    var gp_page_right = false;
+    if (inp.controller_connected) {
+        gp_page_right = gamepad_button_check_pressed(inp.controller_slot, gp_shoulderr);
+    }
+    
+    return kb_page_right || gp_page_right;
 }
 
 // ===== HELPER FUNCTIONS FOR EASY ACCESS =====

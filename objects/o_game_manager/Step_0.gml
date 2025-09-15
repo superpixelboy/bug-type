@@ -11,15 +11,29 @@ scr_update_input_manager();
 // No cooldown system - removed completely!
 
 // ===== GLOBAL PAUSE MENU HANDLING =====
+
+// ===== SIMPLE PAUSE MENU HANDLING =====
 var pause_input = keyboard_check_pressed(vk_escape);
+
+// Add Start button support
+for (var i = 0; i < 12; i++) {
+    if (gamepad_is_connected(i)) {
+        if (gamepad_button_check_pressed(i, gp_start)) {
+            pause_input = true;
+            break;
+        }
+    }
+}
 
 if (pause_input) {
     var can_pause = true;
     
+    // Don't pause if collection is open
     if (instance_exists(o_bug_collection_ui) && o_bug_collection_ui.is_open) {
         can_pause = false;
     }
     
+    // Don't pause during dialogue
     with (o_npc_parent) {
         if (dialogue_active) {
             can_pause = false;
@@ -27,13 +41,19 @@ if (pause_input) {
         }
     }
     
+    // Don't pause if player movement is disabled
     if (instance_exists(o_player) && o_player.movement_mode == "disabled") {
+        can_pause = false;
+    }
+    
+    // Don't pause if debug console is active
+    if (instance_exists(o_bug_selector) && o_bug_selector.menu_active) {
         can_pause = false;
     }
     
     if (can_pause) {
         if (!instance_exists(o_pause_menu)) {
-            instance_create_layer(0, 0, "UI", o_pause_menu);
+            instance_create_layer(0, 0, "Instances", o_pause_menu);
             if (variable_global_exists("game_paused")) {
                 global.game_paused = true;
             }
