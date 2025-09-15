@@ -79,7 +79,12 @@ for (var i = 0; i < cards_per_page_grid; i++) {
         var hover_progress = hover_timer / 20.0; // Smooth 0-1 progress
         hover_scale = lerp(1.0, 1.1, hover_progress); // 10% larger when hovered
         hover_offset_y = lerp(0, -3, hover_progress); // Slight float up
-    }
+   
+   
+     show_debug_message("DRAW: Card " + string(i) + " is hovered! Timer: " + string(hover_timer) + 
+                      " | Scale: " + string(hover_scale) + " | Offset: " + string(hover_offset_y));
+
+   }
     var final_collection_scale = 0.4 * hover_scale; // Base scale * hover effect
     card_y_pos += hover_offset_y; // Apply hover float
     if (ds_map_exists(global.discovered_bugs, bug_key)) {
