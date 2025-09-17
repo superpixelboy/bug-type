@@ -1,21 +1,19 @@
 {
   "$GMObject":"",
-  "%Name":"o_npc_parent",
+  "%Name":"o_scarecrow",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":64,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"o_npc_parent",
+  "name":"o_scarecrow",
   "overriddenProperties":[],
   "parent":{
     "name":"NPCs",
     "path":"folders/Objects/NPCs.yy",
   },
   "parentObjectId":{
-    "name":"o_shadow_parent",
-    "path":"objects/o_shadow_parent/o_shadow_parent.yy",
+    "name":"o_npc_parent",
+    "path":"objects/o_npc_parent/o_npc_parent.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,
@@ -34,7 +32,10 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":null,
+  "spriteId":{
+    "name":"s_scarecrow",
+    "path":"sprites/s_scarecrow/s_scarecrow.yy",
+  },
   "spriteMaskId":null,
   "visible":true,
 }

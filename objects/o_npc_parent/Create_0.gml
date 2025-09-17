@@ -1,6 +1,6 @@
 // o_npc_parent Create Event
 // Universal NPC system with rock-style interactions
-
+event_inherited();
 // INTERACTION SYSTEM (exact same as rocks)
 interaction_range_facing = 28;  // Looking at NPC from distance
 interaction_range_touching = 8; // Direct touch
@@ -32,3 +32,5 @@ on_story_event = -1;     // Script to run for story progression
 /// npc_set_dialogue(messages_array)
 /// npc_add_story_dialogue(condition_name, condition_value, messages_array)
 /// npc_set_events(start_script, end_script, story_script)
+
+depthMod = 0;
