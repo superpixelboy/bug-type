@@ -274,6 +274,18 @@ if (closest_npc_distance <= 28 && closest_npc != noone && !closest_npc.dialogue_
     
     // METHOD 2: Direct touching (same as rocks)
     can_interact_npc_touching = (closest_npc_distance <= 8);
+	
+	 // SPECIAL CASE: Ghost girl when she's in normal state
+    // SAFETY: Check if variables exist before using them
+    if (variable_instance_exists(closest_npc, "special_interaction_rule") && 
+        variable_instance_exists(closest_npc, "ghost_state")) {
+        
+        if (closest_npc.special_interaction_rule == "omnidirectional_when_normal" && 
+            closest_npc.ghost_state == "normal") {
+            // Ghost girl in normal state: can interact from any direction within range
+            can_interact_npc_facing = true; // Override facing requirement
+        }
+    }
 }
 
 var can_interact_npc = can_interact_npc_facing || can_interact_npc_touching;

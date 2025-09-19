@@ -7,3 +7,6 @@ dialogue_messages = [
     "What are you waiting for? You've got to get to Baba Yaga's hut now!",
     "Just follow the trail to the East, you can't miss it."
 ];
+
+can_face_player = true;
+facing_range = 80;    

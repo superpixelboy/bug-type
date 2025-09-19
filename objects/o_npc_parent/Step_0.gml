@@ -99,3 +99,44 @@ if (dialogue_active) {
 }
 
 depth = -y+depthMod;
+
+
+// SIMPLE PLAYER FACING SYSTEM - Left/Right only with sprite flipping
+if (can_face_player && instance_exists(o_player) && !dialogue_active) {
+    facing_update_timer++;
+    
+    if (facing_update_timer >= facing_update_delay) {
+        facing_update_timer = 0;
+        
+        var player_distance = distance_to_object(o_player);
+        
+        if (player_distance <= facing_range) {
+            // Player is close - determine if they're to the left or right
+            var dx = o_player.x - x;
+            var should_face_left = (dx < 0); // Player is to the left
+            
+            // Only update if direction actually changed (prevents unnecessary flipping)
+            if (should_face_left != facing_left) {
+                facing_left = should_face_left;
+                
+                // Apply sprite flipping
+                if (facing_left) {
+                    image_xscale = abs(image_xscale); // Face left (normal sprite)
+                } else {
+                    image_xscale = -abs(image_xscale); // Face right (flipped sprite)
+                }
+                
+                // DEBUG: Show facing changes (remove this later)
+                var direction_text = facing_left ? "left" : "right";
+                show_debug_message("👤 " + object_get_name(object_index) + " now facing: " + direction_text);
+            }
+        } else {
+            // Player is far away - face default direction (left)
+            if (!facing_left) {
+                facing_left = true;
+                image_xscale = abs(image_xscale); // Face left (normal sprite)
+                show_debug_message("👤 " + object_get_name(object_index) + " returned to default (left)");
+            }
+        }
+    }
+}

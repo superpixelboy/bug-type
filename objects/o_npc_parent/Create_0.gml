@@ -34,3 +34,13 @@ on_story_event = -1;     // Script to run for story progression
 /// npc_set_events(start_script, end_script, story_script)
 
 depthMod = 0;
+
+// PLAYER FACING SYSTEM (OPTIONAL - TOGGLEABLE PER NPC)
+// SIMPLE VERSION: Only left/right facing with sprite flipping
+can_face_player = false;           // Set to true in child NPCs to enable
+facing_range = 48;                 // How close player needs to be for NPC to face them
+facing_left = true;                // true = facing left (default), false = facing right
+
+// FACING COOLDOWN - Prevents rapid direction switching
+facing_update_timer = 0;
+facing_update_delay = 8;          
