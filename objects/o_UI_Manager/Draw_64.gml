@@ -126,3 +126,41 @@ if (flash_alpha > 0) {
     draw_set_alpha(1);
     draw_set_color(c_white);
 }
+
+///DEBUG
+
+if (debug_mode) {
+    draw_set_font(-1);
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+    
+    var debug_y = 10;
+    var line_height = 20;
+    
+    // Header
+    draw_set_color(c_yellow);
+    draw_text(10, debug_y, "=== DEBUG: ITEMS (SHIFT + #) ===");
+    debug_y += line_height;
+    
+    // Item status
+    draw_set_color(c_white);
+    
+    var clover_status = (variable_global_exists("has_lucky_clover") && global.has_lucky_clover) ? "YES" : "NO";
+    draw_text(10, debug_y, "SHIFT+1: Lucky Clover = " + clover_status);
+    debug_y += line_height;
+    
+    var wand_status = (variable_global_exists("has_oak_wand") && global.has_oak_wand) ? "YES" : "NO";
+    draw_text(10, debug_y, "SHIFT+2: Oak Wand = " + wand_status);
+    debug_y += line_height;
+    
+    draw_set_color(c_lime);
+    draw_text(10, debug_y, "SHIFT+0: Give All Items");
+    debug_y += line_height;
+    
+    draw_set_color(c_red);
+    draw_text(10, debug_y, "SHIFT+9: Remove All Items");
+    
+    // Reset
+    draw_set_color(c_white);
+    draw_set_halign(fa_left);
+}

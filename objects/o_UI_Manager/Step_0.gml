@@ -25,6 +25,14 @@ if (keyboard_check(vk_shift) && keyboard_check_pressed(ord("F"))) {
     }
 }
 
+// Call the debug items function
+scr_debug_items();
+
+// Optional: Display debug info on screen
+if (debug_mode && keyboard_check(vk_shift)) {
+    // Show current item status when holding SHIFT
+    // This will appear in your existing debug overlay
+}
 // === MAIN MENU SPECIFIC BEHAVIOR ===
 if (room == rm_main_menu) {
     // EXIT EARLY - Don't run game systems in main menu

@@ -229,20 +229,40 @@ if (variable_global_exists("bug_data")) {
 // Handle Space/A button selection for keyboard users
 var select_pressed = input_get_menu_select_pressed();
 if (select_pressed && keyboard_navigation_active && keyboard_selected_card != -1) {
-    if (variable_global_exists("bug_data")) {
-        var all_bug_keys = variable_struct_get_names(global.bug_data);
-        var cards_per_page_grid = 8;
-        var start_bug = page * cards_per_page_grid;
-        var bug_index = start_bug + keyboard_selected_card;
-        
-        if (bug_index < array_length(all_bug_keys)) {
-            var bug_key = all_bug_keys[bug_index];
-            if (ds_map_exists(global.discovered_bugs, bug_key)) {
-                if (scr_collection_show_card(bug_key, id)) {
-                    keyboard_selected_card = -1;
-                    hovered_card = -1;
-                    hover_timer = 0;
+    
+    if (current_tab == 0) {
+        // COLLECTION TAB - Bug cards (existing logic)
+        if (variable_global_exists("bug_data")) {
+            var all_bug_keys = variable_struct_get_names(global.bug_data);
+            var cards_per_page_grid = 8;
+            var start_bug = page * cards_per_page_grid;
+            var bug_index = start_bug + keyboard_selected_card;
+            
+            if (bug_index < array_length(all_bug_keys)) {
+                var bug_key = all_bug_keys[bug_index];
+                if (ds_map_exists(global.discovered_bugs, bug_key)) {
+                    if (scr_collection_show_card(bug_key, id)) {
+                        keyboard_selected_card = -1;
+                        hovered_card = -1;
+                        hover_timer = 0;
+                    }
                 }
+            }
+        }
+        
+    } else if (current_tab == 1) {
+        // ITEMS TAB - Item cards (NEW)
+        var discovered_items = scr_get_discovered_items();
+        var cards_per_page_grid = 8;
+        var start_item = page * cards_per_page_grid;
+        var item_index = start_item + keyboard_selected_card;
+        
+        if (item_index < array_length(discovered_items)) {
+            var item_data = discovered_items[item_index];
+            if (scr_collection_show_item_card(item_data)) {
+                keyboard_selected_card = -1;
+                hovered_card = -1;
+                hover_timer = 0;
             }
         }
     }
@@ -252,17 +272,39 @@ if (select_pressed && keyboard_navigation_active && keyboard_selected_card != -1
 if (mouse_check_button_pressed(mb_left)) {
     var mouse_handled = false;
     
-    // Card clicks
-    if (hovered_card != -1 && variable_global_exists("bug_data")) {
-        var all_bug_keys = variable_struct_get_names(global.bug_data);
-        var cards_per_page_grid = 8;
-        var start_bug = page * cards_per_page_grid;
-        var bug_index = start_bug + hovered_card;
+    // Card clicks - CHECK CURRENT TAB
+    if (hovered_card != -1) {
         
-        if (bug_index < array_length(all_bug_keys)) {
-            var bug_key = all_bug_keys[bug_index];
-            if (ds_map_exists(global.discovered_bugs, bug_key)) {
-                if (scr_collection_show_card(bug_key,id)) {
+        if (current_tab == 0) {
+            // COLLECTION TAB - Bug cards (your existing code)
+            if (variable_global_exists("bug_data")) {
+                var all_bug_keys = variable_struct_get_names(global.bug_data);
+                var cards_per_page_grid = 8;
+                var start_bug = page * cards_per_page_grid;
+                var bug_index = start_bug + hovered_card;
+                
+                if (bug_index < array_length(all_bug_keys)) {
+                    var bug_key = all_bug_keys[bug_index];
+                    if (ds_map_exists(global.discovered_bugs, bug_key)) {
+                        if (scr_collection_show_card(bug_key, id)) {
+                            hovered_card = -1;
+                            hover_timer = 0;
+                        }
+                        mouse_handled = true;
+                    }
+                }
+            }
+            
+        } else if (current_tab == 1) {
+            // ITEMS TAB - Item cards (NEW)
+            var discovered_items = scr_get_discovered_items();
+            var cards_per_page_grid = 8;
+            var start_item = page * cards_per_page_grid;
+            var item_index = start_item + hovered_card;
+            
+            if (item_index < array_length(discovered_items)) {
+                var item_data = discovered_items[item_index];
+                if (scr_collection_show_item_card(item_data)) {
                     hovered_card = -1;
                     hover_timer = 0;
                 }

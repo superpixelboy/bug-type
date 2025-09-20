@@ -41,16 +41,10 @@ if (current_tab == 0) {
         total_pages = ceil(total_bugs / cards_per_page_grid);
     }
 } else if (current_tab == 1) {
-    // Items tab - count discovered items
-    if (variable_global_exists("items")) {
-        var discovered_count = 0;
-        for (var i = 0; i < array_length(global.items); i++) {
-            if (global.items[i].discovered) {
-                discovered_count++;
-            }
-        }
-        total_pages = max(1, ceil(discovered_count / cards_per_page_grid));
-    }
+    // Items tab - count discovered items from existing globals
+    var discovered_items = scr_get_discovered_items();
+    var discovered_count = array_length(discovered_items);
+    total_pages = max(1, ceil(discovered_count / cards_per_page_grid));
 }
 
 // Draw cards in 2 rows of 4 (8 cards per page)
@@ -68,242 +62,237 @@ var horizontal_spread = ui_width * 0.15;
 
 // Draw each card using ORIGINAL positioning logic
 if (current_tab == 0) {
-for (var i = 0; i < cards_per_page_grid; i++) {
-    var bug_index = start_bug + i;
-    if (bug_index >= total_bugs) break;
+	// ========== COLLECTION TAB: DRAW BUG CARDS ==========
+	for (var i = 0; i < cards_per_page_grid; i++) {
+	    var bug_index = start_bug + i;
+	    if (bug_index >= total_bugs) break;
     
-    // Calculate row and column
-    var row = floor(i / cards_per_row);
-    var col = i % cards_per_row;
+	    // Calculate row and column
+	    var row = floor(i / cards_per_row);
+	    var col = i % cards_per_row;
     
-    // Calculate card position based on which page (left/right) - ORIGINAL LOGIC
-    var card_x, card_y_pos;
+	    // Calculate card position based on which page (left/right) - ORIGINAL LOGIC
+	    var card_x, card_y_pos;
     
-    if (col < 2) {
-        // Left page (columns 0 and 1)
-        var local_col = col; // 0 or 1
-        card_x = (left_page_center + ((local_col - 0.5) * horizontal_spread)) * gui_scale;
-    } else {
-        // Right page (columns 2 and 3)
-        var local_col = col - 2; // 0 or 1 (relative to right page)
-        card_x = (right_page_center + ((local_col - 0.5) * horizontal_spread)) * gui_scale;
-    }
+	    if (col < 2) {
+	        // Left page (columns 0 and 1)
+	        var local_col = col; // 0 or 1
+	        card_x = (left_page_center + ((local_col - 0.5) * horizontal_spread)) * gui_scale;
+	    } else {
+	        // Right page (columns 2 and 3)
+	        var local_col = col - 2; // 0 or 1 (relative to right page)
+	        card_x = (right_page_center + ((local_col - 0.5) * horizontal_spread)) * gui_scale;
+	    }
     
-    card_y_pos = (grid_start_y + (row * card_spacing_y)) * gui_scale;
+	    card_y_pos = (grid_start_y + (row * card_spacing_y)) * gui_scale;
 
-    // Get bug data using the bug key
-    var bug_key = all_bug_keys[bug_index];
-    var bug_data = global.bug_data[$ bug_key];
-    // Check if discovered using the bug_key
-    var is_discovered = ds_map_exists(global.discovered_bugs, bug_key);
+	    // Get bug data using the bug key
+	    var bug_key = all_bug_keys[bug_index];
+	    var bug_data = global.bug_data[$ bug_key];
+	    // Check if discovered using the bug_key
+	    var is_discovered = ds_map_exists(global.discovered_bugs, bug_key);
     
-    // Calculate hover scale with smooth animation
-    var hover_scale = 1.0;
-    var hover_offset_y = 0;
-    if (hovered_card == i && hover_timer > 0) {
-        var hover_progress = hover_timer / 20.0; // Smooth 0-1 progress
-        hover_scale = lerp(1.0, 1.1, hover_progress); // 10% larger when hovered
-        hover_offset_y = lerp(0, -3, hover_progress); // Slight float up
+	    // Calculate hover scale with smooth animation
+	    var hover_scale = 1.0;
+	    var hover_offset_y = 0;
+	    if (hovered_card == i && hover_timer > 0) {
+	        var hover_progress = hover_timer / 20.0; // Smooth 0-1 progress
+	        hover_scale = lerp(1.0, 1.1, hover_progress); // 10% larger when hovered
+	        hover_offset_y = lerp(0, -3, hover_progress); // Slight float up
    
    
-     show_debug_message("DRAW: Card " + string(i) + " is hovered! Timer: " + string(hover_timer) + 
-                      " | Scale: " + string(hover_scale) + " | Offset: " + string(hover_offset_y));
+	     show_debug_message("DRAW: Card " + string(i) + " is hovered! Timer: " + string(hover_timer) + 
+	                      " | Scale: " + string(hover_scale) + " | Offset: " + string(hover_offset_y));
 
-   }
-    var final_collection_scale = 0.4 * hover_scale; // Base scale * hover effect
-    card_y_pos += hover_offset_y; // Apply hover float
-    if (ds_map_exists(global.discovered_bugs, bug_key)) {
-        // Draw drop shadow for discovered cards (enhanced for hovered cards)
-        var shadow_alpha = 0.3;
-        var shadow_offset = 2;
-        if (hovered_card == i) {
-            shadow_alpha = 0.5; // Stronger shadow when hovered
-            shadow_offset = 3;   // Larger shadow when hovered
-        }
+	   }
+	    var final_collection_scale = 0.4 * hover_scale; // Base scale * hover effect
+	    card_y_pos += hover_offset_y; // Apply hover float
+	    if (ds_map_exists(global.discovered_bugs, bug_key)) {
+	        // Draw drop shadow for discovered cards (enhanced for hovered cards)
+	        var shadow_alpha = 0.3;
+	        var shadow_offset = 2;
+	        if (hovered_card == i) {
+	            shadow_alpha = 0.5; // Stronger shadow when hovered
+	            shadow_offset = 3;   // Larger shadow when hovered
+	        }
         
-        draw_set_alpha(shadow_alpha);
-        draw_set_color(c_black);
-        draw_sprite_ext(s_card_template, 1, // Use frame 1 (front) for discovered cards shadow
-                       card_x + shadow_offset, card_y_pos + shadow_offset, 
-                       final_collection_scale * gui_scale, final_collection_scale * gui_scale, 
-                       0, c_black, 1);
-        draw_set_alpha(1);
-        draw_set_color(c_white);
+	        draw_set_alpha(shadow_alpha);
+	        draw_set_color(c_black);
+	        draw_sprite_ext(s_card_template, 1, // Use frame 1 (front) for discovered cards shadow
+	                       card_x + shadow_offset, card_y_pos + shadow_offset, 
+	                       final_collection_scale * gui_scale, final_collection_scale * gui_scale, 
+	                       0, c_black, 1);
+	        draw_set_alpha(1);
+	        draw_set_color(c_white);
         
-        // Draw the main card (frame 1 = front)
-        draw_sprite_ext(s_card_template, 1, card_x, card_y_pos, // Use frame 1 (front) for discovered cards
-                       final_collection_scale * gui_scale, final_collection_scale * gui_scale, 0, c_white, 1);
+	        // Draw the main card (frame 1 = front)
+	        draw_sprite_ext(s_card_template, 1, card_x, card_y_pos, // Use frame 1 (front) for discovered cards
+	                       final_collection_scale * gui_scale, final_collection_scale * gui_scale, 0, c_white, 1);
         
-        // Calculate scaled card dimensions for positioning
-        var card_w_scaled = sprite_get_width(s_card_template) * final_collection_scale * gui_scale;
-        var card_h_scaled = sprite_get_height(s_card_template) * final_collection_scale * gui_scale;
+	        // Calculate scaled card dimensions for positioning
+	        var card_w_scaled = sprite_get_width(s_card_template) * final_collection_scale * gui_scale;
+	        var card_h_scaled = sprite_get_height(s_card_template) * final_collection_scale * gui_scale;
         
-        // Draw bug sprite on card (scaled and positioned)
-        var target_bug_size = card_h_scaled * 0.35;
-        var bug_w = sprite_get_width(bug_data.sprite);
-        var bug_h = sprite_get_height(bug_data.sprite);
-        var bug_scale = min(target_bug_size / bug_w, target_bug_size / bug_h);
-        var bug_y_offset = card_h_scaled * -0.20;
+	        // Draw bug sprite on card (scaled and positioned)
+	        var target_bug_size = card_h_scaled * 0.35;
+	        var bug_w = sprite_get_width(bug_data.sprite);
+	        var bug_h = sprite_get_height(bug_data.sprite);
+	        var bug_scale = min(target_bug_size / bug_w, target_bug_size / bug_h);
+	        var bug_y_offset = card_h_scaled * -0.20;
         
-        draw_sprite_ext(bug_data.sprite, 0, card_x, card_y_pos + bug_y_offset, 
-                       bug_scale, bug_scale, 0, c_white, 1);
+	        draw_sprite_ext(bug_data.sprite, 0, card_x, card_y_pos + bug_y_offset, 
+	                       bug_scale, bug_scale, 0, c_white, 1);
         
-        // Draw gems and coins OVER the card (scaled with hover)
-        // Gem (upper right)
-        var gem_x = card_x + (card_w_scaled * 0.32);
-        var gem_y = card_y_pos - (card_h_scaled * 0.38);
-        var gem_rarity = scr_gem_rarity(bug_key);
-        var gem_sprite = get_gem_sprite(gem_rarity);
-        draw_sprite_ext(gem_sprite, 0, gem_x, gem_y, 
-                       final_collection_scale * gui_scale, final_collection_scale * gui_scale, 0, c_white, 1);
+	        // Draw gems and coins OVER the card (scaled with hover)
+	        // Gem (upper right)
+	        var gem_x = card_x + (card_w_scaled * 0.32);
+	        var gem_y = card_y_pos - (card_h_scaled * 0.38);
+	        var gem_rarity = scr_gem_rarity(bug_key);
+	        var gem_sprite = get_gem_sprite(gem_rarity);
+	        draw_sprite_ext(gem_sprite, 0, gem_x, gem_y, 
+	                       final_collection_scale * gui_scale, final_collection_scale * gui_scale, 0, c_white, 1);
         
-        // Coin (upper left)
-        var coin_x = card_x - (card_w_scaled * 0.32);
-        var coin_y = card_y_pos - (card_h_scaled * 0.38);
+	        // Coin (upper left)
+	        var coin_x = card_x - (card_w_scaled * 0.32);
+	        var coin_y = card_y_pos - (card_h_scaled * 0.38);
 		
-    var coin_value = get_bug_catch_count(bug_key);
-	var coin_sprite = get_coin_sprite_from_count(coin_value);
+	    var coin_value = get_bug_catch_count(bug_key);
+		var coin_sprite = get_coin_sprite_from_count(coin_value);
 
-	// BACKUP: If catch count is 0 but bug is discovered, show 1
-	if (coin_value == 0 && ds_map_exists(global.discovered_bugs, bug_key)) {
-	    coin_value = 1;
-	    coin_sprite = s_coin_copper;
-	}										
+		// BACKUP: If catch count is 0 but bug is discovered, show 1
+		if (coin_value == 0 && ds_map_exists(global.discovered_bugs, bug_key)) {
+		    coin_value = 1;
+		    coin_sprite = s_coin_copper;
+		}										
         
-        draw_sprite_ext(coin_sprite, 0, coin_x, coin_y, 
-                       final_collection_scale * gui_scale, final_collection_scale * gui_scale, 0, c_white, 1);
+	        draw_sprite_ext(coin_sprite, 0, coin_x, coin_y, 
+	                       final_collection_scale * gui_scale, final_collection_scale * gui_scale, 0, c_white, 1);
         
-        // Coin number
-        draw_set_font(fnt_card_title);  // Use smaller font for collection
-        draw_set_halign(fa_center);
-        draw_set_valign(fa_middle);
-        var cream = make_color_rgb(245,235,215);
-        var dark_outline = make_color_rgb(25,15,30);
-        var nstr = string(coin_value);
+	        // Coin number
+	        draw_set_font(fnt_card_title);  // Use smaller font for collection
+	        draw_set_halign(fa_center);
+	        draw_set_valign(fa_middle);
+	        var cream = make_color_rgb(245,235,215);
+	        var dark_outline = make_color_rgb(25,15,30);
+	        var nstr = string(coin_value);
         
-        // Outline (scaled down)
-        draw_set_color(dark_outline);
-        draw_text(coin_x + 0.5, coin_y + 0.5, nstr);
-        draw_text(coin_x - 0.5, coin_y - 0.5, nstr);
-        draw_text(coin_x + 0.5, coin_y - 0.5, nstr);
-        draw_text(coin_x - 0.5, coin_y + 0.5, nstr);
+	        // Outline (scaled down)
+	        draw_set_color(dark_outline);
+	        draw_text(coin_x + 0.5, coin_y + 0.5, nstr);
+	        draw_text(coin_x - 0.5, coin_y - 0.5, nstr);
+	        draw_text(coin_x + 0.5, coin_y - 0.5, nstr);
+	        draw_text(coin_x - 0.5, coin_y + 0.5, nstr);
         
-        // Main text
-        draw_set_color(cream);
-        draw_text(coin_x, coin_y, nstr);
+	        // Main text
+	        draw_set_color(cream);
+	        draw_text(coin_x, coin_y, nstr);
         
-        // ---- BUG NAME ----
-        // Use regular fonts for smaller text
-        draw_set_font(fnt_card_title);
-        var cream = make_color_rgb(245,235,215);
-        var dark_purple = make_color_rgb(45, 25, 60);
-        var name_y_offset = card_h_scaled * 0.08; // Same proportion as catch screen
-        var name_width = card_w_scaled * 0.8; // 80% of card width
-        var name_line_sep = 7 * final_collection_scale * gui_scale; // Scale line separation with hover
+	        // ---- BUG NAME ----
+	        // Use regular fonts for smaller text
+	        draw_set_font(fnt_card_title);
+	        var cream = make_color_rgb(245,235,215);
+	        var dark_purple = make_color_rgb(45, 25, 60);
+	        var name_y_offset = card_h_scaled * 0.08; // Same proportion as catch screen
+	        var name_width = card_w_scaled * 0.8; // 80% of card width
+	        var name_line_sep = 7 * final_collection_scale * gui_scale; // Scale line separation with hover
         
-        // Shadow
-        draw_set_alpha(0.5);
-        draw_set_color(c_black);
-        draw_text_ext(card_x + 2, card_y_pos + name_y_offset + 2, bug_data.name, name_line_sep, name_width);
-        draw_set_alpha(1);
+	        // Shadow
+	        draw_set_alpha(0.5);
+	        draw_set_color(c_black);
+	        draw_text_ext(card_x + 2, card_y_pos + name_y_offset + 2, bug_data.name, name_line_sep, name_width);
+	        draw_set_alpha(1);
         
-        // Outline
-        draw_set_color(dark_purple);
-        draw_text_ext(card_x + 1, card_y_pos + name_y_offset + 1, bug_data.name, name_line_sep, name_width);
-        draw_text_ext(card_x - 1, card_y_pos + name_y_offset - 1, bug_data.name, name_line_sep, name_width);
-        draw_text_ext(card_x + 1, card_y_pos + name_y_offset - 1, bug_data.name, name_line_sep, name_width);
-        draw_text_ext(card_x - 1, card_y_pos + name_y_offset + 1, bug_data.name, name_line_sep, name_width);
+	        // Outline
+	        draw_set_color(dark_purple);
+	        draw_text_ext(card_x + 1, card_y_pos + name_y_offset + 1, bug_data.name, name_line_sep, name_width);
+	        draw_text_ext(card_x - 1, card_y_pos + name_y_offset - 1, bug_data.name, name_line_sep, name_width);
+	        draw_text_ext(card_x + 1, card_y_pos + name_y_offset - 1, bug_data.name, name_line_sep, name_width);
+	        draw_text_ext(card_x - 1, card_y_pos + name_y_offset + 1, bug_data.name, name_line_sep, name_width);
         
-        // Main text
-        draw_set_color(cream);
-        draw_text_ext(card_x, card_y_pos + name_y_offset, bug_data.name, name_line_sep, name_width);
+	        // Main text
+	        draw_set_color(cream);
+	        draw_text_ext(card_x, card_y_pos + name_y_offset, bug_data.name, name_line_sep, name_width);
         
-        // ---- FLAVOR TEXT ----
-        draw_set_font(fnt_flavor_text);
-        var light_gold = make_color_rgb(255,223,128);
-        var flavor_y_offset = card_h_scaled * 0.28; // Same proportion as catch screen
-        var flavor_width = card_w_scaled * 0.65; // 65% of card width (tighter)
-        var flavor_line_sep = 10 * final_collection_scale * gui_scale; // Scale with hover
+	        // ---- FLAVOR TEXT ----
+	        draw_set_font(fnt_flavor_text);
+	        var light_gold = make_color_rgb(255,223,128);
+	        var flavor_y_offset = card_h_scaled * 0.28; // Same proportion as catch screen
+	        var flavor_width = card_w_scaled * 0.65; // 65% of card width (tighter)
+	        var flavor_line_sep = 10 * final_collection_scale * gui_scale; // Scale with hover
         
-        // Outline
-        draw_set_color(c_black);
-        draw_text_ext(card_x + 1, card_y_pos + flavor_y_offset + 1, bug_data.flavor_text, flavor_line_sep, flavor_width);
-        draw_text_ext(card_x - 1, card_y_pos + flavor_y_offset - 1, bug_data.flavor_text, flavor_line_sep, flavor_width);
-        draw_text_ext(card_x + 1, card_y_pos + flavor_y_offset - 1, bug_data.flavor_text, flavor_line_sep, flavor_width);
-        draw_text_ext(card_x - 1, card_y_pos + flavor_y_offset + 1, bug_data.flavor_text, flavor_line_sep, flavor_width);
+	        // Outline
+	        draw_set_color(c_black);
+	        draw_text_ext(card_x + 1, card_y_pos + flavor_y_offset + 1, bug_data.flavor_text, flavor_line_sep, flavor_width);
+	        draw_text_ext(card_x - 1, card_y_pos + flavor_y_offset - 1, bug_data.flavor_text, flavor_line_sep, flavor_width);
+	        draw_text_ext(card_x + 1, card_y_pos + flavor_y_offset - 1, bug_data.flavor_text, flavor_line_sep, flavor_width);
+	        draw_text_ext(card_x - 1, card_y_pos + flavor_y_offset + 1, bug_data.flavor_text, flavor_line_sep, flavor_width);
         
-        // Main text
-        draw_set_color(light_gold);
-        draw_text_ext(card_x, card_y_pos + flavor_y_offset, bug_data.flavor_text, flavor_line_sep, flavor_width);
+	        // Main text
+	        draw_set_color(light_gold);
+	        draw_text_ext(card_x, card_y_pos + flavor_y_offset, bug_data.flavor_text, flavor_line_sep, flavor_width);
         
-        // ---- ESSENCE TEXT ----
-        draw_set_font(fnt_flavor_text);
-        var essence_y_offset = card_h_scaled * 0.40; // Same proportion as catch screen
-		var catch_count = get_bug_catch_count(bug_key);
-		// Calculate essence with multipliers
-		var catch_count = get_bug_catch_count(bug_key);
-		var multiplier = 1.0;
-		if (catch_count >= 10) {
-		    multiplier = 2.0;
-		} else if (catch_count >= 5) {
-		    multiplier = 1.5;
-		}
-		var final_essence = round(bug_data.essence * multiplier);
-		var essence_text = "Essence: +" + string(final_essence);
+	        // ---- ESSENCE TEXT ----
+	        draw_set_font(fnt_flavor_text);
+	        var essence_y_offset = card_h_scaled * 0.40; // Same proportion as catch screen
+			var catch_count = get_bug_catch_count(bug_key);
+			// Calculate essence with multipliers
+			var catch_count = get_bug_catch_count(bug_key);
+			var multiplier = 1.0;
+			if (catch_count >= 10) {
+			    multiplier = 2.0;
+			} else if (catch_count >= 5) {
+			    multiplier = 1.5;
+			}
+			var final_essence = round(bug_data.essence * multiplier);
+			var essence_text = "Essence: +" + string(final_essence);
 
-		// Add multiplier display
-		if (catch_count >= 10) {
-		    essence_text += " (x2.0)";
-		} else if (catch_count >= 5) {
-		    essence_text += " (x1.5)";
-		}
+			// Add multiplier display
+			if (catch_count >= 10) {
+			    essence_text += " (x2.0)";
+			} else if (catch_count >= 5) {
+			    essence_text += " (x1.5)";
+			}
         
-        // Outline
-        draw_set_color(c_black);
-        draw_text(card_x + 1, card_y_pos + essence_y_offset + 1, essence_text);
-        draw_text(card_x - 1, card_y_pos + essence_y_offset - 1, essence_text);
-        draw_text(card_x + 1, card_y_pos + essence_y_offset - 1, essence_text);
-        draw_text(card_x - 1, card_y_pos + essence_y_offset + 1, essence_text);
+	        // Outline
+	        draw_set_color(c_black);
+	        draw_text(card_x + 1, card_y_pos + essence_y_offset + 1, essence_text);
+	        draw_text(card_x - 1, card_y_pos + essence_y_offset - 1, essence_text);
+	        draw_text(card_x + 1, card_y_pos + essence_y_offset - 1, essence_text);
+	        draw_text(card_x - 1, card_y_pos + essence_y_offset + 1, essence_text);
         
-        // Main text
-        draw_set_color(make_color_rgb(255,215,0));
-        draw_text(card_x, card_y_pos + essence_y_offset, essence_text);
+	        // Main text
+	        draw_set_color(make_color_rgb(255,215,0));
+	        draw_text(card_x, card_y_pos + essence_y_offset, essence_text);
         
-    } else {
-        // Draw card back with bug silhouette (no shadow for undiscovered)
-        draw_sprite_ext(s_card_template, 0, card_x, card_y_pos, 
-                       0.4 * gui_scale, 0.4 * gui_scale, 0, c_white, 1);
+	    } else {
+	        // Draw card back with bug silhouette (no shadow for undiscovered)
+	        draw_sprite_ext(s_card_template, 0, card_x, card_y_pos, 
+	                       0.4 * gui_scale, 0.4 * gui_scale, 0, c_white, 1);
         
-        // Draw bug silhouette
-        var bug_sprite = bug_data.sprite;
-        draw_sprite_ext(bug_sprite, 0, card_x, card_y_pos - (15 * gui_scale), 
-                       0.3 * gui_scale, 0.3 * gui_scale, 0, c_black, 0.75);
-    }
+	        // Draw bug silhouette
+	        var bug_sprite = bug_data.sprite;
+	        draw_sprite_ext(bug_sprite, 0, card_x, card_y_pos - (15 * gui_scale), 
+	                       0.3 * gui_scale, 0.3 * gui_scale, 0, c_black, 0.75);
+	    }
 	}
 }
+
+
 else if (current_tab == 1) {
     // ========== ITEMS TAB: DRAW ITEM CARDS ==========
     
-    // Check if items exist
-    if (!variable_global_exists("items")) {
+    // Get discovered items from existing global variables
+    var discovered_item_list = scr_get_discovered_items();
+    var total_discovered = array_length(discovered_item_list);
+    var start_item = page * cards_per_page_grid;
+    
+    if (total_discovered == 0) {
+        // No items discovered yet
         draw_set_halign(fa_center);
-        draw_set_color(c_red);
-        draw_text((ui_x + ui_width/2) * gui_scale, (ui_y + 100) * gui_scale, "Items not initialized!");
+        draw_set_color(make_color_rgb(101, 67, 33));
+        draw_text((ui_width/2) * gui_scale, (ui_height/2) * gui_scale, "No items discovered yet!");
         draw_set_halign(fa_left);
     } else {
-        var total_items = array_length(global.items);
-        
-        // Only show discovered items
-        var discovered_item_list = [];
-        for (var i = 0; i < total_items; i++) {
-            if (global.items[i].discovered) {
-                array_push(discovered_item_list, global.items[i]);
-            }
-        }
-        
-        var total_discovered = array_length(discovered_item_list);
-        var start_item = page * cards_per_page_grid;
-        
         // Draw item cards using same grid layout
         for (var i = 0; i < cards_per_page_grid; i++) {
             var item_index = start_item + i;
@@ -339,7 +328,7 @@ else if (current_tab == 1) {
             var final_collection_scale = 0.4 * hover_scale;
             card_y_pos += hover_offset_y;
             
-            // Draw shadow (same as bugs)
+            // Draw shadow
             var shadow_alpha = 0.3;
             var shadow_offset = 2;
             if (hovered_card == i) {
@@ -348,39 +337,43 @@ else if (current_tab == 1) {
             }
             
             draw_set_alpha(shadow_alpha);
-            draw_sprite_ext(s_card_template, 1, 
+            // CHANGED: Use s_item_card for shadow
+            draw_sprite_ext(s_item_card, 0, 
                            card_x + shadow_offset, card_y_pos + shadow_offset, 
                            final_collection_scale * gui_scale, final_collection_scale * gui_scale, 
                            0, c_black, 1);
             draw_set_alpha(1);
             
-            // Draw card front
-            draw_sprite_ext(s_card_template, 1, card_x, card_y_pos,
+            // CHANGED: Use s_item_card for main card
+            draw_sprite_ext(s_item_card, 0, card_x, card_y_pos,
                            final_collection_scale * gui_scale, final_collection_scale * gui_scale, 
                            0, c_white, 1);
             
-            // Calculate card dimensions
-            var card_w_scaled = sprite_get_width(s_card_template) * final_collection_scale * gui_scale;
-            var card_h_scaled = sprite_get_height(s_card_template) * final_collection_scale * gui_scale;
+            // CHANGED: Calculate dimensions based on s_item_card
+            var card_w_scaled = sprite_get_width(s_item_card) * final_collection_scale * gui_scale;
+            var card_h_scaled = sprite_get_height(s_item_card) * final_collection_scale * gui_scale;
             
-            // Draw item icon (centered, similar to bug)
-            var target_item_size = card_h_scaled * 0.35;
+            // Draw item icon (centered at top)
+            var target_item_size = card_h_scaled * 0.40;
             var item_w = sprite_get_width(item_data.sprite);
             var item_h = sprite_get_height(item_data.sprite);
             var item_scale = min(target_item_size / item_w, target_item_size / item_h);
-            var item_y_offset = card_h_scaled * -0.20;
+            var item_y_offset = card_h_scaled * -0.15; // Higher up for better centering
             
             draw_sprite_ext(item_data.sprite, 0, card_x, card_y_pos + item_y_offset,
                            item_scale, item_scale, 0, c_white, 1);
             
             // NO GEMS OR COINS FOR ITEMS
             
-            // Draw item name (same styling as bug names)
+            // Draw item name - CENTERED (moved up)
             draw_set_font(fnt_card_title);
+            draw_set_halign(fa_center);
+            draw_set_valign(fa_middle);
+            
             var cream = make_color_rgb(245,235,215);
             var dark_purple = make_color_rgb(45, 25, 60);
-            var name_y_offset = card_h_scaled * 0.08;
-            var name_width = card_w_scaled * 0.8;
+            var name_y_offset = card_h_scaled * 0.10; // MOVED UP (was 0.15)
+            var name_width = card_w_scaled * 0.85;
             var name_line_sep = 7 * final_collection_scale * gui_scale;
             
             // Shadow
@@ -400,11 +393,11 @@ else if (current_tab == 1) {
             draw_set_color(cream);
             draw_text_ext(card_x, card_y_pos + name_y_offset, item_data.name, name_line_sep, name_width);
             
-            // Draw item description (replaces flavor text)
+            // Draw item description - CENTERED (moved up)
             draw_set_font(fnt_flavor_text);
             var light_gold = make_color_rgb(255,223,128);
-            var desc_y_offset = card_h_scaled * 0.28;
-            var desc_width = card_w_scaled * 0.65;
+            var desc_y_offset = card_h_scaled * 0.26; // MOVED UP (was 0.32)
+            var desc_width = card_w_scaled * 0.75;
             var desc_line_sep = 10 * final_collection_scale * gui_scale;
             
             // Outline
@@ -418,7 +411,9 @@ else if (current_tab == 1) {
             draw_set_color(light_gold);
             draw_text_ext(card_x, card_y_pos + desc_y_offset, item_data.description, desc_line_sep, desc_width);
             
-            // NO ESSENCE VALUE FOR ITEMS
+            // Reset alignment after each card
+            draw_set_halign(fa_left);
+            draw_set_valign(fa_top);
         }
     }
 }

@@ -141,10 +141,36 @@ flash_duration = 0;
 flash_timer = 0;
 
 // Items
-global.has_oak_wand = false;
-global.has_lucky_clover = false;
-global.has_rabbit_foot=false;
-global.has_horseshoe=false;
+
+// === ITEMS INITIALIZATION ===
+// Only initialize if not already set (prevents overwriting loaded data)
+if (!variable_global_exists("has_oak_wand")) {
+    global.has_oak_wand = false;
+    show_debug_message("Initialized global.has_oak_wand to false");
+} else {
+    show_debug_message("global.has_oak_wand already exists: " + string(global.has_oak_wand));
+}
+
+if (!variable_global_exists("has_lucky_clover")) {
+    global.has_lucky_clover = false;
+    show_debug_message("Initialized global.has_lucky_clover to false");
+} else {
+    show_debug_message("global.has_lucky_clover already exists: " + string(global.has_lucky_clover));
+}
+
+if (!variable_global_exists("has_rabbit_foot")) {
+    global.has_rabbit_foot = false;
+    show_debug_message("Initialized global.has_rabbit_foot to false");
+} else {
+    show_debug_message("global.has_rabbit_foot already exists: " + string(global.has_rabbit_foot));
+}
+
+if (!variable_global_exists("has_horseshoe")) {
+    global.has_horseshoe = false;
+    show_debug_message("Initialized global.has_horseshoe to false");
+} else {
+    show_debug_message("global.has_horseshoe already exists: " + string(global.has_horseshoe));
+}
 
 scr_initialize_bug_data()
 
