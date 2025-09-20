@@ -332,3 +332,92 @@ if (keyboard_navigation_active) {
                       " | Hovered: " + string(hovered_card) + 
                       " | Method: " + last_input_method);
 }
+
+// === TAB SWITCHING INPUT ===
+// SAFETY: This runs BEFORE existing card scrolling/selection to handle tab changes first
+
+if (tab_click_cooldown > 0) {
+    tab_click_cooldown--;
+}
+
+var _old_tab = current_tab;
+
+// Keyboard: Up/Down arrows to switch tabs
+if (keyboard_check_pressed(vk_up)) {
+    current_tab--;
+    if (current_tab < 0) current_tab = total_tabs - 1;
+    tab_click_cooldown = 10;
+}
+if (keyboard_check_pressed(vk_down)) {
+    current_tab++;
+    if (current_tab >= total_tabs) current_tab = 0;
+    tab_click_cooldown = 10;
+}
+
+// Gamepad: L/R triggers to switch tabs
+if (gamepad_is_connected(0)) {
+    if (gamepad_button_check_pressed(0, gp_shoulderlb)) {
+        current_tab--;
+        if (current_tab < 0) current_tab = total_tabs - 1;
+        tab_click_cooldown = 10;
+    }
+    if (gamepad_button_check_pressed(0, gp_shoulderrb)) {
+        current_tab++;
+        if (current_tab >= total_tabs) current_tab = 0;
+        tab_click_cooldown = 10;
+    }
+}
+
+// Mouse: Click detection on tabs
+var _gui_mouse_x = device_mouse_x_to_gui(0);
+var _gui_mouse_y = device_mouse_y_to_gui(0);
+
+// Tab positions (must match Draw GUI positions exactly!)
+// Moved slightly left and up
+// Tab positions (must match Draw GUI positions exactly!)
+var _collection_x = 50;
+var _collection_y = 90;
+var _items_x = 50;
+var _items_y = 325;
+
+
+// Get sprite dimensions for click detection
+var _tab_width = sprite_get_width(s_collection_tab);
+var _tab_height = sprite_get_height(s_collection_tab);
+
+tab_hover_index = -1;
+
+// Check Collection tab (tab 0)
+if (point_in_rectangle(_gui_mouse_x, _gui_mouse_y,
+    _collection_x, _collection_y,
+    _collection_x + _tab_width, _collection_y + _tab_height)) {
+    tab_hover_index = 0;
+    
+    if (mouse_check_button_pressed(mb_left) && tab_click_cooldown == 0) {
+        current_tab = 0;
+        tab_click_cooldown = 10;
+    }
+}
+
+// Check Items tab (tab 1)
+if (point_in_rectangle(_gui_mouse_x, _gui_mouse_y,
+    _items_x, _items_y,
+    _items_x + _tab_width, _items_y + _tab_height)) {
+    tab_hover_index = 1;
+    
+    if (mouse_check_button_pressed(mb_left) && tab_click_cooldown == 0) {
+        current_tab = 1;
+        tab_click_cooldown = 10;
+    }
+}
+
+// If tab changed, play sound and reset scroll
+// DEPENDENCY: This ensures card system resets when switching tabs
+if (_old_tab != current_tab) {
+    audio_play_sound(sn_bugtap1, 1, false); // Assuming you have this sound
+    
+    // SAFETY: Reset scroll position when switching tabs
+    // This prevents showing wrong cards from previous tab
+    scroll_offset = 0;
+    selected_card_index = 0;
+}

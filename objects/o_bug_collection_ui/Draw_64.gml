@@ -356,3 +356,37 @@ if (instance_exists(o_bug_card_collection)) {
     draw_set_alpha(1);
     draw_set_color(c_white);
 }
+
+// === DRAW TABS ===
+// SAFETY: Drawing tabs - they're part of the book design
+
+// Position tabs on the left edge of the book
+// IMPORTANT: These positions must match Step event exactly!
+var _collection_x = 90; // Moved left and up
+var _collection_y = 150; // Moved up
+
+var _items_x = 90; // Moved left and up
+var _items_y = 385; // Moved up
+
+// Determine which sprite frame to use for each tab
+// Frame 0 = Active (this page is open)
+// Frame 1 = Inactive (other page is open)
+// Frame 2 = Hover (mouse over)
+
+// Draw Collection Tab
+var _collection_frame = 1; // Default: inactive
+if (current_tab == 0) {
+    _collection_frame = 0; // Active
+} else if (tab_hover_index == 0) {
+    _collection_frame = 2; // Hover
+}
+draw_sprite(s_collection_tab, _collection_frame, _collection_x, _collection_y);
+
+// Draw Items Tab
+var _items_frame = 1; // Default: inactive
+if (current_tab == 1) {
+    _items_frame = 0; // Active
+} else if (tab_hover_index == 1) {
+    _items_frame = 2; // Hover
+}
+draw_sprite(s_items_tab, _items_frame, _items_x, _items_y);
