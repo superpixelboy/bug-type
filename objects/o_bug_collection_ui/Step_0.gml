@@ -368,18 +368,37 @@ if (gamepad_is_connected(0)) {
     }
 }
 
+
+// === TAB SWITCHING INPUT (EARLY - BEFORE CARD NAVIGATION) ===
+if (tab_click_cooldown > 0) {
+    tab_click_cooldown--;
+}
+
+var _old_tab = current_tab;
+
+// Gamepad ONLY: L/R triggers to switch tabs (removed keyboard arrow keys)
+if (gamepad_is_connected(0)) {
+    if (gamepad_button_check_pressed(0, gp_shoulderlb) && tab_click_cooldown == 0) {
+        current_tab--;
+        if (current_tab < 0) current_tab = total_tabs - 1;
+        tab_click_cooldown = 10;
+    }
+    if (gamepad_button_check_pressed(0, gp_shoulderrb) && tab_click_cooldown == 0) {
+        current_tab++;
+        if (current_tab >= total_tabs) current_tab = 0;
+        tab_click_cooldown = 10;
+    }
+}
+
 // Mouse: Click detection on tabs
 var _gui_mouse_x = device_mouse_x_to_gui(0);
 var _gui_mouse_y = device_mouse_y_to_gui(0);
 
 // Tab positions (must match Draw GUI positions exactly!)
-// Moved slightly left and up
-// Tab positions (must match Draw GUI positions exactly!)
 var _collection_x = 50;
 var _collection_y = 90;
 var _items_x = 50;
 var _items_y = 325;
-
 
 // Get sprite dimensions for click detection
 var _tab_width = sprite_get_width(s_collection_tab);
@@ -411,13 +430,14 @@ if (point_in_rectangle(_gui_mouse_x, _gui_mouse_y,
     }
 }
 
-// If tab changed, play sound and reset scroll
-// DEPENDENCY: This ensures card system resets when switching tabs
+// If tab changed, play sound and reset to page 0
 if (_old_tab != current_tab) {
-    audio_play_sound(sn_bugtap1, 1, false); // Assuming you have this sound
+    audio_play_sound(sn_rock_click, 1, false);
     
-    // SAFETY: Reset scroll position when switching tabs
-    // This prevents showing wrong cards from previous tab
-    scroll_offset = 0;
+    // SAFETY: Reset to first page when switching tabs
+    page = 0;
     selected_card_index = 0;
+    hovered_card = -1;
+    hover_timer = 0;
+    keyboard_selected_card = -1;
 }

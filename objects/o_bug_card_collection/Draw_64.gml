@@ -1,5 +1,15 @@
 // o_bug_card_collection Draw_64 Event - Individual Card Display
 
+
+// SAFETY: Only draw bug cards when on Collection tab (tab 0)
+// Don't draw anything if we're on Items tab (tab 1)
+// === TAB FILTERING ===
+// SAFETY: Only draw bug cards when on Collection tab (tab 0)
+
+if (o_bug_collection_ui.current_tab != 0) {
+    exit; // Stop drawing, we're on Items tab
+}
+
 // Get GUI center position with slide animation
 var gui_center_x = display_get_gui_width() / 2;
 var cam = view_camera[0];
@@ -234,3 +244,4 @@ draw_set_valign(fa_top);
 draw_set_color(c_white);
 draw_set_alpha(1);
 draw_set_font(-1);
+

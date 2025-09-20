@@ -28,7 +28,30 @@ var total_bugs = array_length(all_bug_keys);
 var cards_per_row = 4;
 var rows = 2;
 var cards_per_page_grid = cards_per_row * rows; // 8 cards per page
-var total_pages = ceil(total_bugs / cards_per_page_grid);
+
+// Calculate total pages based on current tab
+var total_bugs = 0;
+var total_pages = 1;
+
+if (current_tab == 0) {
+    // Collection tab - count bugs
+    if (variable_global_exists("bug_data")) {
+        var all_bug_keys = variable_struct_get_names(global.bug_data);
+        total_bugs = array_length(all_bug_keys);
+        total_pages = ceil(total_bugs / cards_per_page_grid);
+    }
+} else if (current_tab == 1) {
+    // Items tab - count discovered items
+    if (variable_global_exists("items")) {
+        var discovered_count = 0;
+        for (var i = 0; i < array_length(global.items); i++) {
+            if (global.items[i].discovered) {
+                discovered_count++;
+            }
+        }
+        total_pages = max(1, ceil(discovered_count / cards_per_page_grid));
+    }
+}
 
 // Draw cards in 2 rows of 4 (8 cards per page)
 var start_bug = page * cards_per_page_grid;
@@ -42,7 +65,9 @@ var card_spacing_y = ui_height * 0.36;    // Vertical gap between rows
 // Calculate horizontal spacing for 2 cards per page
 var horizontal_spread = ui_width * 0.15;
 
+
 // Draw each card using ORIGINAL positioning logic
+if (current_tab == 0) {
 for (var i = 0; i < cards_per_page_grid; i++) {
     var bug_index = start_bug + i;
     if (bug_index >= total_bugs) break;
@@ -254,8 +279,149 @@ for (var i = 0; i < cards_per_page_grid; i++) {
         draw_sprite_ext(bug_sprite, 0, card_x, card_y_pos - (15 * gui_scale), 
                        0.3 * gui_scale, 0.3 * gui_scale, 0, c_black, 0.75);
     }
+	}
 }
-
+else if (current_tab == 1) {
+    // ========== ITEMS TAB: DRAW ITEM CARDS ==========
+    
+    // Check if items exist
+    if (!variable_global_exists("items")) {
+        draw_set_halign(fa_center);
+        draw_set_color(c_red);
+        draw_text((ui_x + ui_width/2) * gui_scale, (ui_y + 100) * gui_scale, "Items not initialized!");
+        draw_set_halign(fa_left);
+    } else {
+        var total_items = array_length(global.items);
+        
+        // Only show discovered items
+        var discovered_item_list = [];
+        for (var i = 0; i < total_items; i++) {
+            if (global.items[i].discovered) {
+                array_push(discovered_item_list, global.items[i]);
+            }
+        }
+        
+        var total_discovered = array_length(discovered_item_list);
+        var start_item = page * cards_per_page_grid;
+        
+        // Draw item cards using same grid layout
+        for (var i = 0; i < cards_per_page_grid; i++) {
+            var item_index = start_item + i;
+            if (item_index >= total_discovered) break;
+            
+            var item_data = discovered_item_list[item_index];
+            
+            // Calculate row and column (same as bugs)
+            var row = floor(i / cards_per_row);
+            var col = i % cards_per_row;
+            
+            // Calculate card position (same as bugs)
+            var card_x, card_y_pos;
+            
+            if (col < 2) {
+                var local_col = col;
+                card_x = (left_page_center + ((local_col - 0.5) * horizontal_spread)) * gui_scale;
+            } else {
+                var local_col = col - 2;
+                card_x = (right_page_center + ((local_col - 0.5) * horizontal_spread)) * gui_scale;
+            }
+            
+            card_y_pos = (grid_start_y + (row * card_spacing_y)) * gui_scale;
+            
+            // Hover effects (same as bugs)
+            var hover_scale = 1.0;
+            var hover_offset_y = 0;
+            if (hovered_card == i && hover_timer > 0) {
+                var hover_progress = hover_timer / 20.0;
+                hover_scale = lerp(1.0, 1.1, hover_progress);
+                hover_offset_y = lerp(0, -3, hover_progress);
+            }
+            var final_collection_scale = 0.4 * hover_scale;
+            card_y_pos += hover_offset_y;
+            
+            // Draw shadow (same as bugs)
+            var shadow_alpha = 0.3;
+            var shadow_offset = 2;
+            if (hovered_card == i) {
+                shadow_alpha = 0.5;
+                shadow_offset = 3;
+            }
+            
+            draw_set_alpha(shadow_alpha);
+            draw_sprite_ext(s_card_template, 1, 
+                           card_x + shadow_offset, card_y_pos + shadow_offset, 
+                           final_collection_scale * gui_scale, final_collection_scale * gui_scale, 
+                           0, c_black, 1);
+            draw_set_alpha(1);
+            
+            // Draw card front
+            draw_sprite_ext(s_card_template, 1, card_x, card_y_pos,
+                           final_collection_scale * gui_scale, final_collection_scale * gui_scale, 
+                           0, c_white, 1);
+            
+            // Calculate card dimensions
+            var card_w_scaled = sprite_get_width(s_card_template) * final_collection_scale * gui_scale;
+            var card_h_scaled = sprite_get_height(s_card_template) * final_collection_scale * gui_scale;
+            
+            // Draw item icon (centered, similar to bug)
+            var target_item_size = card_h_scaled * 0.35;
+            var item_w = sprite_get_width(item_data.sprite);
+            var item_h = sprite_get_height(item_data.sprite);
+            var item_scale = min(target_item_size / item_w, target_item_size / item_h);
+            var item_y_offset = card_h_scaled * -0.20;
+            
+            draw_sprite_ext(item_data.sprite, 0, card_x, card_y_pos + item_y_offset,
+                           item_scale, item_scale, 0, c_white, 1);
+            
+            // NO GEMS OR COINS FOR ITEMS
+            
+            // Draw item name (same styling as bug names)
+            draw_set_font(fnt_card_title);
+            var cream = make_color_rgb(245,235,215);
+            var dark_purple = make_color_rgb(45, 25, 60);
+            var name_y_offset = card_h_scaled * 0.08;
+            var name_width = card_w_scaled * 0.8;
+            var name_line_sep = 7 * final_collection_scale * gui_scale;
+            
+            // Shadow
+            draw_set_alpha(0.5);
+            draw_set_color(c_black);
+            draw_text_ext(card_x + 2, card_y_pos + name_y_offset + 2, item_data.name, name_line_sep, name_width);
+            draw_set_alpha(1);
+            
+            // Outline
+            draw_set_color(dark_purple);
+            draw_text_ext(card_x + 1, card_y_pos + name_y_offset + 1, item_data.name, name_line_sep, name_width);
+            draw_text_ext(card_x - 1, card_y_pos + name_y_offset - 1, item_data.name, name_line_sep, name_width);
+            draw_text_ext(card_x + 1, card_y_pos + name_y_offset - 1, item_data.name, name_line_sep, name_width);
+            draw_text_ext(card_x - 1, card_y_pos + name_y_offset + 1, item_data.name, name_line_sep, name_width);
+            
+            // Main text
+            draw_set_color(cream);
+            draw_text_ext(card_x, card_y_pos + name_y_offset, item_data.name, name_line_sep, name_width);
+            
+            // Draw item description (replaces flavor text)
+            draw_set_font(fnt_flavor_text);
+            var light_gold = make_color_rgb(255,223,128);
+            var desc_y_offset = card_h_scaled * 0.28;
+            var desc_width = card_w_scaled * 0.65;
+            var desc_line_sep = 10 * final_collection_scale * gui_scale;
+            
+            // Outline
+            draw_set_color(c_black);
+            draw_text_ext(card_x + 1, card_y_pos + desc_y_offset + 1, item_data.description, desc_line_sep, desc_width);
+            draw_text_ext(card_x - 1, card_y_pos + desc_y_offset - 1, item_data.description, desc_line_sep, desc_width);
+            draw_text_ext(card_x + 1, card_y_pos + desc_y_offset - 1, item_data.description, desc_line_sep, desc_width);
+            draw_text_ext(card_x - 1, card_y_pos + desc_y_offset + 1, item_data.description, desc_line_sep, desc_width);
+            
+            // Main text
+            draw_set_color(light_gold);
+            draw_text_ext(card_x, card_y_pos + desc_y_offset, item_data.description, desc_line_sep, desc_width);
+            
+            // NO ESSENCE VALUE FOR ITEMS
+        }
+    }
+}
 // Page navigation text - FIXED VERSION
 if (total_pages > 1) {
     // SAFETY: Explicitly reset ALL draw states before drawing page text
