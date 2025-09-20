@@ -31,10 +31,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"s_bug_frame",
-    "path":"sprites/s_bug_frame/s_bug_frame.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }
