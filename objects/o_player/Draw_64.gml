@@ -1,5 +1,6 @@
 
 // Check if input manager exists
+/*
 if (variable_global_exists("input_manager")) {
     var inp = global.input_manager;
     
@@ -29,4 +30,4 @@ if (variable_global_exists("input_manager")) {
     draw_text(10, 250, "INPUT MANAGER NOT FOUND!");
     draw_text(10, 265, "Did you set up o_game_manager?");
     draw_set_color(c_white);
-}
+}*/

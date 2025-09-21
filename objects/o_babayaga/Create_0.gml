@@ -1,6 +1,6 @@
 // === ENHANCED o_babayaga Create Event ===
 event_inherited();
-
+shadow_enabled=false;
 // SET SPRITE for Baba Yaga
 sprite_index = s_bugayuga; // Set the Baba Yaga sprite
 image_speed = 0.1; // Animate if sprite has multiple frames
