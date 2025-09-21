@@ -43,3 +43,10 @@ base_y = y;
 // ENABLE SIMPLE PLAYER FACING SYSTEM
 can_face_player = true;
 facing_range = 100;     // A bit closer range for shy ghost
+
+// Configure shadows for trees
+shadow_offset_x = 6;      // Slight offset to the right
+shadow_offset_y = 12;      // Below the tree base
+shadow_scale_x = 0.8;     // Narrower than tree
+shadow_scale_y = 0.5;     // Very flat
+shadow_alpha = 0.3;       // More transparent for natural look

@@ -61,7 +61,7 @@ else if (variable_global_exists("door_entrance_x") && global.door_entrance_x != 
 }
 // PRIORITY 3: Default return position for any forest room
 else if (variable_global_exists("return_x") && 
-         (room == rm_spooky_forest || room == rm_deep_woods || 
+         (room == rm_spooky_forest || room == rm_graveyard || 
           room == rm_forest_clearing || room == rm_shadow_grove)) {
     o_player.x = global.return_x;
     o_player.y = global.return_y;

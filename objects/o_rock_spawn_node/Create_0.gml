@@ -8,7 +8,7 @@ switch(room) {
         chance_cracked = 5;
         break;
         
-    case rm_deep_woods:
+    case rm_graveyard_old:
         // More mossy rocks (nature theme)
         chance_nothing = 40;
         chance_normal = 20;
