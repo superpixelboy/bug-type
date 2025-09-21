@@ -1,16 +1,16 @@
-// o_player - Other 4 Event (Room Start) - Updated for jump intro
+// o_player - Room Start Event - FIXED
+
+show_debug_message("=== PLAYER ROOM START ===");
+show_debug_message("Room: " + room_get_name(room));
+show_debug_message("Player x before: " + string(x));
+show_debug_message("Player y before: " + string(y));
 
 // Check if this is the main spooky forest room and if we should do intro
 var should_do_jump_intro = false;
 
-// Do jump intro if:
-// 1. We're in the main spooky forest room
-// 2. We're NOT coming from a door (no door entrance position set)
-// 3. We're NOT returning from sleep
 if (room == rm_spooky_forest) {
     if (!variable_global_exists("door_entrance_x") || global.door_entrance_x == undefined) {
         if (!variable_global_exists("is_sleeping") || !global.is_sleeping) {
-            // Check if this is a "fresh start" (not returning from bug catching)
             if (!variable_global_exists("return_x") || 
                 (global.return_x == 626 && global.return_y == 525)) {
                 should_do_jump_intro = true;
@@ -20,29 +20,26 @@ if (room == rm_spooky_forest) {
 }
 
 if (should_do_jump_intro) {
-    // Find the hole object to get exact position
     var hole_obj = instance_find(o_hole, 0);
-    var hole_x = 626;  // Fallback position
-    var hole_y = 525;  // Fallback position
+    var hole_x = 626;
+    var hole_y = 525;
     
     if (instance_exists(hole_obj)) {
         hole_x = hole_obj.x;
         hole_y = hole_obj.y;
     }
     
-    // Create the wake-up prompt object
     var prompt_obj = instance_create_layer(hole_x, hole_y, "Instances", o_wake_up_prompt);
     
-    // Hide and disable this player until wake-up sequence is complete
     x = hole_x;
     y = hole_y;
     visible = false;
     movement_mode = "disabled";
     
-    exit;  // Skip normal positioning logic
+    exit;
 }
 
-// Normal room start logic (existing code)
+// Normal room start logic
 // PRIORITY 1: Handle sleep position restoration
 if (variable_global_exists("is_sleeping") && global.is_sleeping) {
     if (instance_exists(o_player)) {
@@ -52,17 +49,27 @@ if (variable_global_exists("is_sleeping") && global.is_sleeping) {
     global.is_sleeping = false;
 }
 // PRIORITY 2: Position player at door entrance when coming FROM a door
-else if (variable_global_exists("door_entrance_x") && global.door_entrance_x != undefined) {
+// FIXED: Check for undefined directly, not just existence
+else if (variable_global_exists("door_entrance_x") && 
+         global.door_entrance_x != undefined && 
+         is_real(global.door_entrance_x)) {
+    show_debug_message("EXECUTING PRIORITY 2 - Door entrance");
     o_player.x = global.door_entrance_x;
     o_player.y = global.door_entrance_y;
-    // Clear the door entrance globals so they don't interfere next time
-    global.door_entrance_x = undefined;
-    global.door_entrance_y = undefined;
+    
+    // Clear by deleting, not setting to undefined
+    variable_global_set("door_entrance_x", undefined);
+    variable_global_set("door_entrance_y", undefined);
 }
-// PRIORITY 3: Default return position for any forest room
+// PRIORITY 3: Default return position
 else if (variable_global_exists("return_x") && 
          (room == rm_spooky_forest || room == rm_graveyard || 
           room == rm_forest_clearing || room == rm_shadow_grove)) {
+    show_debug_message("EXECUTING PRIORITY 3 - Return position");
     o_player.x = global.return_x;
     o_player.y = global.return_y;
 }
+
+show_debug_message("Player x after: " + string(x));
+show_debug_message("Player y after: " + string(y));
+show_debug_message("=== END PLAYER ROOM START ===");
