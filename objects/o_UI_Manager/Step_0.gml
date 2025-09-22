@@ -61,7 +61,7 @@ if (keyboard_check_pressed(vk_tab)) {
     }
 }*/
 
-
+/*
 // COLLECTION TOGGLE - Tab, C, and Controller X
 var collection_input = keyboard_check_pressed(vk_tab) || 
                       keyboard_check_pressed(ord("C"));
@@ -95,7 +95,7 @@ if (collection_input) {
         audio_play_sound(sn_bugtap1, 1, false);
     }
 }
-
+*/
 // ===== STEP 2: REMOVE COLLECTION LOGIC FROM o_player Step Event =====
 // Delete/comment out the ENTIRE "COLLECTION UI TOGGLE" section in o_player
 
