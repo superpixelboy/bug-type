@@ -13,6 +13,9 @@ if (distance_to_object(o_player) < 16) {
         global.sleep_x = o_player.x;
         global.sleep_y = o_player.y;
         
+		global.return_x = o_player.x;
+		global.return_y = o_player.y;
+		
         // Create fade controller
         if (!instance_exists(o_fade_controller)) {
             var fade = instance_create_layer(0, 0, "Instances", o_fade_controller);

@@ -42,9 +42,15 @@ if (!variable_global_exists("discovered_bugs")) {
     global.discovered_bugs = ds_map_create();
 }
 
-// Position memory
-global.return_x = 626;
-global.return_y = 525;
+
+// Position memory - FIXED: Only initialize if doesn't exist!
+if (!variable_global_exists("return_x")) {
+    global.return_x = 626;
+    global.return_y = 525;
+    show_debug_message("Initialized return_x/y to default spawn");
+} else {
+    show_debug_message("return_x/y already exists: " + string(global.return_x) + ", " + string(global.return_y));
+}
 
 //Door Stuff
 global.door_cooldown = 0;

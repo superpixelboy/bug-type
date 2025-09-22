@@ -12,8 +12,8 @@
     "path":"folders/Objects.yy",
   },
   "parentObjectId":{
-    "name":"o_doorB_parent",
-    "path":"objects/o_doorB_parent/o_doorB_parent.yy",
+    "name":"o_world_door_parent",
+    "path":"objects/o_world_door_parent/o_world_door_parent.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,

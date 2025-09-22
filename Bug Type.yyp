@@ -185,6 +185,7 @@
     {"id":{"name":"o_UI_Manager","path":"objects/o_UI_Manager/o_UI_Manager.yy",},},
     {"id":{"name":"o_wake_up_prompt","path":"objects/o_wake_up_prompt/o_wake_up_prompt.yy",},},
     {"id":{"name":"o_whisper_weevil","path":"objects/o_whisper_weevil/o_whisper_weevil.yy",},},
+    {"id":{"name":"o_world_door_parent","path":"objects/o_world_door_parent/o_world_door_parent.yy",},},
     {"id":{"name":"rm_backstory_hole","path":"rooms/rm_backstory_hole/rm_backstory_hole.yy",},},
     {"id":{"name":"rm_backstory","path":"rooms/rm_backstory/rm_backstory.yy",},},
     {"id":{"name":"rm_forest_clearing","path":"rooms/rm_forest_clearing/rm_forest_clearing.yy",},},
