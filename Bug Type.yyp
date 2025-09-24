@@ -444,6 +444,8 @@
     {"id":{"name":"s_title_black","path":"sprites/s_title_black/s_title_black.yy",},},
     {"id":{"name":"s_title_clouds","path":"sprites/s_title_clouds/s_title_clouds.yy",},},
     {"id":{"name":"s_title_title","path":"sprites/s_title_title/s_title_title.yy",},},
+    {"id":{"name":"s_todo_card","path":"sprites/s_todo_card/s_todo_card.yy",},},
+    {"id":{"name":"s_todo_tab","path":"sprites/s_todo_tab/s_todo_tab.yy",},},
     {"id":{"name":"s_tomb_1","path":"sprites/s_tomb_1/s_tomb_1.yy",},},
     {"id":{"name":"s_tree_birch","path":"sprites/s_tree_birch/s_tree_birch.yy",},},
     {"id":{"name":"s_tree_collision_mask","path":"sprites/s_tree_collision_mask/s_tree_collision_mask.yy",},},
