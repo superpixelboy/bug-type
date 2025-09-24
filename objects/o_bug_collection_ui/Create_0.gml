@@ -71,7 +71,7 @@ keyboard_navigation_active = false; // Is keyboard navigation currently active?
 // === TAB SYSTEM ===
 // SAFETY: These variables control tab switching - don't change names as they'll be referenced in Step/Draw
 current_tab = 0; // 0 = collection, 1 = items
-total_tabs = 2;
+total_tabs = 3;
 
 // Tab hover/click detection
 tab_hover_index = -1; // Which tab is being hovered (-1 = none)

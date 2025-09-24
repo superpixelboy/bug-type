@@ -46,6 +46,17 @@ if (current_tab == 0) {
     var discovered_count = array_length(discovered_items);
     total_pages = max(1, ceil(discovered_count / cards_per_page_grid));
 }
+// === 2. ADD TO DO TAB AFTER ITEMS TAB ===
+// After your Items tab section ends, add:
+ else if (current_tab == 2) {
+    // ========== TO DO TAB: PLACEHOLDER ==========
+    
+    // Simple placeholder text for now
+    draw_set_halign(fa_center);
+    draw_set_color(make_color_rgb(101, 67, 33));
+    draw_text((ui_width/2) * gui_scale, (ui_height/2) * gui_scale, "To Do List coming soon!");
+    draw_set_halign(fa_left);
+}
 
 // Draw cards in 2 rows of 4 (8 cards per page)
 var start_bug = page * cards_per_page_grid;
@@ -518,17 +529,20 @@ if (instance_exists(o_bug_card_collection)) {
     draw_set_color(c_white);
 }
 
+
 // === DRAW TABS ===
 // SAFETY: Drawing tabs - they're part of the book design
 
 // Position tabs on the left edge of the book
 // IMPORTANT: These positions must match Step event exactly!
 var _collection_x = 90; // Moved left and up
-var _collection_y = 150; // Moved up
+var _collection_y = 130; // Moved up
 
 var _items_x = 90; // Moved left and up
-var _items_y = 385; // Moved up
+var _items_y = 260; // Moved up
 
+var _todo_x = 90;   // New third tab
+var _todo_y = 390;  // Below items
 // Determine which sprite frame to use for each tab
 // Frame 0 = Active (this page is open)
 // Frame 1 = Inactive (other page is open)
@@ -551,3 +565,12 @@ if (current_tab == 1) {
     _items_frame = 2; // Hover
 }
 draw_sprite(s_items_tab, _items_frame, _items_x, _items_y);
+
+// Draw To Do Tab (NEW - ADD THIS)
+var _todo_frame = 1;
+if (current_tab == 2) {
+    _todo_frame = 0;
+} else if (tab_hover_index == 2) {
+    _todo_frame = 2;
+}
+draw_sprite(s_todo_tab, _todo_frame, _todo_x, _todo_y);

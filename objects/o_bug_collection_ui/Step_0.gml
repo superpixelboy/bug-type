@@ -91,6 +91,96 @@ if (detail_view_open) {
     exit;
 }
 
+// === TAB SWITCHING INPUT (EARLY - BEFORE CARD NAVIGATION) ===
+if (tab_click_cooldown > 0) {
+    tab_click_cooldown--;
+}
+
+var _old_tab = current_tab;
+
+// Gamepad ONLY: L/R triggers to switch tabs (removed keyboard arrow keys)
+if (gamepad_is_connected(0)) {
+    if (gamepad_button_check_pressed(0, gp_shoulderlb) && tab_click_cooldown == 0) {
+        current_tab--;
+        if (current_tab < 0) current_tab = total_tabs - 1;
+        tab_click_cooldown = 10;
+    }
+    if (gamepad_button_check_pressed(0, gp_shoulderrb) && tab_click_cooldown == 0) {
+        current_tab++;
+        if (current_tab >= total_tabs) current_tab = 0;
+        tab_click_cooldown = 10;
+    }
+}
+
+// Mouse: Click detection on tabs
+var _gui_mouse_x = device_mouse_x_to_gui(0);
+var _gui_mouse_y = device_mouse_y_to_gui(0);
+
+// Tab positions (must match Draw GUI positions exactly!)
+var _collection_x = 50; // Moved left and up
+var _collection_y = 70; // Moved up
+
+var _items_x = 50; // Moved left and up
+var _items_y = 200; // Moved up
+
+var _todo_x = 50;   // New third tab
+var _todo_y = 330;  // Below items
+
+// Get sprite dimensions for click detection
+var _tab_width = sprite_get_width(s_collection_tab);
+var _tab_height = sprite_get_height(s_collection_tab);
+
+tab_hover_index = -1;
+
+// Check Collection tab (tab 0)
+if (point_in_rectangle(_gui_mouse_x, _gui_mouse_y,
+    _collection_x, _collection_y,
+    _collection_x + _tab_width, _collection_y + _tab_height)) {
+    tab_hover_index = 0;
+    
+    if (mouse_check_button_pressed(mb_left) && tab_click_cooldown == 0) {
+        current_tab = 0;
+        tab_click_cooldown = 10;
+    }
+}
+
+// Check Items tab (tab 1)
+if (point_in_rectangle(_gui_mouse_x, _gui_mouse_y,
+    _items_x, _items_y,
+    _items_x + _tab_width, _items_y + _tab_height)) {
+    tab_hover_index = 1;
+    
+    if (mouse_check_button_pressed(mb_left) && tab_click_cooldown == 0) {
+        current_tab = 1;
+        tab_click_cooldown = 10;
+    }
+}
+
+// Check To Do tab (tab 2) - NEW
+if (point_in_rectangle(_gui_mouse_x, _gui_mouse_y,
+    _todo_x, _todo_y,
+    _todo_x + _tab_width, _todo_y + _tab_height)) {
+    tab_hover_index = 2;
+    
+    if (mouse_check_button_pressed(mb_left) && tab_click_cooldown == 0) {
+        current_tab = 2;
+        tab_click_cooldown = 10;
+    }
+}
+
+// If tab changed, play sound and reset to page 0
+if (_old_tab != current_tab) {
+    audio_play_sound(sn_rock_click, 1, false);
+    
+    // SAFETY: Reset to first page when switching tabs
+    page = 0;
+    selected_card_index = 0;
+    hovered_card = -1;
+    hover_timer = 0;
+    keyboard_selected_card = -1;
+}
+
+
 // ===== KEYBOARD/GAMEPAD CARD NAVIGATION =====
 // Detect input method for seamless switching
 if (!variable_instance_exists(id, "prev_mouse_gui_x")) {
@@ -375,111 +465,3 @@ if (keyboard_navigation_active) {
                       " | Method: " + last_input_method);
 }
 
-// === TAB SWITCHING INPUT ===
-// SAFETY: This runs BEFORE existing card scrolling/selection to handle tab changes first
-
-if (tab_click_cooldown > 0) {
-    tab_click_cooldown--;
-}
-
-var _old_tab = current_tab;
-
-// Keyboard: Up/Down arrows to switch tabs
-if (keyboard_check_pressed(vk_up)) {
-    current_tab--;
-    if (current_tab < 0) current_tab = total_tabs - 1;
-    tab_click_cooldown = 10;
-}
-if (keyboard_check_pressed(vk_down)) {
-    current_tab++;
-    if (current_tab >= total_tabs) current_tab = 0;
-    tab_click_cooldown = 10;
-}
-
-// Gamepad: L/R triggers to switch tabs
-if (gamepad_is_connected(0)) {
-    if (gamepad_button_check_pressed(0, gp_shoulderlb)) {
-        current_tab--;
-        if (current_tab < 0) current_tab = total_tabs - 1;
-        tab_click_cooldown = 10;
-    }
-    if (gamepad_button_check_pressed(0, gp_shoulderrb)) {
-        current_tab++;
-        if (current_tab >= total_tabs) current_tab = 0;
-        tab_click_cooldown = 10;
-    }
-}
-
-
-// === TAB SWITCHING INPUT (EARLY - BEFORE CARD NAVIGATION) ===
-if (tab_click_cooldown > 0) {
-    tab_click_cooldown--;
-}
-
-var _old_tab = current_tab;
-
-// Gamepad ONLY: L/R triggers to switch tabs (removed keyboard arrow keys)
-if (gamepad_is_connected(0)) {
-    if (gamepad_button_check_pressed(0, gp_shoulderlb) && tab_click_cooldown == 0) {
-        current_tab--;
-        if (current_tab < 0) current_tab = total_tabs - 1;
-        tab_click_cooldown = 10;
-    }
-    if (gamepad_button_check_pressed(0, gp_shoulderrb) && tab_click_cooldown == 0) {
-        current_tab++;
-        if (current_tab >= total_tabs) current_tab = 0;
-        tab_click_cooldown = 10;
-    }
-}
-
-// Mouse: Click detection on tabs
-var _gui_mouse_x = device_mouse_x_to_gui(0);
-var _gui_mouse_y = device_mouse_y_to_gui(0);
-
-// Tab positions (must match Draw GUI positions exactly!)
-var _collection_x = 50;
-var _collection_y = 90;
-var _items_x = 50;
-var _items_y = 325;
-
-// Get sprite dimensions for click detection
-var _tab_width = sprite_get_width(s_collection_tab);
-var _tab_height = sprite_get_height(s_collection_tab);
-
-tab_hover_index = -1;
-
-// Check Collection tab (tab 0)
-if (point_in_rectangle(_gui_mouse_x, _gui_mouse_y,
-    _collection_x, _collection_y,
-    _collection_x + _tab_width, _collection_y + _tab_height)) {
-    tab_hover_index = 0;
-    
-    if (mouse_check_button_pressed(mb_left) && tab_click_cooldown == 0) {
-        current_tab = 0;
-        tab_click_cooldown = 10;
-    }
-}
-
-// Check Items tab (tab 1)
-if (point_in_rectangle(_gui_mouse_x, _gui_mouse_y,
-    _items_x, _items_y,
-    _items_x + _tab_width, _items_y + _tab_height)) {
-    tab_hover_index = 1;
-    
-    if (mouse_check_button_pressed(mb_left) && tab_click_cooldown == 0) {
-        current_tab = 1;
-        tab_click_cooldown = 10;
-    }
-}
-
-// If tab changed, play sound and reset to page 0
-if (_old_tab != current_tab) {
-    audio_play_sound(sn_rock_click, 1, false);
-    
-    // SAFETY: Reset to first page when switching tabs
-    page = 0;
-    selected_card_index = 0;
-    hovered_card = -1;
-    hover_timer = 0;
-    keyboard_selected_card = -1;
-}
