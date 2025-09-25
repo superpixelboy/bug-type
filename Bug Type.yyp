@@ -67,6 +67,8 @@
     {"id":{"name":"fnt_flavor_text","path":"fonts/fnt_flavor_text/fnt_flavor_text.yy",},},
     {"id":{"name":"fnt_intro_text","path":"fonts/fnt_intro_text/fnt_intro_text.yy",},},
     {"id":{"name":"fnt_silkscreen","path":"fonts/fnt_silkscreen/fnt_silkscreen.yy",},},
+    {"id":{"name":"fnt_todo_text","path":"fonts/fnt_todo_text/fnt_todo_text.yy",},},
+    {"id":{"name":"fnt_todo_title","path":"fonts/fnt_todo_title/fnt_todo_title.yy",},},
     {"id":{"name":"o_ancient_shell_back","path":"objects/o_ancient_shell_back/o_ancient_shell_back.yy",},},
     {"id":{"name":"o_babayaga_hut","path":"objects/o_babayaga_hut/o_babayaga_hut.yy",},},
     {"id":{"name":"o_babayaga_old","path":"objects/o_babayaga_old/o_babayaga_old.yy",},},

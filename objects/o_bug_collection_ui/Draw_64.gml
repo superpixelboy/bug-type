@@ -492,6 +492,7 @@ else if (current_tab == 1) {
                            0, c_black, 1);
             draw_set_alpha(1);
             
+			
             // Draw main quest card
             draw_sprite_ext(s_todo_card, 0, card_x, card_y_pos,
                            final_collection_scale * gui_scale, final_collection_scale * gui_scale, 
@@ -502,54 +503,54 @@ else if (current_tab == 1) {
             var card_h_scaled = sprite_get_height(s_todo_card) * final_collection_scale * gui_scale;
             
             // Draw quest name - CENTERED
-            draw_set_font(fnt_card_title);
+            draw_set_font(fnt_todo_title);
             draw_set_halign(fa_center);
             draw_set_valign(fa_middle);
             
             var cream = make_color_rgb(245,235,215);
             var dark_purple = make_color_rgb(45, 25, 60);
-            var name_y_offset = card_h_scaled * -0.30; // Near the top
+            var name_y_offset = card_h_scaled * -0.17; // Near the top
             var name_width = card_w_scaled * 0.85;
-            var name_line_sep = 7 * final_collection_scale * gui_scale;
+            var name_line_sep = (7 * final_collection_scale * gui_scale)+10;
             
             // Shadow
             draw_set_alpha(0.5);
             draw_set_color(c_black);
-            draw_text_ext(card_x + 2, card_y_pos + name_y_offset + 2, quest_data.name, name_line_sep, name_width);
+            draw_text_ext(card_x + 1, card_y_pos + name_y_offset + 1, quest_data.name, name_line_sep, name_width);
             draw_set_alpha(1);
             
             // Outline
             draw_set_color(dark_purple);
-            draw_text_ext(card_x + 1, card_y_pos + name_y_offset + 1, quest_data.name, name_line_sep, name_width);
-            draw_text_ext(card_x - 1, card_y_pos + name_y_offset - 1, quest_data.name, name_line_sep, name_width);
-            draw_text_ext(card_x + 1, card_y_pos + name_y_offset - 1, quest_data.name, name_line_sep, name_width);
-            draw_text_ext(card_x - 1, card_y_pos + name_y_offset + 1, quest_data.name, name_line_sep, name_width);
+        //    draw_text_ext(card_x + 1, card_y_pos + name_y_offset + 1, quest_data.name, name_line_sep, name_width);
+         //   draw_text_ext(card_x - 1, card_y_pos + name_y_offset - 1, quest_data.name, name_line_sep, name_width);
+          //  draw_text_ext(card_x + 1, card_y_pos + name_y_offset - 1, quest_data.name, name_line_sep, name_width);
+          //  draw_text_ext(card_x - 1, card_y_pos + name_y_offset + 1, quest_data.name, name_line_sep, name_width);
             
             // Main name text
-            draw_set_color(cream);
+            draw_set_color(dark_purple);
             draw_text_ext(card_x, card_y_pos + name_y_offset, quest_data.name, name_line_sep, name_width);
             
             // Draw quest description - CENTERED
-            draw_set_font(fnt_flavor_text);
+            draw_set_font(fnt_todo_text);
             var light_gold = make_color_rgb(255,223,128);
-            var desc_y_offset = card_h_scaled * -0.10; // Below name
+            var desc_y_offset = (card_h_scaled *-0.1)+25; // Below name
             var desc_width = card_w_scaled * 0.75;
             var desc_line_sep = 10 * final_collection_scale * gui_scale;
             
             // Outline
             draw_set_color(c_black);
-            draw_text_ext(card_x + 1, card_y_pos + desc_y_offset + 1, quest_data.description, desc_line_sep, desc_width);
-            draw_text_ext(card_x - 1, card_y_pos + desc_y_offset - 1, quest_data.description, desc_line_sep, desc_width);
-            draw_text_ext(card_x + 1, card_y_pos + desc_y_offset - 1, quest_data.description, desc_line_sep, desc_width);
-            draw_text_ext(card_x - 1, card_y_pos + desc_y_offset + 1, quest_data.description, desc_line_sep, desc_width);
+           // draw_text_ext(card_x + 1, card_y_pos + desc_y_offset + 1, quest_data.description, desc_line_sep, desc_width);
+           // draw_text_ext(card_x - 1, card_y_pos + desc_y_offset - 1, quest_data.description, desc_line_sep, desc_width);
+           // draw_text_ext(card_x + 1, card_y_pos + desc_y_offset - 1, quest_data.description, desc_line_sep, desc_width);
+           // draw_text_ext(card_x - 1, card_y_pos + desc_y_offset + 1, quest_data.description, desc_line_sep, desc_width);
             
             // Main description text
-            draw_set_color(light_gold);
+            draw_set_color(c_black);
             draw_text_ext(card_x, card_y_pos + desc_y_offset, quest_data.description, desc_line_sep, desc_width);
             
             // Draw objectives - SMALLER FONT
             draw_set_font(fnt_flavor_text); // Even smaller font for objectives
-            var obj_y_offset = card_h_scaled * 0.15; // Below description
+            var obj_y_offset = (card_h_scaled * 0.1)+25; // Below description
             var obj_width = card_w_scaled * 0.70;
             var obj_line_sep = 8 * final_collection_scale * gui_scale;
             
@@ -570,6 +571,7 @@ else if (current_tab == 1) {
                 }
             }
             
+			/*
             // Draw objectives with outline
             var obj_color = make_color_rgb(200, 200, 255); // Light blue for objectives
             
@@ -586,7 +588,7 @@ else if (current_tab == 1) {
             
             // Reset alignment after each card
             draw_set_halign(fa_left);
-            draw_set_valign(fa_top);
+            draw_set_valign(fa_top);*/
         }
     }
 }
