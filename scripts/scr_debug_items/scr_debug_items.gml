@@ -26,6 +26,30 @@ function scr_debug_items() {
         audio_play_sound(sn_bug_catch1, 1, false);
     }
     
+    // Press SHIFT + 3 to complete Find Baba Yaga quest
+    if (keyboard_check(vk_shift) && keyboard_check_pressed(ord("3"))) {
+        var quest = scr_get_quest("find_baba_yaga");
+        if (quest != undefined && quest.status == "active") {
+            if (quest.on_complete != undefined) {
+                quest.on_complete();
+            }
+            show_debug_message("DEBUG: Completed Find Baba Yaga quest");
+            audio_play_sound(sn_bug_catch1, 1, false);
+        }
+    }
+    
+    // Press SHIFT + 4 to complete Summoning Spell quest (if active)
+    if (keyboard_check(vk_shift) && keyboard_check_pressed(ord("4"))) {
+        var quest = scr_get_quest("summoning_spell");
+        if (quest != undefined && quest.status == "active") {
+            if (quest.on_complete != undefined) {
+                quest.on_complete();
+            }
+            show_debug_message("DEBUG: Completed Summoning Spell quest");
+            audio_play_sound(sn_bug_catch1, 1, false);
+        }
+    }
+    
     // Press SHIFT + 0 to give ALL items
     if (keyboard_check(vk_shift) && keyboard_check_pressed(ord("0"))) {
         global.has_lucky_clover = true;

@@ -52,10 +52,9 @@ if (current_tab == 0) {
     // ========== TO DO TAB: PLACEHOLDER ==========
     
     // Simple placeholder text for now
-    draw_set_halign(fa_center);
-    draw_set_color(make_color_rgb(101, 67, 33));
-    draw_text((ui_width/2) * gui_scale, (ui_height/2) * gui_scale, "To Do List coming soon!");
-    draw_set_halign(fa_left);
+    var active_quests = scr_get_active_quests();
+    var active_count = array_length(active_quests);
+    total_pages = max(1, ceil(active_count / cards_per_page_grid));
 }
 
 // Draw cards in 2 rows of 4 (8 cards per page)
@@ -421,6 +420,169 @@ else if (current_tab == 1) {
             // Main text
             draw_set_color(light_gold);
             draw_text_ext(card_x, card_y_pos + desc_y_offset, item_data.description, desc_line_sep, desc_width);
+            
+            // Reset alignment after each card
+            draw_set_halign(fa_left);
+            draw_set_valign(fa_top);
+        }
+    }
+}else if (current_tab == 2) {
+    // ========== TO DO TAB: DRAW QUEST CARDS ==========
+    
+    // Get active quests
+    var active_quest_list = scr_get_active_quests();
+    var total_active_quests = array_length(active_quest_list);
+    var start_quest = page * cards_per_page_grid;
+    
+    if (total_active_quests == 0) {
+        // No active quests
+        draw_set_halign(fa_center);
+        draw_set_color(make_color_rgb(101, 67, 33));
+        draw_text((ui_width/2) * gui_scale, (ui_height/2) * gui_scale, "No active quests!");
+        draw_set_halign(fa_left);
+    } else {
+        // Draw quest cards using same grid layout as items/bugs
+        for (var i = 0; i < cards_per_page_grid; i++) {
+            var quest_index = start_quest + i;
+            if (quest_index >= total_active_quests) break;
+            
+            var quest_data = active_quest_list[quest_index];
+            
+            // Calculate row and column (same as other tabs)
+            var row = floor(i / cards_per_row);
+            var col = i % cards_per_row;
+            
+            // Calculate card position (same as other tabs)
+            var card_x, card_y_pos;
+            
+            if (col < 2) {
+                var local_col = col;
+                card_x = (left_page_center + ((local_col - 0.5) * horizontal_spread)) * gui_scale;
+            } else {
+                var local_col = col - 2;
+                card_x = (right_page_center + ((local_col - 0.5) * horizontal_spread)) * gui_scale;
+            }
+            
+            card_y_pos = (grid_start_y + (row * card_spacing_y)) * gui_scale;
+            
+            // Hover effects (same as other tabs)
+            var hover_scale = 1.0;
+            var hover_offset_y = 0;
+            if (hovered_card == i && hover_timer > 0) {
+                var hover_progress = hover_timer / 20.0;
+                hover_scale = lerp(1.0, 1.1, hover_progress);
+                hover_offset_y = lerp(0, -3, hover_progress);
+            }
+            var final_collection_scale = 0.4 * hover_scale;
+            card_y_pos += hover_offset_y;
+            
+            // Draw shadow
+            var shadow_alpha = 0.3;
+            var shadow_offset = 2;
+            if (hovered_card == i) {
+                shadow_alpha = 0.5;
+                shadow_offset = 3;
+            }
+            
+            draw_set_alpha(shadow_alpha);
+            // Use s_todo_card for quest cards
+            draw_sprite_ext(s_todo_card, 0, 
+                           card_x + shadow_offset, card_y_pos + shadow_offset, 
+                           final_collection_scale * gui_scale, final_collection_scale * gui_scale, 
+                           0, c_black, 1);
+            draw_set_alpha(1);
+            
+            // Draw main quest card
+            draw_sprite_ext(s_todo_card, 0, card_x, card_y_pos,
+                           final_collection_scale * gui_scale, final_collection_scale * gui_scale, 
+                           0, c_white, 1);
+            
+            // Calculate card dimensions based on s_todo_card
+            var card_w_scaled = sprite_get_width(s_todo_card) * final_collection_scale * gui_scale;
+            var card_h_scaled = sprite_get_height(s_todo_card) * final_collection_scale * gui_scale;
+            
+            // Draw quest name - CENTERED
+            draw_set_font(fnt_card_title);
+            draw_set_halign(fa_center);
+            draw_set_valign(fa_middle);
+            
+            var cream = make_color_rgb(245,235,215);
+            var dark_purple = make_color_rgb(45, 25, 60);
+            var name_y_offset = card_h_scaled * -0.30; // Near the top
+            var name_width = card_w_scaled * 0.85;
+            var name_line_sep = 7 * final_collection_scale * gui_scale;
+            
+            // Shadow
+            draw_set_alpha(0.5);
+            draw_set_color(c_black);
+            draw_text_ext(card_x + 2, card_y_pos + name_y_offset + 2, quest_data.name, name_line_sep, name_width);
+            draw_set_alpha(1);
+            
+            // Outline
+            draw_set_color(dark_purple);
+            draw_text_ext(card_x + 1, card_y_pos + name_y_offset + 1, quest_data.name, name_line_sep, name_width);
+            draw_text_ext(card_x - 1, card_y_pos + name_y_offset - 1, quest_data.name, name_line_sep, name_width);
+            draw_text_ext(card_x + 1, card_y_pos + name_y_offset - 1, quest_data.name, name_line_sep, name_width);
+            draw_text_ext(card_x - 1, card_y_pos + name_y_offset + 1, quest_data.name, name_line_sep, name_width);
+            
+            // Main name text
+            draw_set_color(cream);
+            draw_text_ext(card_x, card_y_pos + name_y_offset, quest_data.name, name_line_sep, name_width);
+            
+            // Draw quest description - CENTERED
+            draw_set_font(fnt_flavor_text);
+            var light_gold = make_color_rgb(255,223,128);
+            var desc_y_offset = card_h_scaled * -0.10; // Below name
+            var desc_width = card_w_scaled * 0.75;
+            var desc_line_sep = 10 * final_collection_scale * gui_scale;
+            
+            // Outline
+            draw_set_color(c_black);
+            draw_text_ext(card_x + 1, card_y_pos + desc_y_offset + 1, quest_data.description, desc_line_sep, desc_width);
+            draw_text_ext(card_x - 1, card_y_pos + desc_y_offset - 1, quest_data.description, desc_line_sep, desc_width);
+            draw_text_ext(card_x + 1, card_y_pos + desc_y_offset - 1, quest_data.description, desc_line_sep, desc_width);
+            draw_text_ext(card_x - 1, card_y_pos + desc_y_offset + 1, quest_data.description, desc_line_sep, desc_width);
+            
+            // Main description text
+            draw_set_color(light_gold);
+            draw_text_ext(card_x, card_y_pos + desc_y_offset, quest_data.description, desc_line_sep, desc_width);
+            
+            // Draw objectives - SMALLER FONT
+            draw_set_font(fnt_flavor_text); // Even smaller font for objectives
+            var obj_y_offset = card_h_scaled * 0.15; // Below description
+            var obj_width = card_w_scaled * 0.70;
+            var obj_line_sep = 8 * final_collection_scale * gui_scale;
+            
+            // Build objectives text
+            var objectives_text = "";
+            for (var obj = 0; obj < array_length(quest_data.objectives); obj++) {
+                var objective = quest_data.objectives[obj];
+                var check_mark = objective.completed ? "✓ " : "• ";
+                objectives_text += check_mark + objective.text;
+                
+                // Add progress if it exists
+                if (variable_struct_exists(objective, "progress") && variable_struct_exists(objective, "target")) {
+                    objectives_text += " (" + string(objective.progress) + "/" + string(objective.target) + ")";
+                }
+                
+                if (obj < array_length(quest_data.objectives) - 1) {
+                    objectives_text += "\n";
+                }
+            }
+            
+            // Draw objectives with outline
+            var obj_color = make_color_rgb(200, 200, 255); // Light blue for objectives
+            
+            // Outline
+            draw_set_color(c_black);
+            draw_text_ext(card_x + 1, card_y_pos + obj_y_offset + 1, objectives_text, obj_line_sep, obj_width);
+            draw_text_ext(card_x - 1, card_y_pos + obj_y_offset - 1, objectives_text, obj_line_sep, obj_width);
+            draw_text_ext(card_x + 1, card_y_pos + obj_y_offset - 1, objectives_text, obj_line_sep, obj_width);
+            draw_text_ext(card_x - 1, card_y_pos + obj_y_offset + 1, objectives_text, obj_line_sep, obj_width);
+            
+            // Main objectives text
+            draw_set_color(obj_color);
+            draw_text_ext(card_x, card_y_pos + obj_y_offset, objectives_text, obj_line_sep, obj_width);
             
             // Reset alignment after each card
             draw_set_halign(fa_left);

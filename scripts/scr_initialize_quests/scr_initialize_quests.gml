@@ -7,17 +7,17 @@ function scr_initialize_quests() {
     
     var _quest_count = 0;
     
-    // Quest 1: Find Baba Yaga
+    // Quest 1: Find Baba Yaga (STARTS ACTIVE)
     global.quests[_quest_count] = {
         id: "find_baba_yaga",
         name: "Seek the Witch",
         description: "Find Baba Yaga in the deep woods to begin your magical training.",
-        status: "active", // active, completed, failed, locked
+        status: "active", // Player starts with this quest active
         objectives: [
             {text: "Explore the forest", completed: false},
             {text: "Find Baba Yaga", completed: false}
         ],
-        reward_type: "unlock", // unlock, item, essence, etc.
+        reward_type: "unlock",
         reward_description: "Begin your magical journey",
         on_complete: function() {
             // When this quest completes, unlock the next quest
