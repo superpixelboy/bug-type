@@ -200,6 +200,7 @@
     {"id":{"name":"rm_spooky_forest","path":"rooms/rm_spooky_forest/rm_spooky_forest.yy",},},
     {"id":{"name":"rm_wichhouse","path":"rooms/rm_wichhouse/rm_wichhouse.yy",},},
     {"id":{"name":"scr_auto_save","path":"scripts/scr_auto_save/scr_auto_save.yy",},},
+    {"id":{"name":"scr_babayaga_refresh_dialogue","path":"scripts/scr_babayaga_refresh_dialogue/scr_babayaga_refresh_dialogue.yy",},},
     {"id":{"name":"scr_bug_catch_tracking","path":"scripts/scr_bug_catch_tracking/scr_bug_catch_tracking.yy",},},
     {"id":{"name":"scr_bug_do_damage","path":"scripts/scr_bug_do_damage/scr_bug_do_damage.yy",},},
     {"id":{"name":"scr_bug_handle_catch","path":"scripts/scr_bug_handle_catch/scr_bug_handle_catch.yy",},},
