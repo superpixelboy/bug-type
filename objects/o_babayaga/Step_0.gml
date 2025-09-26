@@ -2,19 +2,23 @@
 // This should run AFTER the parent NPC interaction logic
 event_inherited();
 
-// === QUEST PROGRESSION TRIGGER ===
-// When dialogue starts, check if we should progress quests
+// === REFRESH DIALOGUE when dialogue starts ===
 if (dialogue_active && dialogue_index == 0) {
     // REFRESH DIALOGUE based on current quest status
     dialogue_messages = scr_babayaga_refresh_dialogue();
     
     show_debug_message("🔄 Dialogue refreshed! New message count: " + string(array_length(dialogue_messages)));
-    
+    show_debug_message("Current dialogue_index: " + string(dialogue_index));
+}
+
+// === COMPLETE QUEST 1 when dialogue ENDS (not when it starts!) ===
+// Check if dialogue just ended
+if (!dialogue_active && dialogue_cooldown == 29) { // Just ended (cooldown was just set to 30)
     var quest_1 = scr_get_quest("find_baba_yaga");
     
-    // If Quest 1 is still active, complete it NOW (player found Baba Yaga!)
+    // If Quest 1 is still active, complete it NOW
     if (quest_1 != undefined && quest_1.status == "active") {
-        show_debug_message("🎯 QUEST PROGRESSION: Player found Baba Yaga!");
+        show_debug_message("🎯 QUEST PROGRESSION: Completing Quest 1 after dialogue!");
         
         // Complete Quest 1 (this also unlocks Quest 2 via on_complete callback)
         if (quest_1.on_complete != undefined) {
@@ -28,9 +32,6 @@ if (dialogue_active && dialogue_index == 0) {
         scr_screen_flash(c_white, 0.2, 15);
         
         show_debug_message("✅ Quest 1 completed! Quest 2 unlocked!");
-        
-        // IMMEDIATELY refresh dialogue to show Quest 2 messages
-        dialogue_messages = scr_babayaga_refresh_dialogue();
     }
 }
 

@@ -27,14 +27,14 @@ function scr_initialize_quests() {
     };
     _quest_count++;
     
-    // Quest 2: Summoning Spell (initially locked)
+    // Quest 2: Summoning Spell (initially locked) - NOW TRACKS ESSENCE!
     global.quests[_quest_count] = {
         id: "summoning_spell", 
         name: "Summoning Practice",
-        description: "Catch enough bugs to gather essence for your first summoning spell.",
+        description: "Gather 100 essence to prepare for your first summoning spell.",
         status: "locked", // Starts locked until first quest completes
         objectives: [
-            {text: "Catch 10 bugs", completed: false, progress: 0, target: 10}
+            {text: "Gather 100 essence", completed: false, progress: 0, target: 100}
         ],
         reward_type: "spell",
         reward_description: "Learn your first summoning spell",
