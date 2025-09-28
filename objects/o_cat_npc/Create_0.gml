@@ -60,3 +60,13 @@ if (global.cat_befriended) {
 // Mark as discovered when created (player entered the room with the cat)
 global.cat_discovered = true;
 
+
+// ===== CAT SHADOW CONFIGURATION =====
+// Manual shadow setup for companion cat (since it doesn't inherit from shadow_parent)
+shadow_enabled = true;
+shadow_offset_x = 2;        // Slight offset to the right (cats have small shadows)
+shadow_offset_y = 4;        // Just below the cat's base
+shadow_scale_x = 1.1;       // Slightly narrower than the cat sprite
+shadow_scale_y = 0.5;       // Flat, cat-like shadow
+shadow_alpha = 0.35;        // Semi-transparent, natural looking
+

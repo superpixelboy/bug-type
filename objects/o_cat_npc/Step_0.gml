@@ -48,4 +48,4 @@ if (dialogue_cooldown == 29 && !dialogue_active && !cat_befriended) {
 }
 
 // Update depth for proper rendering with player
-depth = -y;
+depth = -y+6;

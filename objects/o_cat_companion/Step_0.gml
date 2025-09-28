@@ -109,4 +109,4 @@ if (distance_to_target > follow_distance) {
 }
 
 // UPDATE DEPTH for proper layering with player and environment
-depth = -y;
+depth = -y+6;
