@@ -213,6 +213,7 @@
     {"name":"inst_60820F05","path":"rooms/rm_spooky_forest/rm_spooky_forest.yy",},
     {"name":"inst_6F9C59CD","path":"rooms/rm_spooky_forest/rm_spooky_forest.yy",},
     {"name":"inst_64BAD450","path":"rooms/rm_spooky_forest/rm_spooky_forest.yy",},
+    {"name":"inst_33B111AC","path":"rooms/rm_spooky_forest/rm_spooky_forest.yy",},
   ],
   "isDnd":false,
   "layers":[
@@ -225,6 +226,7 @@
     {"$GMRInstanceLayer":"","%Name":"Interactables","depth":100,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[
         {"$GMRInstance":"v2","%Name":"inst_772C4FF","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_772C4FF","objectId":{"name":"o_hole","path":"objects/o_hole/o_hole.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":257.0,"y":170.0,},
         {"$GMRInstance":"v2","%Name":"inst_17015FF2","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_17015FF2","objectId":{"name":"o_ghost_raven_ow","path":"objects/o_ghost_raven_ow/o_ghost_raven_ow.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":320.0,"y":288.0,},
+        {"$GMRInstance":"v2","%Name":"inst_33B111AC","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_33B111AC","objectId":{"name":"o_cat_npc","path":"objects/o_cat_npc/o_cat_npc.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":449.0,"y":237.0,},
       ],"layers":[],"name":"Interactables","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRInstanceLayer":"","%Name":"Decoration","depth":200,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[
         {"$GMRInstance":"v2","%Name":"inst_70955FAA","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_70955FAA","objectId":{"name":"o_tree_birch","path":"objects/o_tree_birch/o_tree_birch.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":422.0,"y":344.0,},

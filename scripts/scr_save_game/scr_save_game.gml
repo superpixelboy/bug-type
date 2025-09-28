@@ -60,7 +60,13 @@ function scr_save_game() {
 	    show_debug_message("Loaded met_baba_yaga: " + string(global.met_baba_yaga));
 	}
 
+	// ADD THIS in your scr_save_game function
+// Replace lines 131-132 with this:
 
+// === CAT COMPANION DATA ===
+ds_map_add(save_data, "cat_discovered", global.cat_discovered);
+ds_map_add(save_data, "cat_befriended", global.cat_befriended);
+show_debug_message("Saved cat state - discovered: " + string(global.cat_discovered) + ", befriended: " + string(global.cat_befriended));
     
     // === SAVE VERSION (for future compatibility) ===
     ds_map_add(save_data, "save_version", "1.0");
@@ -85,4 +91,6 @@ function scr_save_game() {
         ds_map_destroy(save_data);
         return false;
     }
+	
+	
 }

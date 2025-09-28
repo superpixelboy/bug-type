@@ -126,7 +126,24 @@ function scr_load_game() {
 	    global.met_baba_yaga = false;
 	    show_debug_message("Old save file - defaulting met_baba_yaga to false");
 	}
+	
 
+	// === LOAD CAT COMPANION DATA ===
+	if (ds_map_exists(save_data, "cat_discovered")) {
+	    global.cat_discovered = ds_map_find_value(save_data, "cat_discovered");
+	    show_debug_message("Loaded cat_discovered: " + string(global.cat_discovered));
+	} else {
+	    global.cat_discovered = false;
+	    show_debug_message("No cat_discovered in save - defaulting to false");
+	}
+
+	if (ds_map_exists(save_data, "cat_befriended")) {
+	    global.cat_befriended = ds_map_find_value(save_data, "cat_befriended");
+	    show_debug_message("Loaded cat_befriended: " + string(global.cat_befriended));
+	} else {
+	    global.cat_befriended = false;
+	    show_debug_message("No cat_befriended in save - defaulting to false");
+	}
 	// === FIX scr_initialize_new_game.gml ===
 	// Add this in the "CORE PROGRESS" section:
 
